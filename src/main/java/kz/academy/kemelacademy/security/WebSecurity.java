@@ -43,11 +43,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         
     }
     
-    public AuthenticationFilter getAuthenticationFilter() throws Exception {
+    private AuthenticationFilter getAuthenticationFilter() throws Exception {
         final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
         filter.setFilterProcessesUrl("/users/login");
         return filter;
     }
-    
     
 }

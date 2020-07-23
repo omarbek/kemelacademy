@@ -3,11 +3,11 @@ package kz.academy.kemelacademy.controllers;
 import kz.academy.kemelacademy.exceptions.UserServiceException;
 import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.shared.dto.UserDto;
-import kz.academy.kemelacademy.ui.enums.RequestOperationName;
-import kz.academy.kemelacademy.ui.model.request.UserDetailsRequestModel;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
-import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
+import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
+import kz.academy.kemelacademy.ui.model.request.UserDetailsRequestModel;
+import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class UserController {
     private ApplicationEventPublisher eventPublisher;
     
     @PostMapping
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) throws Exception {
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
         UserRest returnValue = new UserRest();
         
         if (userDetailsRequestModel.getFirstName().isEmpty()) {
@@ -104,7 +104,7 @@ public class UserController {
     }
     
     @PostMapping(path = "ss")
-    public String ss(){
+    public String ss() {
         return "ss";
     }
     

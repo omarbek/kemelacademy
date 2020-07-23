@@ -15,7 +15,7 @@ public class AppProperties {
     @Autowired
     private Environment environment;
     
-    public String getTokenSecret(){
+    String getTokenSecret(){
         return environment.getProperty("tokenSecret");
     }
     

@@ -23,7 +23,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     
     private IUserService userService;
     
-    public AuthorizationFilter(AuthenticationManager authenticationManager, IUserService userService) {
+    AuthorizationFilter(AuthenticationManager authenticationManager, IUserService userService) {
         super(authenticationManager);
         this.userService = userService;
     }
