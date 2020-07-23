@@ -8,6 +8,7 @@ package kz.academy.kemelacademy.ui.enums;
 public enum RequestOperationName {
     
     DELETE,
+    VERIFY_EMAIL,
     
     ;
     

@@ -1,8 +1,13 @@
 package kz.academy.kemelacademy.shared;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import kz.academy.kemelacademy.security.SecurityConstants;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -14,6 +19,15 @@ import java.util.Random;
 public class Utils {
     
     private final Random RANDOM = new SecureRandom();
+    
+    public static boolean hasTokenExpired(String token) {
+        Claims claims = Jwts.parser().setSigningKey(SecurityConstants.getTokenSecret()).parseClaimsJws(token).getBody();
+        
+        Date tokenExpirationDate = claims.getExpiration();
+        Date todayDate = new Date();
+        
+        return tokenExpirationDate.before(todayDate);
+    }
     
     public String generateUserId(int length) {
         return generateRandomString(length);
@@ -28,6 +42,12 @@ public class Utils {
         }
         
         return new String(returnVal);
+    }
+    
+    public String generateEmailVerificationToken(String userId) {
+        return Jwts.builder().setSubject(userId)
+                .setExpiration(new Date(System.currentTimeMillis()+SecurityConstants.EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512,SecurityConstants.getTokenSecret()).compact();
     }
     
 }

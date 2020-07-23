@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,6 +39,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     
+    @Autowired
+    private JavaMailSender javaMailSender;
+    
     @Override
     public UserDto createUser(UserDto userDto) {
         UserEntity userByEmail = userRepository.findByEmail(userDto.getEmail());
@@ -48,7 +53,10 @@ public class UserServiceImpl implements IUserService {
         BeanUtils.copyProperties(userDto, userEntity);
         
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-        userEntity.setUserId(utils.generateUserId(30));
+        String userId = utils.generateUserId(30);
+        userEntity.setUserId(userId);
+        userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(userId));
+        userEntity.setEmailVerificationStatus(false);
         
         UserEntity storedUserDetails = userRepository.save(userEntity);
         
@@ -135,13 +143,44 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
+    public void sendEmail(String email, String emailVerificationToken) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(email);
+        
+        msg.setSubject("Email verification");
+        msg.setText("Token: " + emailVerificationToken);
+        
+        javaMailSender.send(msg);
+    }
+    
+    @Override
+    public boolean verifyEmailToken(String token) {
+        boolean returnValue = false;
+        
+        UserEntity userEntity = userRepository.findUserByEmailVerificationToken(token);
+        
+        if (userEntity != null) {
+            boolean hasTokenExpired = Utils.hasTokenExpired(token);
+            if (!hasTokenExpired) {
+                userEntity.setEmailVerificationToken(null);
+                userEntity.setEmailVerificationStatus(true);
+                userRepository.save(userEntity);
+                returnValue = true;
+            }
+        }
+        
+        return returnValue;
+    }
+    
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
             throw new UsernameNotFoundException(email);
         }
         
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(),
+                userEntity.getEmailVerificationStatus(), true, true, true, new ArrayList<>());
     }
     
 }

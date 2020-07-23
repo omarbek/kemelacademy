@@ -46,6 +46,8 @@ public class UserController {
         UserDto createdUser = userService.createUser(userDto);
         BeanUtils.copyProperties(createdUser, returnValue);
         
+        userService.sendEmail(createdUser.getEmail(), createdUser.getEmailVerificationToken());
+        
         return returnValue;
     }
     
@@ -106,6 +108,18 @@ public class UserController {
     @PostMapping(path = "ss")
     public String ss() {
         return "ss";
+    }
+    
+    @GetMapping(path = "email-verification")
+    public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+        
+        boolean isVerified = userService.verifyEmailToken(token);
+        returnValue.setOperationResult(isVerified ? RequestOperationStatus.SUCCESS.name() :
+                RequestOperationStatus.ERROR.name());
+        
+        return returnValue;
     }
     
 }
