@@ -1,8 +1,11 @@
 package kz.academy.kemelacademy.services;
 
+import com.google.common.collect.Sets;
 import kz.academy.kemelacademy.exceptions.UserServiceException;
+import kz.academy.kemelacademy.repositories.IRoleRepository;
 import kz.academy.kemelacademy.repositories.IUserRepository;
 import kz.academy.kemelacademy.ui.dto.UserDto;
+import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import kz.academy.kemelacademy.ui.entity.UserEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.utils.GeneratorUtils;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -42,6 +46,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private JavaMailSender javaMailSender;
     
+    @Autowired
+    private IRoleRepository roleRepository;
+    
     @Override
     public UserDto createUser(UserDto userDto) {
         UserEntity userByEmail = userRepository.findByEmail(userDto.getEmail());
@@ -57,6 +64,11 @@ public class UserServiceImpl implements IUserService {
         userEntity.setUserId(userId);
         userEntity.setEmailVerificationToken(generatorUtils.generateEmailVerificationToken(userId));
         userEntity.setEmailVerificationStatus(false);
+        
+        RoleEntity instructor = roleRepository.findById(RoleEntity.INSTRUCTOR).get();
+        RoleEntity student = roleRepository.findById(RoleEntity.STUDENT).get();
+        Set<RoleEntity> roles = Sets.newHashSet(instructor, student);
+        userEntity.setRoles(roles);
         
         UserEntity storedUserDetails = userRepository.save(userEntity);
         

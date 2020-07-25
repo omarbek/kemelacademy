@@ -1,8 +1,11 @@
 package kz.academy.kemelacademy.ui.dto;
 
+import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -13,13 +16,15 @@ import java.io.Serializable;
 public class UserDto implements Serializable {
     
     private long id;
-    private String userId;
+    private String email;
+    private Boolean emailVerificationStatus = false;
+    private String emailVerificationToken;
+    private String encryptedPassword;
+    private String password;
     private String firstName;
     private String lastName;
-    private String email;
-    private String password;
-    private String encryptedPassword;
-    private String emailVerificationToken;
-    private Boolean emailVerificationStatus = false;
+    private String patronymic;
+    private String userId;
+    private Set<RoleEntity> roles = new HashSet<>();
     
 }
