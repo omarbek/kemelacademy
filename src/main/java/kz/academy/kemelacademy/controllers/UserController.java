@@ -105,11 +105,6 @@ public class UserController {
         return returnVal;
     }
     
-    @PostMapping(path = "ss")
-    public String ss() {
-        return "ss";
-    }
-    
     @GetMapping(path = "email-verification")
     public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
         OperationStatusModel returnValue = new OperationStatusModel();
