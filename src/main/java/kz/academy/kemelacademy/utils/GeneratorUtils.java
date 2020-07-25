@@ -1,4 +1,4 @@
-package kz.academy.kemelacademy.shared;
+package kz.academy.kemelacademy.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +16,7 @@ import java.util.Random;
  * @project kemelacademy
  */
 @Component
-public class Utils {
+public class GeneratorUtils {
     
     private final Random RANDOM = new SecureRandom();
     

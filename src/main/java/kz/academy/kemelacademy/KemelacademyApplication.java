@@ -7,6 +7,10 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+
+import java.util.Locale;
 
 @SpringBootApplication
 public class KemelacademyApplication extends SpringBootServletInitializer {
@@ -33,6 +37,13 @@ public class KemelacademyApplication extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(KemelacademyApplication.class);
+    }
+    
+    @Bean
+    public LocaleResolver localeResolver() {
+        AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
+        localeResolver.setDefaultLocale(new Locale("kz"));
+        return localeResolver;
     }
     
 }

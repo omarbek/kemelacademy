@@ -2,7 +2,7 @@ package kz.academy.kemelacademy.controllers;
 
 import kz.academy.kemelacademy.exceptions.UserServiceException;
 import kz.academy.kemelacademy.services.IUserService;
-import kz.academy.kemelacademy.shared.dto.UserDto;
+import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
@@ -11,7 +11,8 @@ import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class UserController {
     private IUserService userService;
     
     @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    private MessageSource messageSource;
     
     @PostMapping
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
@@ -115,6 +116,11 @@ public class UserController {
                 RequestOperationStatus.ERROR.name());
         
         return returnValue;
+    }
+    
+    @GetMapping(path = "/hello-inter")
+    public String helloWorldInter() {
+        return messageSource.getMessage("good.morning.message", null, LocaleContextHolder.getLocale());
     }
     
 }

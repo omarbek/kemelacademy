@@ -1,4 +1,4 @@
-package kz.academy.kemelacademy.shared.dto;
+package kz.academy.kemelacademy.ui.dto;
 
 import lombok.Data;
 

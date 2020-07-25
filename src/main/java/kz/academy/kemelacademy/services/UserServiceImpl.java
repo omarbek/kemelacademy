@@ -2,10 +2,10 @@ package kz.academy.kemelacademy.services;
 
 import kz.academy.kemelacademy.exceptions.UserServiceException;
 import kz.academy.kemelacademy.repositories.IUserRepository;
-import kz.academy.kemelacademy.shared.Utils;
-import kz.academy.kemelacademy.shared.dto.UserDto;
+import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.entity.UserEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
+import kz.academy.kemelacademy.utils.GeneratorUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +34,7 @@ public class UserServiceImpl implements IUserService {
     private IUserRepository userRepository;
     
     @Autowired
-    private Utils utils;
+    private GeneratorUtils generatorUtils;
     
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -53,9 +53,9 @@ public class UserServiceImpl implements IUserService {
         BeanUtils.copyProperties(userDto, userEntity);
         
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-        String userId = utils.generateUserId(30);
+        String userId = generatorUtils.generateUserId(30);
         userEntity.setUserId(userId);
-        userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(userId));
+        userEntity.setEmailVerificationToken(generatorUtils.generateEmailVerificationToken(userId));
         userEntity.setEmailVerificationStatus(false);
         
         UserEntity storedUserDetails = userRepository.save(userEntity);
@@ -160,7 +160,7 @@ public class UserServiceImpl implements IUserService {
         UserEntity userEntity = userRepository.findUserByEmailVerificationToken(token);
         
         if (userEntity != null) {
-            boolean hasTokenExpired = Utils.hasTokenExpired(token);
+            boolean hasTokenExpired = GeneratorUtils.hasTokenExpired(token);
             if (!hasTokenExpired) {
                 userEntity.setEmailVerificationToken(null);
                 userEntity.setEmailVerificationStatus(true);

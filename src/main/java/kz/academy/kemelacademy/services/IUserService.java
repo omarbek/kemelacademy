@@ -1,6 +1,6 @@
 package kz.academy.kemelacademy.services;
 
-import kz.academy.kemelacademy.shared.dto.UserDto;
+import kz.academy.kemelacademy.ui.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;

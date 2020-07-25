@@ -1,11 +1,10 @@
 package kz.academy.kemelacademy.ui.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -39,6 +38,12 @@ public class UserEntity implements Serializable {
     private String emailVerificationToken;
     
     @Column(nullable = false)
-    private Boolean emailVerificationStatus=false;
+    private Boolean emailVerificationStatus = false;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    //    @NotNull(message = GeneratorUtils.NotNullUtils.ROLE_MUST_NOT_BE_NULL_VALUE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private RoleEntity role;
     
 }

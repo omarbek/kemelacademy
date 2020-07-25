@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kz.academy.kemelacademy.SpringApplicationContext;
 import kz.academy.kemelacademy.services.IUserService;
-import kz.academy.kemelacademy.shared.dto.UserDto;
+import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.model.request.UserLoginRequestModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
