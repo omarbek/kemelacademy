@@ -29,16 +29,13 @@ public class RoleEntity {
     @GeneratedValue
     private long id;
     
-    @Column(length = 20)
-    @NotNull(message = "Name kz must not be null")
+    @Column(nullable = false, length = 20)
     private String nameKz;
     
     @Column(nullable = false, length = 20)
-    @NotNull(message = "Name ru must not be null")
     private String nameRu;
     
     @Column(nullable = false, length = 20)
-    @NotNull(message = "Name en must not be null")
     private String nameEn;
     
     @ManyToMany(mappedBy = "roles")

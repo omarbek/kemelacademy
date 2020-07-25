@@ -3,6 +3,7 @@ package kz.academy.kemelacademy.ui.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -31,15 +32,12 @@ public class UserEntity implements Serializable {
     private String emailVerificationToken;
     
     @Column(nullable = false)
-    @NotNull(message = "Password must not be null")
     private String encryptedPassword;
     
     @Column(nullable = false, length = 120)
-    @NotNull(message = "First name must not be null")
     private String firstName;
     
-    @Column(length = 120)
-    @NotNull(message = "Last name not be null")
+    @Column(nullable = false, length = 120)
     private String lastName;
     
     @Column(length = 120)
