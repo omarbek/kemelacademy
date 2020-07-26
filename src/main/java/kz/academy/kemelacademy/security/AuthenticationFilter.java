@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import kz.academy.kemelacademy.SpringApplicationContext;
 import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.ui.dto.UserDto;
+import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import kz.academy.kemelacademy.ui.model.request.UserLoginRequestModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -30,9 +32,11 @@ import java.util.*;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     
     private final AuthenticationManager authenticationManager;
+    private final IUserService userService;
     
-    AuthenticationFilter(AuthenticationManager authenticationManager) {
+    AuthenticationFilter(AuthenticationManager authenticationManager, IUserService userService) {
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
     
     @Override
@@ -42,11 +46,25 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             UserLoginRequestModel creds = new ObjectMapper().readValue(request.getInputStream(),
                     UserLoginRequestModel.class);
             
+            UserDto userDto = userService.getUser(creds.getEmail());
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(creds.getEmail(),
-                    creds.getPassword(), new ArrayList<>()));
+                    creds.getPassword(), getAuthority(userDto)));
         } catch (IOException e) {
             throw new RuntimeException();
         }
+    }
+    
+    private Set<GrantedAuthority> getAuthority(UserDto userDto) {
+        Set<GrantedAuthority> set = new HashSet<>();
+        for (RoleEntity roleEntity: userDto.getRoles()) {
+            set.add(new GrantedAuthority() {
+                @Override
+                public String getAuthority() {
+                    return roleEntity.getName();
+                }
+            });
+        }
+        return set;
     }
     
     @Override

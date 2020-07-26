@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -192,7 +194,20 @@ public class UserServiceImpl implements IUserService {
         }
         
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(),
-                userEntity.getEmailVerificationStatus(), true, true, true, new ArrayList<>());
+                userEntity.getEmailVerificationStatus(), true, true, true, getAuthority(userEntity));
+    }
+    
+    private Set<GrantedAuthority> getAuthority(UserEntity userEntity) {
+        Set<GrantedAuthority> set = new HashSet<>();
+        for (RoleEntity roleEntity: userEntity.getRoles()) {
+            set.add(new GrantedAuthority() {
+                @Override
+                public String getAuthority() {
+                    return roleEntity.getNameEn();
+                }
+            });
+        }
+        return set;
     }
     
 }

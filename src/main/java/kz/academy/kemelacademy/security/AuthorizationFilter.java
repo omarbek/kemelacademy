@@ -2,8 +2,11 @@ package kz.academy.kemelacademy.security;
 
 import io.jsonwebtoken.Jwts;
 import kz.academy.kemelacademy.services.IUserService;
+import kz.academy.kemelacademy.ui.dto.UserDto;
+import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -12,7 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -54,12 +58,25 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                     .getSubject();
             
             if (user != null) {
-                userService.getUser(user);
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                UserDto userDto = userService.getUser(user);
+                return new UsernamePasswordAuthenticationToken(user, null, getAuthority(userDto));
             }
             return null;
         }
         return null;
+    }
+    
+    private Set<GrantedAuthority> getAuthority(UserDto userDto) {
+        Set<GrantedAuthority> set = new HashSet<>();
+        for (RoleEntity roleEntity: userDto.getRoles()) {
+            set.add(new GrantedAuthority() {
+                @Override
+                public String getAuthority() {
+                    return roleEntity.getName();
+                }
+            });
+        }
+        return set;
     }
     
 }

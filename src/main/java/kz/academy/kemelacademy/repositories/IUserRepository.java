@@ -1,7 +1,8 @@
 package kz.academy.kemelacademy.repositories;
 
 import kz.academy.kemelacademy.ui.entity.UserEntity;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,8 +11,9 @@ import org.springframework.stereotype.Repository;
  * @project kemelacademy
  */
 @Repository
-public interface IUserRepository extends PagingAndSortingRepository<UserEntity, Long> {
+public interface IUserRepository extends JpaRepository<UserEntity, Long> {
     
+    @Query("select u from UserEntity u left join fetch u.roles where u.email = :email")
     UserEntity findByEmail(String email);
     
     UserEntity findByUserId(String userId);

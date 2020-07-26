@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +24,10 @@ public class RoleEntity {
     public static final Long INSTRUCTOR = 2L;
     public static final Long STUDENT = 3L;
     
+    public static final String ROLE_MODERATOR = "ROLE_MODERATOR";
+    public static final String ROLE_INSTRUCTOR = "ROLE_INSTRUCTOR";
+    public static final String ROLE_STUDENT = "ROLE_STUDENT";
+    
     @Id
     @GeneratedValue
     private long id;
@@ -38,6 +41,9 @@ public class RoleEntity {
     @Column(nullable = false, length = 20)
     private String nameEn;
     
+    @Column(nullable = false, length = 40)
+    private String name;
+    
     @ManyToMany(mappedBy = "roles")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -45,15 +51,15 @@ public class RoleEntity {
     
     @Override
     public String toString() {
-        String name;
+        String ret;
         if (LocaleUtils.checkLocale(Locales.KZ.getLocale())) {
-            name = nameKz;
+            ret = nameKz;
         } else if (LocaleUtils.checkLocale(Locales.RU.getLocale())) {
-            name = nameRu;
+            ret = nameRu;
         } else {
-            name = nameEn;
+            ret = nameEn;
         }
-        return name;
+        return ret;
     }
     
 }
