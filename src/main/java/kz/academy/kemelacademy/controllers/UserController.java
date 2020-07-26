@@ -119,7 +119,7 @@ public class UserController {
     }
     
     @GetMapping(path = "/hello-inter")
-    //    @PreAuthorize("hasAuthority('ROLE_MODERATOR')")
+    //    @PreAuthorize("hasAuthority('ROLE_MODERATOR')")//todo
     public String helloWorldInter() {
         return messageSource.getMessage("good.morning.message", null, LocaleContextHolder.getLocale());
     }

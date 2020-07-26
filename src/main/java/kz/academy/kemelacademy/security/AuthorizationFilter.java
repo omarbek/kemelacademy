@@ -69,7 +69,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     private Set<GrantedAuthority> getAuthority(UserDto userDto) {
         Set<GrantedAuthority> set = new HashSet<>();
         for (RoleEntity roleEntity: userDto.getRoles()) {
-            set.add(new GrantedAuthority() {
+            set.add(new GrantedAuthority() {//todo stream
                 @Override
                 public String getAuthority() {
                     return roleEntity.getName();

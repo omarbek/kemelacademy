@@ -200,7 +200,7 @@ public class UserServiceImpl implements IUserService {
     private Set<GrantedAuthority> getAuthority(UserEntity userEntity) {
         Set<GrantedAuthority> set = new HashSet<>();
         for (RoleEntity roleEntity: userEntity.getRoles()) {
-            set.add(new GrantedAuthority() {
+            set.add(new GrantedAuthority() {//todo stream
                 @Override
                 public String getAuthority() {
                     return roleEntity.getNameEn();
