@@ -1,6 +1,7 @@
 package kz.academy.kemelacademy.security;
 
 import kz.academy.kemelacademy.services.IUserService;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * @project kemelacademy
  */
 @EnableWebSecurity
+@EnableOAuth2Sso
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     
     private final IUserService userDetailsService;
@@ -27,7 +29,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
+        http.csrf().disable()
+                .antMatcher("/**").authorizeRequests()
+                .antMatchers("/", "/index.html").permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.HELLO_URL).hasRole("MODERATOR")
