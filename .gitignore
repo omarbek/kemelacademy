@@ -31,9 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
-src/main/resources/static/
 src/main/resources/templates/
 /.mvn/
 /mvnw
 /mvnw.cmd
 /src/test/
+!/src/main/resources/static/
