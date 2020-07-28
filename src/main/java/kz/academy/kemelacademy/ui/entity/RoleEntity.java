@@ -18,7 +18,9 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "roles")
-public class RoleEntity {
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class RoleEntity extends AbstractNameEntity {
     
     public static final Long MODERATOR = 1L;
     public static final Long INSTRUCTOR = 2L;
@@ -28,19 +30,6 @@ public class RoleEntity {
     public static final String ROLE_INSTRUCTOR = "ROLE_INSTRUCTOR";
     public static final String ROLE_STUDENT = "ROLE_STUDENT";
     
-    @Id
-    @GeneratedValue
-    private long id;
-    
-    @Column(nullable = false, length = 20)
-    private String nameKz;
-    
-    @Column(nullable = false, length = 20)
-    private String nameRu;
-    
-    @Column(nullable = false, length = 20)
-    private String nameEn;
-    
     @Column(nullable = false, length = 40)
     private String name;
     
@@ -48,18 +37,5 @@ public class RoleEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<UserEntity> users = new HashSet<>();
-    
-    @Override
-    public String toString() {
-        String ret;
-        if (LocaleUtils.checkLocale(Locales.KZ.getLocale())) {
-            ret = nameKz;
-        } else if (LocaleUtils.checkLocale(Locales.RU.getLocale())) {
-            ret = nameRu;
-        } else {
-            ret = nameEn;
-        }
-        return ret;
-    }
     
 }
