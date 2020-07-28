@@ -5,7 +5,6 @@ create table roles
   name_ru varchar(20) not null,
   name_en varchar(20) not null
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 17
   DEFAULT CHARSET = utf8;
 
 create table users
@@ -20,7 +19,7 @@ create table users
   patronymic                varchar(120),
   user_id                   varchar(255) not null
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 17
+  AUTO_INCREMENT = 2
   DEFAULT CHARSET = utf8;
 
 CREATE TABLE user_roles

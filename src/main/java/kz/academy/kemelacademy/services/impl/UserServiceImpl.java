@@ -1,10 +1,11 @@
-package kz.academy.kemelacademy.services;
+package kz.academy.kemelacademy.services.impl;
 
 import com.google.common.collect.Sets;
 import kz.academy.kemelacademy.exceptions.UserServiceException;
 import kz.academy.kemelacademy.repositories.IPasswordResetTokenRepository;
 import kz.academy.kemelacademy.repositories.IRoleRepository;
 import kz.academy.kemelacademy.repositories.IUserRepository;
+import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.entity.PasswordResetTokenEntity;
 import kz.academy.kemelacademy.ui.entity.RoleEntity;

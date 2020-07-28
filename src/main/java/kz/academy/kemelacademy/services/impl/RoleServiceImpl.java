@@ -1,6 +1,7 @@
-package kz.academy.kemelacademy.services;
+package kz.academy.kemelacademy.services.impl;
 
 import kz.academy.kemelacademy.repositories.IRoleRepository;
+import kz.academy.kemelacademy.services.IRoleService;
 import kz.academy.kemelacademy.ui.dto.RoleDto;
 import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import org.springframework.beans.BeanUtils;
