@@ -13,7 +13,8 @@ public enum ErrorMessages {
     MISSING_REQUIRED_FIELD("Missing required field"),
     INTERNAL_SERVER_ERROR("Internal server error"),
     NO_RECORD_FOUND("No record found"),
-    DID_NOT_SEND_TO_EMAIL("Did not send to email"),
+    DID_NOT_SEND_EMAIL("Did not send email"),
+    EMAIL_ALREADY_EXISTS("Email already exists"),
     
     ;
     

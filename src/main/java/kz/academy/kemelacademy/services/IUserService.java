@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface IUserService extends UserDetailsService {
     
-    UserDto createUser(UserDto userDto);
+    UserDto createUser(UserDto userDto) throws Exception;
     
     UserDto getUser(String email);
     

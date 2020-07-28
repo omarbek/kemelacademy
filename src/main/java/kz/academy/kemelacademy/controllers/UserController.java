@@ -39,22 +39,38 @@ public class UserController {
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
         UserRest returnValue = new UserRest();
         
-        if (userDetailsRequestModel.getFirstName().isEmpty()) {
-            throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
-        }
+        String[] fields = {userDetailsRequestModel.getFirstName(), userDetailsRequestModel.getLastName(),
+                userDetailsRequestModel.getEmail(), userDetailsRequestModel.getPassword()};
+        throwMissingRequiredFieldException(fields);
         
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetailsRequestModel, userDto);
         
-        UserDto createdUser = userService.createUser(userDto);
+        UserDto createdUser;
+        try {
+            createdUser = userService.createUser(userDto);
+        } catch (UserServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UserServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
+        
         BeanUtils.copyProperties(createdUser, returnValue);
         
         boolean sendEmail = userService.sendEmail(createdUser.getEmail(), createdUser.getEmailVerificationToken());
         if (!sendEmail) {
-            throw new UserServiceException(ErrorMessages.DID_NOT_SEND_TO_EMAIL.getErrorMessage());
+            throw new UserServiceException(ErrorMessages.DID_NOT_SEND_EMAIL.getErrorMessage());
         }
         
         return returnValue;
+    }
+    
+    private void throwMissingRequiredFieldException(String[] fields) {
+        for (String field: fields) {
+            if (field.isEmpty()) {
+                throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+            }
+        }
     }
     
     @GetMapping(path = "/{id}")

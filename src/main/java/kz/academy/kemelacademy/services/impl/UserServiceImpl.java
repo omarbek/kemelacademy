@@ -12,6 +12,7 @@ import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import kz.academy.kemelacademy.ui.entity.UserEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.utils.GeneratorUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,6 +38,7 @@ import java.util.Set;
  * on 2020-07-20
  * @project kemelacademy
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements IUserService {
     
@@ -58,10 +61,11 @@ public class UserServiceImpl implements IUserService {
     private IPasswordResetTokenRepository passwordResetTokenRepository;
     
     @Override
-    public UserDto createUser(UserDto userDto) {
+    @Transactional
+    public UserDto createUser(UserDto userDto) throws Exception {
         UserEntity userByEmail = userRepository.findByEmail(userDto.getEmail());
         if (userByEmail != null) {
-            throw new RuntimeException("Record already exists");
+            throw new UserServiceException(ErrorMessages.EMAIL_ALREADY_EXISTS.getErrorMessage());
         }
         
         UserEntity userEntity = new UserEntity();
@@ -173,6 +177,7 @@ public class UserServiceImpl implements IUserService {
         try {
             javaMailSender.send(msg);
         } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
             return false;
         }
         
@@ -214,7 +219,7 @@ public class UserServiceImpl implements IUserService {
         
         boolean sendEmail = sendEmail(email, token);
         if (!sendEmail) {
-            throw new UserServiceException(ErrorMessages.DID_NOT_SEND_TO_EMAIL.getErrorMessage());
+            throw new UserServiceException(ErrorMessages.DID_NOT_SEND_EMAIL.getErrorMessage());
         }
         
         return true;
@@ -262,12 +267,7 @@ public class UserServiceImpl implements IUserService {
     private Set<GrantedAuthority> getAuthority(UserEntity userEntity) {
         Set<GrantedAuthority> set = new HashSet<>();
         for (RoleEntity roleEntity: userEntity.getRoles()) {
-            set.add(new GrantedAuthority() {//todo stream
-                @Override
-                public String getAuthority() {
-                    return roleEntity.getNameEn();
-                }
-            });
+            set.add((GrantedAuthority) roleEntity::getNameEn);
         }
         return set;
     }
