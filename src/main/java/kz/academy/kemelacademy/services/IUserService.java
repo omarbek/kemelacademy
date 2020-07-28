@@ -24,8 +24,12 @@ public interface IUserService extends UserDetailsService {
     
     List<UserDto> getUsers(int page, int limit);
     
-    void sendEmail(String email, String emailVerificationToken);
+    boolean sendEmail(String email, String emailVerificationToken);
     
     boolean verifyEmailToken(String token);
+    
+    boolean requestPasswordReset(String email);
+    
+    boolean resetPassword(String token, String password);
     
 }

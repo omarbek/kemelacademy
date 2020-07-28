@@ -6,6 +6,8 @@ import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
+import kz.academy.kemelacademy.ui.model.request.PasswordResetModel;
+import kz.academy.kemelacademy.ui.model.request.PasswordResetRequestModel;
 import kz.academy.kemelacademy.ui.model.request.UserDetailsRequestModel;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.ui.model.response.UserRest;
@@ -47,7 +49,10 @@ public class UserController {
         UserDto createdUser = userService.createUser(userDto);
         BeanUtils.copyProperties(createdUser, returnValue);
         
-        userService.sendEmail(createdUser.getEmail(), createdUser.getEmailVerificationToken());
+        boolean sendEmail = userService.sendEmail(createdUser.getEmail(), createdUser.getEmailVerificationToken());
+        if (!sendEmail) {
+            throw new UserServiceException(ErrorMessages.DID_NOT_SEND_TO_EMAIL.getErrorMessage());
+        }
         
         return returnValue;
     }
@@ -122,6 +127,39 @@ public class UserController {
     //    @PreAuthorize("hasAuthority('ROLE_MODERATOR')")//todo
     public String helloWorldInter() {
         return messageSource.getMessage("good.morning.message", null, LocaleContextHolder.getLocale());
+    }
+    
+    @PostMapping(path = "/password-reset-request")
+    public OperationStatusModel requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+        OperationStatusModel returnValue = new OperationStatusModel();
+        
+        boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+        
+        returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
+        returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+        
+        if (operationResult) {
+            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        }
+        
+        return returnValue;
+    }
+    
+    @PostMapping(path = "/password-reset")
+    public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
+        OperationStatusModel returnVal = new OperationStatusModel();
+        
+        boolean operationResult = userService.resetPassword(passwordResetModel.getToken(),
+                passwordResetModel.getPassword());
+        
+        returnVal.setOperationName(RequestOperationName.PASSWORD_RESET.name());
+        returnVal.setOperationResult(RequestOperationStatus.ERROR.name());
+        
+        if (operationResult) {
+            returnVal.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        }
+        
+        return returnVal;
     }
     
 }

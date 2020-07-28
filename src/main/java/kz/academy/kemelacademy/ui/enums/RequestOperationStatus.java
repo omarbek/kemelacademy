@@ -7,6 +7,7 @@ package kz.academy.kemelacademy.ui.enums;
  */
 public enum RequestOperationStatus {
     
-    ERROR, SUCCESS
+    ERROR,
+    SUCCESS
     
 }

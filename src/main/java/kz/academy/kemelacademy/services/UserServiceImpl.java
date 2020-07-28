@@ -2,9 +2,11 @@ package kz.academy.kemelacademy.services;
 
 import com.google.common.collect.Sets;
 import kz.academy.kemelacademy.exceptions.UserServiceException;
+import kz.academy.kemelacademy.repositories.IPasswordResetTokenRepository;
 import kz.academy.kemelacademy.repositories.IRoleRepository;
 import kz.academy.kemelacademy.repositories.IUserRepository;
 import kz.academy.kemelacademy.ui.dto.UserDto;
+import kz.academy.kemelacademy.ui.entity.PasswordResetTokenEntity;
 import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import kz.academy.kemelacademy.ui.entity.UserEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
@@ -50,6 +52,9 @@ public class UserServiceImpl implements IUserService {
     
     @Autowired
     private IRoleRepository roleRepository;
+    
+    @Autowired
+    private IPasswordResetTokenRepository passwordResetTokenRepository;
     
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -157,14 +162,20 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public void sendEmail(String email, String emailVerificationToken) {
+    public boolean sendEmail(String email, String emailVerificationToken) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(email);
         
         msg.setSubject("Email verification");
         msg.setText("Token: " + emailVerificationToken);
         
-        javaMailSender.send(msg);
+        try {
+            javaMailSender.send(msg);
+        } catch (Exception e) {
+            return false;
+        }
+        
+        return true;
     }
     
     @Override
@@ -184,6 +195,56 @@ public class UserServiceImpl implements IUserService {
         }
         
         return returnValue;
+    }
+    
+    @Override
+    public boolean requestPasswordReset(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) {
+            return false;
+        }
+        
+        String token = new GeneratorUtils().generatePasswordResetToken(userEntity.getUserId());
+        
+        PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
+        passwordResetTokenEntity.setToken(token);
+        passwordResetTokenEntity.setUserDetails(userEntity);
+        passwordResetTokenRepository.save(passwordResetTokenEntity);
+        
+        boolean sendEmail = sendEmail(email, token);
+        if (!sendEmail) {
+            throw new UserServiceException(ErrorMessages.DID_NOT_SEND_TO_EMAIL.getErrorMessage());
+        }
+        
+        return true;
+    }
+    
+    @Override
+    public boolean resetPassword(String token, String password) {
+        boolean returnVal = false;
+        
+        if (GeneratorUtils.hasTokenExpired(token)) {
+            return returnVal;
+        }
+        
+        PasswordResetTokenEntity passwordResetTokenEntity = passwordResetTokenRepository.findByToken(token);
+        if (passwordResetTokenEntity == null) {
+            return returnVal;
+        }
+        
+        String encodedPassword = bCryptPasswordEncoder.encode(password);
+        
+        UserEntity userEntity = passwordResetTokenEntity.getUserDetails();
+        userEntity.setEncryptedPassword(encodedPassword);
+        UserEntity savedUserEntity = userRepository.save(userEntity);
+        
+        if (savedUserEntity.getEncryptedPassword().equalsIgnoreCase(encodedPassword)) {
+            returnVal = true;
+        }
+        
+        passwordResetTokenRepository.delete(passwordResetTokenEntity);
+        
+        return returnVal;
     }
     
     @Override
