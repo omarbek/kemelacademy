@@ -28,10 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Omarbek.Dinassil
@@ -140,6 +137,11 @@ public class UserServiceImpl implements IUserService {
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) {
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        Iterator<RoleEntity> iterator = userEntity.getRoles().iterator();
+        for(userEntity.getRoles().iterator();iterator.hasNext();){
+            RoleEntity roleEntity = iterator.next();
+            iterator.remove();
         }
         
         userRepository.delete(userEntity);
