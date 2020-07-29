@@ -41,7 +41,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+            throws AuthenticationException {//login-1
         try {
             UserLoginRequestModel creds = new ObjectMapper().readValue(request.getInputStream(),
                     UserLoginRequestModel.class);
@@ -57,12 +57,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private Set<GrantedAuthority> getAuthority(UserDto userDto) {
         Set<GrantedAuthority> set = new HashSet<>();
         for (RoleEntity roleEntity: userDto.getRoles()) {
-            set.add(new GrantedAuthority() {//todo stream
-                @Override
-                public String getAuthority() {
-                    return roleEntity.getName();
-                }
-            });
+            set.add((GrantedAuthority) roleEntity::getName);
         }
         return set;
     }
@@ -94,7 +89,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.getWriter().close();
     }
     
-    private void middle(HttpServletResponse response, Authentication authResult) {
+    private void middle(HttpServletResponse response, Authentication authResult) {//login-3
         String username = ((User) authResult.getPrincipal()).getUsername();
         
         String token = Jwts.builder().setSubject(username)

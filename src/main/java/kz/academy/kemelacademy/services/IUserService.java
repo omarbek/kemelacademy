@@ -22,7 +22,7 @@ public interface IUserService extends UserDetailsService {
     
     void deleteUser(String userId) throws Exception;
     
-    List<UserDto> getUsers(int page, int limit);
+    List<UserDto> getUsers(int page, int limit) throws Exception;
     
     boolean sendEmail(String email, String emailVerificationToken);
     

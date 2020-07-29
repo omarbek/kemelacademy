@@ -146,7 +146,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public List<UserDto> getUsers(int page, int limit) {
+    public List<UserDto> getUsers(int page, int limit) throws Exception {
         List<UserDto> returnValue = new ArrayList<>();
         
         if (page > 0) {
@@ -254,7 +254,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {//login-2
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
             throw new UsernameNotFoundException(email);

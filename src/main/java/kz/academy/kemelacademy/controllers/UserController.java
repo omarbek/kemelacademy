@@ -131,7 +131,12 @@ public class UserController {
                                    @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<UserRest> returnVal = new ArrayList<>();
         
-        List<UserDto> users = userService.getUsers(page, limit);
+        List<UserDto> users;
+        try {
+            users = userService.getUsers(page, limit);
+        } catch (Exception e) {
+            throw new UserServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.name());
+        }
         for (UserDto userDto: users) {
             UserRest userModel = new UserRest();
             BeanUtils.copyProperties(userDto, userModel);
