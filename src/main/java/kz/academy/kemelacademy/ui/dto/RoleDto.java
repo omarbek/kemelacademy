@@ -2,11 +2,7 @@ package kz.academy.kemelacademy.ui.dto;
 
 import kz.academy.kemelacademy.ui.entity.UserEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;

@@ -177,7 +177,7 @@ public class UserController {
         try {
             operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
         } catch (Exception e) {
-            log.error(e.getLocalizedMessage(),e);
+            log.error(e.getLocalizedMessage(), e);
         }
         
         returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
@@ -193,15 +193,15 @@ public class UserController {
     @PostMapping(path = "/password-reset")
     public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
         OperationStatusModel returnVal = new OperationStatusModel();
-    
+        
         boolean operationResult = false;
         try {
             operationResult = userService.resetPassword(passwordResetModel.getToken(),
                     passwordResetModel.getPassword());
         } catch (Exception e) {
-            log.error(e.getLocalizedMessage(),e);
+            log.error(e.getLocalizedMessage(), e);
         }
-    
+        
         returnVal.setOperationName(RequestOperationName.PASSWORD_RESET.name());
         returnVal.setOperationResult(RequestOperationStatus.ERROR.name());
         

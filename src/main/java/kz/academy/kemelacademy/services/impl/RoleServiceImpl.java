@@ -35,15 +35,15 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     public List<RoleDto> getRoles() {
         List<RoleDto> returnValue = new ArrayList<>();
-    
+        
         List<RoleEntity> roles = roleRepository.findAll();
-    
+        
         for (RoleEntity roleEntity: roles) {
             RoleDto roleDto = new RoleDto();
             BeanUtils.copyProperties(roleEntity, roleDto);
             returnValue.add(roleDto);
         }
-    
+        
         return returnValue;
     }
     

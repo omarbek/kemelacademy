@@ -1,12 +1,13 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import kz.academy.kemelacademy.ui.enums.Locales;
-import kz.academy.kemelacademy.utils.LocaleUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 

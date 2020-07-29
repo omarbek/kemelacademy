@@ -228,7 +228,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public boolean resetPassword(String token, String password) throws Exception{
+    public boolean resetPassword(String token, String password) throws Exception {
         boolean returnVal = false;
         
         if (GeneratorUtils.hasTokenExpired(token)) {
