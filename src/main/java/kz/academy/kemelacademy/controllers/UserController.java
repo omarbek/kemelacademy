@@ -11,6 +11,7 @@ import kz.academy.kemelacademy.ui.model.request.PasswordResetRequestModel;
 import kz.academy.kemelacademy.ui.model.request.UserDetailsRequestModel;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.ui.model.response.UserRest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -25,6 +26,7 @@ import java.util.List;
  * on 2020-07-20
  * @project kemelacademy
  */
+@Slf4j
 @RestController
 @RequestMapping("users")
 public class UserController {
@@ -113,9 +115,14 @@ public class UserController {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
         operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
         
-        userService.deleteUser(userId);
+        try {
+            userService.deleteUser(userId);
+            operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
         
-        operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         return operationStatusModel;
     }
     

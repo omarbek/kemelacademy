@@ -20,7 +20,7 @@ public interface IUserService extends UserDetailsService {
     
     UserDto updateUser(String userId, UserDto userDto) throws Exception;
     
-    void deleteUser(String userId);
+    void deleteUser(String userId) throws Exception;
     
     List<UserDto> getUsers(int page, int limit);
     

@@ -136,7 +136,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public void deleteUser(String userId) {
+    public void deleteUser(String userId) throws Exception {
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) {
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
