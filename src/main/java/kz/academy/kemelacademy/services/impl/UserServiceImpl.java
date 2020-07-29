@@ -139,7 +139,7 @@ public class UserServiceImpl implements IUserService {
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         Iterator<RoleEntity> iterator = userEntity.getRoles().iterator();
-        for(userEntity.getRoles().iterator();iterator.hasNext();){
+        for (userEntity.getRoles().iterator(); iterator.hasNext(); ) {
             RoleEntity roleEntity = iterator.next();
             iterator.remove();
         }
@@ -187,7 +187,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public boolean verifyEmailToken(String token) {
+    public boolean verifyEmailToken(String token) throws Exception {
         boolean returnValue = false;
         
         UserEntity userEntity = userRepository.findUserByEmailVerificationToken(token);
@@ -206,10 +206,10 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public boolean requestPasswordReset(String email) {
+    public boolean requestPasswordReset(String email) throws Exception {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
-            return false;
+            throw new UsernameNotFoundException(email);
         }
         
         String token = new GeneratorUtils().generatePasswordResetToken(userEntity.getUserId());
@@ -228,7 +228,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public boolean resetPassword(String token, String password) {
+    public boolean resetPassword(String token, String password) throws Exception{
         boolean returnVal = false;
         
         if (GeneratorUtils.hasTokenExpired(token)) {

@@ -151,7 +151,12 @@ public class UserController {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
         
-        boolean isVerified = userService.verifyEmailToken(token);
+        boolean isVerified = false;
+        try {
+            isVerified = userService.verifyEmailToken(token);
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+        }
         returnValue.setOperationResult(isVerified ? RequestOperationStatus.SUCCESS.name() :
                 RequestOperationStatus.ERROR.name());
         
@@ -168,7 +173,12 @@ public class UserController {
     public OperationStatusModel requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
         OperationStatusModel returnValue = new OperationStatusModel();
         
-        boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+        boolean operationResult = false;
+        try {
+            operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(),e);
+        }
         
         returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
         returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
@@ -183,10 +193,15 @@ public class UserController {
     @PostMapping(path = "/password-reset")
     public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
         OperationStatusModel returnVal = new OperationStatusModel();
-        
-        boolean operationResult = userService.resetPassword(passwordResetModel.getToken(),
-                passwordResetModel.getPassword());
-        
+    
+        boolean operationResult = false;
+        try {
+            operationResult = userService.resetPassword(passwordResetModel.getToken(),
+                    passwordResetModel.getPassword());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(),e);
+        }
+    
         returnVal.setOperationName(RequestOperationName.PASSWORD_RESET.name());
         returnVal.setOperationResult(RequestOperationStatus.ERROR.name());
         

@@ -26,10 +26,10 @@ public interface IUserService extends UserDetailsService {
     
     boolean sendEmail(String email, String emailVerificationToken);
     
-    boolean verifyEmailToken(String token);
+    boolean verifyEmailToken(String token) throws Exception;
     
-    boolean requestPasswordReset(String email);
+    boolean requestPasswordReset(String email) throws Exception;
     
-    boolean resetPassword(String token, String password);
+    boolean resetPassword(String token, String password) throws Exception;
     
 }
