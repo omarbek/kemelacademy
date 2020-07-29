@@ -18,7 +18,7 @@ public interface IUserService extends UserDetailsService {
     
     UserDto getUserByUserId(String userId);
     
-    UserDto updateUser(String userId, UserDto userDto);
+    UserDto updateUser(String userId, UserDto userDto) throws Exception;
     
     void deleteUser(String userId);
     

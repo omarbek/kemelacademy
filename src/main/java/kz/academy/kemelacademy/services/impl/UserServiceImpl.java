@@ -118,7 +118,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public UserDto updateUser(String userId, UserDto userDto) {
+    public UserDto updateUser(String userId, UserDto userDto) throws Exception {
         UserDto returnValue = new UserDto();
         
         UserEntity userEntity = userRepository.findByUserId(userId);

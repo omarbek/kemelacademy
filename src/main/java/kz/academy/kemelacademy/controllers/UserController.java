@@ -88,14 +88,21 @@ public class UserController {
                                @RequestBody UserDetailsRequestModel userDetailsRequestModel) {
         UserRest returnValue = new UserRest();
         
-        if (userDetailsRequestModel.getFirstName().isEmpty()) {
-            throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
-        }
+        String[] fields = {userDetailsRequestModel.getFirstName(), userDetailsRequestModel.getLastName(),
+                userDetailsRequestModel.getPassword()};
+        throwMissingRequiredFieldException(fields);
         
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetailsRequestModel, userDto);
         
-        UserDto updatedUser = userService.updateUser(userId, userDto);
+        UserDto updatedUser;
+        try {
+            updatedUser = userService.updateUser(userId, userDto);
+        } catch (UserServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UserServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
         BeanUtils.copyProperties(updatedUser, returnValue);
         
         return returnValue;
