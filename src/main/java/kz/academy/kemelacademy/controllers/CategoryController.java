@@ -11,6 +11,7 @@ import kz.academy.kemelacademy.ui.model.request.CategoryRequestModel;
 import kz.academy.kemelacademy.ui.model.response.CategoryRest;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.utils.LocaleUtils;
+import kz.academy.kemelacademy.utils.ThrowUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -68,10 +69,19 @@ public class CategoryController {
     public CategoryRest createCategory(@RequestBody CategoryRequestModel categoryRequestModel) {
         CategoryRest returnValue = new CategoryRest();
         
+        String[] fields = {categoryRequestModel.getNameKz(), categoryRequestModel.getNameRu(),
+                categoryRequestModel.getNameEn()};
+        ThrowUtils.throwMissingRequiredFieldException(fields);
+        
         CategoryDto categoryDto = new CategoryDto();
         BeanUtils.copyProperties(categoryRequestModel, categoryDto);
         
-        CategoryDto createdCategory = categoryService.createCategory(categoryDto);
+        CategoryDto createdCategory;
+        try {
+            createdCategory = categoryService.createCategory(categoryDto);
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
         BeanUtils.copyProperties(createdCategory, returnValue);
         
         return returnValue;

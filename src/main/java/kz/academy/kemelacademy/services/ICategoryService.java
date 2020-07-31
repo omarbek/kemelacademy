@@ -13,7 +13,7 @@ public interface ICategoryService {
     
     List<CategoryDto> getCategories(int page, int limit) throws Exception;
     
-    CategoryDto createCategory(CategoryDto categoryDto);
+    CategoryDto createCategory(CategoryDto categoryDto) throws Exception;
     
     CategoryDto getCategoryById(long id);
     

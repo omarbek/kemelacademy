@@ -11,6 +11,7 @@ import kz.academy.kemelacademy.ui.model.request.PasswordResetRequestModel;
 import kz.academy.kemelacademy.ui.model.request.UserDetailsRequestModel;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.ui.model.response.UserRest;
+import kz.academy.kemelacademy.utils.ThrowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class UserController {
         
         String[] fields = {userDetailsRequestModel.getFirstName(), userDetailsRequestModel.getLastName(),
                 userDetailsRequestModel.getEmail(), userDetailsRequestModel.getPassword()};
-        throwMissingRequiredFieldException(fields);
+        ThrowUtils.throwMissingRequiredFieldException(fields);
         
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetailsRequestModel, userDto);
@@ -67,14 +68,6 @@ public class UserController {
         return returnValue;
     }
     
-    private void throwMissingRequiredFieldException(String[] fields) {
-        for (String field: fields) {
-            if (field.isEmpty()) {
-                throw new ServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
-            }
-        }
-    }
-    
     @GetMapping(path = "/{id}")
     public UserRest getUser(@PathVariable("id") String userId) {
         UserRest returnValue = new UserRest();
@@ -92,7 +85,7 @@ public class UserController {
         
         String[] fields = {userDetailsRequestModel.getFirstName(), userDetailsRequestModel.getLastName(),
                 userDetailsRequestModel.getPassword()};
-        throwMissingRequiredFieldException(fields);
+        ThrowUtils.throwMissingRequiredFieldException(fields);
         
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetailsRequestModel, userDto);

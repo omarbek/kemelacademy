@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements ICategoryService {
     private ICategoryRepository categoryRepository;
     
     @Override
-    public List<CategoryDto> getCategories(int page, int limit) throws Exception{
+    public List<CategoryDto> getCategories(int page, int limit) throws Exception {
         List<CategoryDto> returnValue = new ArrayList<>();
         
         if (page > 0) {
@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
     
     @Override
-    public CategoryDto createCategory(CategoryDto categoryDto) {
+    public CategoryDto createCategory(CategoryDto categoryDto) throws Exception {
         CategoryEntity categoryEntity = new CategoryEntity();
         BeanUtils.copyProperties(categoryDto, categoryEntity);
         
