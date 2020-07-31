@@ -40,7 +40,7 @@ public class RoleServiceImpl implements IRoleService {
     }
     
     @Override
-    public List<RoleDto> getRoles() {
+    public List<RoleDto> getRoles() throws Exception{
         List<RoleDto> returnValue = new ArrayList<>();
         
         List<RoleEntity> roles = roleRepository.findAll();

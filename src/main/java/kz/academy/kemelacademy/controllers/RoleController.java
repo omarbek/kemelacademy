@@ -46,7 +46,12 @@ public class RoleController {
     public List<RoleRest> getRoles() {
         List<RoleRest> returnVal = new ArrayList<>();
         
-        List<RoleDto> roles = roleService.getRoles();
+        List<RoleDto> roles = null;
+        try {
+            roles = roleService.getRoles();
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
         for (RoleDto roleDto: roles) {
             RoleRest roleRest = getRoleRest(roleDto);
             

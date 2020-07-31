@@ -13,6 +13,6 @@ public interface IRoleService {
     
     RoleDto getRoleById(long id) throws Exception;
     
-    List<RoleDto> getRoles();
+    List<RoleDto> getRoles() throws Exception;
     
 }
