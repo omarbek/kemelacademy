@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
  * @project kemelacademy
  */
 @Slf4j
-public class UserServiceException extends RuntimeException {
+public class ServiceException extends RuntimeException {
     
-    public UserServiceException(String message) {
+    public ServiceException(String message) {
         super(message);
         log.error(message, this);
     }

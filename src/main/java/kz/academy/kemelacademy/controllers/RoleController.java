@@ -1,7 +1,9 @@
 package kz.academy.kemelacademy.controllers;
 
+import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IRoleService;
 import kz.academy.kemelacademy.ui.dto.RoleDto;
+import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.Locales;
 import kz.academy.kemelacademy.ui.model.response.RoleRest;
 import kz.academy.kemelacademy.utils.LocaleUtils;
@@ -28,7 +30,14 @@ public class RoleController {
     
     @GetMapping(path = "/{id}")
     public RoleRest getRole(@PathVariable("id") long id) {
-        RoleDto roleDto = roleService.getRoleById(id);
+        RoleDto roleDto = null;
+        try {
+            roleDto = roleService.getRoleById(id);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
         
         return getRoleRest(roleDto);
     }

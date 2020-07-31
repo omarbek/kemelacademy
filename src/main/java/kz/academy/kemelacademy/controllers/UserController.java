@@ -1,6 +1,6 @@
 package kz.academy.kemelacademy.controllers;
 
-import kz.academy.kemelacademy.exceptions.UserServiceException;
+import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
@@ -51,17 +51,17 @@ public class UserController {
         UserDto createdUser;
         try {
             createdUser = userService.createUser(userDto);
-        } catch (UserServiceException e) {
+        } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new UserServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
         }
         
         BeanUtils.copyProperties(createdUser, returnValue);
         
         boolean sendEmail = userService.sendEmail(createdUser.getEmail(), createdUser.getEmailVerificationToken());
         if (!sendEmail) {
-            throw new UserServiceException(ErrorMessages.DID_NOT_SEND_EMAIL.getErrorMessage());
+            throw new ServiceException(ErrorMessages.DID_NOT_SEND_EMAIL.getErrorMessage());
         }
         
         return returnValue;
@@ -70,7 +70,7 @@ public class UserController {
     private void throwMissingRequiredFieldException(String[] fields) {
         for (String field: fields) {
             if (field.isEmpty()) {
-                throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+                throw new ServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
             }
         }
     }
@@ -100,10 +100,10 @@ public class UserController {
         UserDto updatedUser;
         try {
             updatedUser = userService.updateUser(userId, userDto);
-        } catch (UserServiceException e) {
+        } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new UserServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
         }
         BeanUtils.copyProperties(updatedUser, returnValue);
         
@@ -135,7 +135,7 @@ public class UserController {
         try {
             users = userService.getUsers(page, limit);
         } catch (Exception e) {
-            throw new UserServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.name());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.name());
         }
         for (UserDto userDto: users) {
             UserRest userModel = new UserRest();

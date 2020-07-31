@@ -18,8 +18,8 @@ import java.util.Date;
 @ControllerAdvice
 public class AppExceptionsHandler {
     
-    @ExceptionHandler(value = {UserServiceException.class})
-    public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request) {
+    @ExceptionHandler(value = {ServiceException.class})
+    public ResponseEntity<Object> handleUserServiceException(ServiceException ex, WebRequest request) {
         ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

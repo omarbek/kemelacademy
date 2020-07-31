@@ -1,6 +1,6 @@
 package kz.academy.kemelacademy.services.impl;
 
-import kz.academy.kemelacademy.exceptions.UserServiceException;
+import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.ICategoryRepository;
 import kz.academy.kemelacademy.services.ICategoryService;
 import kz.academy.kemelacademy.ui.dto.CategoryDto;
@@ -68,7 +68,7 @@ public class CategoryServiceImpl implements ICategoryService {
         
         Optional<CategoryEntity> optional = categoryRepository.findById(id);
         if (!optional.isPresent()) {
-            throw new UserServiceException("category with id " + id + " is not found");
+            throw new ServiceException("category with id " + id + " is not found");
         }
         CategoryEntity categoryEntity = optional.get();
         
@@ -83,7 +83,7 @@ public class CategoryServiceImpl implements ICategoryService {
         
         Optional<CategoryEntity> optional = categoryRepository.findById(id);
         if (!optional.isPresent()) {
-            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         CategoryEntity categoryEntity = optional.get();
         categoryEntity.setNameKz(categoryDto.getNameKz());
@@ -100,7 +100,7 @@ public class CategoryServiceImpl implements ICategoryService {
     public void deleteCategory(long id) {
         Optional<CategoryEntity> optional = categoryRepository.findById(id);
         if (!optional.isPresent()) {
-            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         CategoryEntity categoryEntity = optional.get();
         

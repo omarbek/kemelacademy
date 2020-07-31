@@ -1,7 +1,7 @@
 package kz.academy.kemelacademy.services.impl;
 
 import com.google.common.collect.Sets;
-import kz.academy.kemelacademy.exceptions.UserServiceException;
+import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.IPasswordResetTokenRepository;
 import kz.academy.kemelacademy.repositories.IRoleRepository;
 import kz.academy.kemelacademy.repositories.IUserRepository;
@@ -62,7 +62,7 @@ public class UserServiceImpl implements IUserService {
     public UserDto createUser(UserDto userDto) throws Exception {
         UserEntity userByEmail = userRepository.findByEmail(userDto.getEmail());
         if (userByEmail != null) {
-            throw new UserServiceException(ErrorMessages.EMAIL_ALREADY_EXISTS.getErrorMessage());
+            throw new ServiceException(ErrorMessages.EMAIL_ALREADY_EXISTS.getErrorMessage());
         }
         
         UserEntity userEntity = new UserEntity();
@@ -120,7 +120,7 @@ public class UserServiceImpl implements IUserService {
         
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) {
-            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         
         userEntity.setFirstName(userDto.getFirstName());
@@ -136,7 +136,7 @@ public class UserServiceImpl implements IUserService {
     public void deleteUser(String userId) throws Exception {
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) {
-            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         Iterator<RoleEntity> iterator = userEntity.getRoles().iterator();
         for (userEntity.getRoles().iterator(); iterator.hasNext(); ) {
@@ -221,7 +221,7 @@ public class UserServiceImpl implements IUserService {
         
         boolean sendEmail = sendEmail(email, token);
         if (!sendEmail) {
-            throw new UserServiceException(ErrorMessages.DID_NOT_SEND_EMAIL.getErrorMessage());
+            throw new ServiceException(ErrorMessages.DID_NOT_SEND_EMAIL.getErrorMessage());
         }
         
         return true;

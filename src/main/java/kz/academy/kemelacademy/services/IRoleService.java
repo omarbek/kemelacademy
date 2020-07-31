@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface IRoleService {
     
-    RoleDto getRoleById(long id);
+    RoleDto getRoleById(long id) throws Exception;
     
     List<RoleDto> getRoles();
     
