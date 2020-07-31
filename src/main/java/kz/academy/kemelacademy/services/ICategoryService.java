@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface ICategoryService {
     
-    List<CategoryDto> getCategories(int page, int limit);
+    List<CategoryDto> getCategories(int page, int limit) throws Exception;
     
     CategoryDto createCategory(CategoryDto categoryDto);
     

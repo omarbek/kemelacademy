@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements ICategoryService {
     private ICategoryRepository categoryRepository;
     
     @Override
-    public List<CategoryDto> getCategories(int page, int limit) {
+    public List<CategoryDto> getCategories(int page, int limit) throws Exception{
         List<CategoryDto> returnValue = new ArrayList<>();
         
         if (page > 0) {

@@ -1,7 +1,9 @@
 package kz.academy.kemelacademy.controllers;
 
+import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.ICategoryService;
 import kz.academy.kemelacademy.ui.dto.CategoryDto;
+import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.Locales;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
@@ -33,7 +35,12 @@ public class CategoryController {
                                             @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<CategoryRest> returnVal = new ArrayList<>();
         
-        List<CategoryDto> categories = categoryService.getCategories(page, limit);
+        List<CategoryDto> categories;
+        try {
+            categories = categoryService.getCategories(page, limit);
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
         for (CategoryDto categoryDto: categories) {
             CategoryRest categoryRest = getCategoryRest(categoryDto);
             returnVal.add(categoryRest);
