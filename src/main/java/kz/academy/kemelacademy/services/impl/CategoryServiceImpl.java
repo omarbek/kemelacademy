@@ -63,12 +63,12 @@ public class CategoryServiceImpl implements ICategoryService {
     }
     
     @Override
-    public CategoryDto getCategoryById(long id) {
+    public CategoryDto getCategoryById(long id) throws Exception {
         CategoryDto returnValue = new CategoryDto();
         
         Optional<CategoryEntity> optional = categoryRepository.findById(id);
         if (!optional.isPresent()) {
-            throw new ServiceException("category with id " + id + " is not found");
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         CategoryEntity categoryEntity = optional.get();
         

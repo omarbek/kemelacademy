@@ -1,7 +1,13 @@
 package kz.academy.kemelacademy.ui.enums;
 
-import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.EnumSet;
 
 /**
  * @author Omarbek.Dinassil
@@ -10,20 +16,40 @@ import lombok.Setter;
  */
 public enum ErrorMessages {
     
-    MISSING_REQUIRED_FIELD("Missing required field"),
-    INTERNAL_SERVER_ERROR("Internal server error"),
-    NO_RECORD_FOUND("No record found"),
-    DID_NOT_SEND_EMAIL("Did not send email"),
-    EMAIL_ALREADY_EXISTS("Email already exists"),
+    MISSING_REQUIRED_FIELD("Missing required field"),//todo
+    INTERNAL_SERVER_ERROR("internal.server.error"),
+    NO_RECORD_FOUND("no.record.found"),
+    DID_NOT_SEND_EMAIL("Did not send email"),//todo
+    EMAIL_ALREADY_EXISTS("Email already exists"),//todo
     
     ;
     
-    @Getter
     @Setter
     private String errorMessage;
     
+    @Setter
+    private MessageSource messageSource;
+    
     ErrorMessages(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+    
+    public String getErrorMessage() {
+        return messageSource.getMessage(errorMessage, null, LocaleContextHolder.getLocale());
+    }
+    
+    @Component
+    public static class ErrorMessagesServiceInjector {
+        
+        @Autowired
+        private MessageSource messageSource;
+        
+        @PostConstruct
+        public void postConstruct() {
+            for (ErrorMessages errorMessage: EnumSet.allOf(ErrorMessages.class)) {
+                errorMessage.setMessageSource(messageSource);
+            }
+        }
     }
     
 }

@@ -89,7 +89,14 @@ public class CategoryController {
     
     @GetMapping(path = "/{id}")
     public CategoryRest getCategory(@PathVariable("id") long id) {
-        CategoryDto categoryDto = categoryService.getCategoryById(id);
+        CategoryDto categoryDto = null;
+        try {
+            categoryDto = categoryService.getCategoryById(id);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
         
         return getCategoryRest(categoryDto);
     }
