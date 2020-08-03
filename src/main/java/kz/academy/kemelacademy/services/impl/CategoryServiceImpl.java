@@ -98,7 +98,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
     
     @Override
-    public void deleteCategory(long id) {
+    public void deleteCategory(long id)  throws Exception{
         Optional<CategoryEntity> optional = categoryRepository.findById(id);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());

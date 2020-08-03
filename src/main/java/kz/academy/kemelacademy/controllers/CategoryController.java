@@ -12,6 +12,7 @@ import kz.academy.kemelacademy.ui.model.response.CategoryRest;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.utils.LocaleUtils;
 import kz.academy.kemelacademy.utils.ThrowUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.List;
  * on 2020-07-28
  * @project kemelacademy
  */
+@Slf4j
 @RestController
 @RequestMapping("categories")
 public class CategoryController {
@@ -105,14 +107,14 @@ public class CategoryController {
     public CategoryRest updateCategory(@PathVariable("id") long id,
                                        @RequestBody CategoryRequestModel categoryRequestModel) {
         CategoryRest returnValue = new CategoryRest();
-    
+        
         String[] fields = {categoryRequestModel.getNameKz(), categoryRequestModel.getNameRu(),
                 categoryRequestModel.getNameEn()};
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
         CategoryDto categoryDto = new CategoryDto();
         BeanUtils.copyProperties(categoryRequestModel, categoryDto);
-    
+        
         CategoryDto updatedCategory;
         try {
             updatedCategory = categoryService.updateCategory(id, categoryDto);
@@ -131,9 +133,14 @@ public class CategoryController {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
         operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
         
-        categoryService.deleteCategory(id);
+        try {
+            categoryService.deleteCategory(id);
+            operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
         
-        operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         return operationStatusModel;
     }
     
