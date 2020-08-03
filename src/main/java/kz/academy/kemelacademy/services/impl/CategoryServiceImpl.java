@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +79,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
     
     @Override
-    public CategoryDto updateCategory(long id, CategoryDto categoryDto) {
+    public CategoryDto updateCategory(long id, CategoryDto categoryDto) throws Exception{
         CategoryDto returnValue = new CategoryDto();
         
         Optional<CategoryEntity> optional = categoryRepository.findById(id);

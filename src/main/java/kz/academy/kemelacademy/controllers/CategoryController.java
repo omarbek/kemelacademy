@@ -89,7 +89,7 @@ public class CategoryController {
     
     @GetMapping(path = "/{id}")
     public CategoryRest getCategory(@PathVariable("id") long id) {
-        CategoryDto categoryDto = null;
+        CategoryDto categoryDto;
         try {
             categoryDto = categoryService.getCategoryById(id);
         } catch (ServiceException e) {
@@ -105,11 +105,22 @@ public class CategoryController {
     public CategoryRest updateCategory(@PathVariable("id") long id,
                                        @RequestBody CategoryRequestModel categoryRequestModel) {
         CategoryRest returnValue = new CategoryRest();
+    
+        String[] fields = {categoryRequestModel.getNameKz(), categoryRequestModel.getNameRu(),
+                categoryRequestModel.getNameEn()};
+        ThrowUtils.throwMissingRequiredFieldException(fields);
         
         CategoryDto categoryDto = new CategoryDto();
         BeanUtils.copyProperties(categoryRequestModel, categoryDto);
-        
-        CategoryDto updatedCategory = categoryService.updateCategory(id, categoryDto);
+    
+        CategoryDto updatedCategory;
+        try {
+            updatedCategory = categoryService.updateCategory(id, categoryDto);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
         BeanUtils.copyProperties(updatedCategory, returnValue);
         
         return returnValue;
