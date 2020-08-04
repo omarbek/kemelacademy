@@ -1,0 +1,64 @@
+package kz.academy.kemelacademy.controllers;
+
+import kz.academy.kemelacademy.exceptions.ServiceException;
+import kz.academy.kemelacademy.services.ILevelService;
+import kz.academy.kemelacademy.ui.dto.LevelDto;
+import kz.academy.kemelacademy.ui.enums.ErrorMessages;
+import kz.academy.kemelacademy.ui.enums.Locales;
+import kz.academy.kemelacademy.ui.model.response.LevelRest;
+import kz.academy.kemelacademy.utils.LocaleUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Omarbek.Dinassil
+ * on 2020-08-04
+ * @project kemelacademy
+ */
+@RestController
+@RequestMapping("levels")
+public class LevelController {
+    
+    @Autowired
+    private ILevelService levelService;
+    
+    @GetMapping
+    public List<LevelRest> getRoles() {
+        List<LevelRest> returnVal = new ArrayList<>();
+        
+        List<LevelDto> levels;
+        try {
+            levels = levelService.getAll();
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
+        for (LevelDto levelDto: levels) {
+            LevelRest levelRest = getLevelRest(levelDto);
+            returnVal.add(levelRest);
+        }
+        
+        return returnVal;
+    }
+    
+    private LevelRest getLevelRest(LevelDto levelDto) {
+        LevelRest levelRest = new LevelRest();
+        levelRest.setId(levelDto.getId());
+        
+        String name;
+        if (LocaleUtils.checkLocale(Locales.KZ.getLocale())) {
+            name = levelDto.getNameKz();
+        } else if (LocaleUtils.checkLocale(Locales.RU.getLocale())) {
+            name = levelDto.getNameRu();
+        } else {
+            name = levelDto.getNameEn();
+        }
+        levelRest.setName(name);
+        return levelRest;
+    }
+    
+}
