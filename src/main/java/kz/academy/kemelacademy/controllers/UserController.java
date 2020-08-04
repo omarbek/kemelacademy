@@ -9,6 +9,7 @@ import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
 import kz.academy.kemelacademy.ui.model.request.PasswordResetModel;
 import kz.academy.kemelacademy.ui.model.request.PasswordResetRequestModel;
 import kz.academy.kemelacademy.ui.model.request.UserDetailsRequestModel;
+import kz.academy.kemelacademy.ui.model.response.ErrorMessage;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.ui.model.response.UserRest;
 import kz.academy.kemelacademy.utils.ThrowUtils;
@@ -17,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -55,7 +57,8 @@ public class UserController {
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.EMAIL_ALREADY_EXISTS.getErrorMessage());
+//            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
         }
         
         BeanUtils.copyProperties(createdUser, returnValue);
@@ -169,9 +172,12 @@ public class UserController {
         boolean operationResult = false;
         try {
             operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+        } catch (UsernameNotFoundException e){
+           throw new UsernameNotFoundException(ErrorMessages.DID_NOT_SEND_EMAIL.getErrorMessage());
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);
         }
+        ;
         
         returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
         returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
