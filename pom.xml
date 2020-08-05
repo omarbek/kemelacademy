@@ -90,7 +90,7 @@
                     </changeLogFile>
                     <url>jdbc:mysql://localhost:3306/kemelacademy_db?useUnicode=true&amp;characterEncoding=UTF-8</url>
                     <username>root</username>
-                    <password>password</password>
+                    <password>Arsenal.85</password>
                 </configuration>
                 <executions>
                     <execution>
