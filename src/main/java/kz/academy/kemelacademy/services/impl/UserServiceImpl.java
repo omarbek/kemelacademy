@@ -205,6 +205,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
+    @Transactional
     public boolean requestPasswordReset(String email) throws Exception {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
@@ -227,6 +228,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
+    @Transactional
     public boolean resetPassword(String token, String password) throws Exception {
         boolean returnVal = false;
         
