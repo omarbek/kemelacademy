@@ -80,7 +80,6 @@ public class UserController {
         return returnValue;
     }
     
-    @Transactional
     @PutMapping(path = "/{id}")
     public UserRest updateUser(@PathVariable("id") String userId,
                                @RequestBody UserDetailsRequestModel userDetailsRequestModel) {
