@@ -39,8 +39,8 @@ public class UserController {
     @Autowired
     private MessageSource messageSource;
     
-    @Transactional
     @PostMapping
+    @Transactional
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
         UserRest returnValue = new UserRest();
         
@@ -80,6 +80,7 @@ public class UserController {
         return returnValue;
     }
     
+    @Transactional
     @PutMapping(path = "/{id}")
     public UserRest updateUser(@PathVariable("id") String userId,
                                @RequestBody UserDetailsRequestModel userDetailsRequestModel) {
