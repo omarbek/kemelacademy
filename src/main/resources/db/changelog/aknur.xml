@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-<!--    <changeSet logicalFilePath="path-independent" id="omar_01" author="omar">-->
-<!--        <sqlFile path="/aknur/20200806/script_1.sql" relativeToChangelogFile="true" splitStatements="true"/>-->
-<!--    </changeSet>-->
+    <changeSet logicalFilePath="path-independent" id="aknur_01" author="aknur">
+        <sqlFile path="/aknur/20200806/script_1.sql" relativeToChangelogFile="true" splitStatements="true"/>
+    </changeSet>
 </databaseChangeLog>
