@@ -58,7 +58,6 @@ public class UserServiceImpl implements IUserService {
     private IPasswordResetTokenRepository passwordResetTokenRepository;
     
     @Override
-    @Transactional
     public UserDto createUser(UserDto userDto) throws Exception {
         UserEntity userByEmail = userRepository.findByEmail(userDto.getEmail());
         if (userByEmail != null) {
