@@ -27,7 +27,7 @@ public class RoleController {
     
     @Autowired
     private IRoleService roleService;
-    
+
     @GetMapping(path = "/{id}")
     public RoleRest getRole(@PathVariable("id") long id) {
         RoleDto roleDto = null;
