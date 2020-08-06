@@ -28,22 +28,6 @@ public class RoleController {
     @Autowired
     private IRoleService roleService;
 
-    @GetMapping(path = "/FirstRole")
-    public String getFirstRole() {
-        System.out.println("sdfghjbnkml,kjhgfdsfgvhbnm nbvcbefjhbsjdnkj!!!!!!");
-        RoleDto roleDto = null;
-        try {
-            roleDto = roleService.getRoleById(1);
-        } catch (ServiceException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
-        }
-
-        return roleDto.getName() + " " + roleDto.getName();
-    }
-
-
     @GetMapping(path = "/{id}")
     public RoleRest getRole(@PathVariable("id") long id) {
         RoleDto roleDto = null;
