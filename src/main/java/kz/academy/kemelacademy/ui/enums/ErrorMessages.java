@@ -16,11 +16,11 @@ import java.util.EnumSet;
  */
 public enum ErrorMessages {
     
-    MISSING_REQUIRED_FIELD("Missing required field"),//todo
+    MISSING_REQUIRED_FIELD("missing.required.field"),//Пока он только в двух местах использован
     INTERNAL_SERVER_ERROR("internal.server.error"),
     NO_RECORD_FOUND("no.record.found"),
-    DID_NOT_SEND_EMAIL("Did not send email"),//todo
-    EMAIL_ALREADY_EXISTS("Email already exists"),//todo
+    DID_NOT_SEND_EMAIL("did.not.send.email"),//Кажется здесь нужно еще добавить и неверно отправившихся почту
+    EMAIL_ALREADY_EXISTS("email.already.exists"),//how to dont miss the InternalServerError in the cases like this
     
     ;
     
