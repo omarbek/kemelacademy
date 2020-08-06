@@ -57,7 +57,7 @@ public class UserController {
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()); //todo
         }
         
         BeanUtils.copyProperties(createdUser, returnValue);
@@ -193,7 +193,7 @@ public class UserController {
         try {
             operationResult = userService.resetPassword(passwordResetModel.getToken(),
                     passwordResetModel.getPassword());
-        } catch (Exception e) {
+        } catch (Exception e) {//todo
             log.error(e.getLocalizedMessage(), e);
         }
         
