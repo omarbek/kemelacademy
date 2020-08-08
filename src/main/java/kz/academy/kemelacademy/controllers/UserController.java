@@ -122,6 +122,7 @@ public class UserController {
     }
     
     @GetMapping
+    @Transactional
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<UserRest> returnVal = new ArrayList<>();
