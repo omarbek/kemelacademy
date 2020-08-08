@@ -15,6 +15,7 @@ import kz.academy.kemelacademy.utils.ThrowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class CategoryController {
     private ICategoryService categoryService;
     
     @GetMapping
+    @Transactional
     public List<CategoryRest> getCategories(@RequestParam(value = "page", defaultValue = "0") int page,
                                             @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<CategoryRest> returnVal = new ArrayList<>();
@@ -89,6 +91,7 @@ public class CategoryController {
         return returnValue;
     }
     
+    @Transactional
     @GetMapping(path = "/{id}")
     public CategoryRest getCategory(@PathVariable("id") long id) {
         CategoryDto categoryDto;
@@ -103,6 +106,7 @@ public class CategoryController {
         return getCategoryRest(categoryDto);
     }
     
+    @Transactional
     @PutMapping(path = "/{id}")
     public CategoryRest updateCategory(@PathVariable("id") long id,
                                        @RequestBody CategoryRequestModel categoryRequestModel) {
@@ -128,6 +132,7 @@ public class CategoryController {
         return returnValue;
     }
     
+    @Transactional
     @DeleteMapping(path = "/{id}")
     public OperationStatusModel deleteCategory(@PathVariable("id") long id) {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
