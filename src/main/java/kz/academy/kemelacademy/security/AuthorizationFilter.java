@@ -2,8 +2,8 @@ package kz.academy.kemelacademy.security;
 
 import io.jsonwebtoken.Jwts;
 import kz.academy.kemelacademy.services.IUserService;
+import kz.academy.kemelacademy.ui.dto.RoleDto;
 import kz.academy.kemelacademy.ui.dto.UserDto;
-import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -68,8 +68,8 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     
     private Set<GrantedAuthority> getAuthority(UserDto userDto) {
         Set<GrantedAuthority> set = new HashSet<>();
-        for (RoleEntity roleEntity: userDto.getRoles()) {
-            set.add((GrantedAuthority) roleEntity::getName);
+        for (RoleDto roleDto: userDto.getRoles()) {
+            set.add((GrantedAuthority) roleDto::getName);
         }
         return set;
     }

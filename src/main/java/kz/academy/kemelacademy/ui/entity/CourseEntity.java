@@ -18,8 +18,10 @@ import javax.persistence.*;
 @ToString
 public class CourseEntity extends AbstractNameEntity {
     
-    @OneToOne()
+    @ManyToOne(fetch = FetchType.LAZY)//todo
     @JoinColumn(name = "author_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private UserEntity author = new UserEntity();
     
     @OneToOne()

@@ -1,6 +1,5 @@
 package kz.academy.kemelacademy.ui.dto;
 
-import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -25,7 +24,8 @@ public class UserDto implements Serializable {
     private String lastName;
     private String patronymic;
     private String userId;
-    private Set<RoleEntity> roles = new HashSet<>();
+    private Set<RoleDto> roles = new HashSet<>();
+    private Set<CourseDto> courses = new HashSet<>();
     
     @Override
     public String toString() {
