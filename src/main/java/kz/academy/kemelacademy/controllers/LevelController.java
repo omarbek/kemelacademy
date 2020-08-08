@@ -30,6 +30,7 @@ public class LevelController {
     private ILevelService levelService;
     
     @GetMapping
+    @Transactional
     public List<LevelRest> getRoles() {
         List<LevelRest> returnVal = new ArrayList<>();
         
