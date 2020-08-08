@@ -11,9 +11,9 @@ import lombok.Data;
 public class CategoryRest {
     
     private long id;
+    private String name;
     private String nameKz;
     private String nameRu;
     private String nameEn;
-    private String name;
     
 }

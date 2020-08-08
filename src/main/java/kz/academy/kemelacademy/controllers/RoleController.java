@@ -27,7 +27,7 @@ public class RoleController {
     
     @Autowired
     private IRoleService roleService;
-
+    
     @GetMapping(path = "/{id}")
     public RoleRest getRole(@PathVariable("id") long id) {
         RoleDto roleDto = null;
@@ -36,7 +36,7 @@ public class RoleController {
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
         return getRoleRest(roleDto);
@@ -50,7 +50,7 @@ public class RoleController {
         try {
             roles = roleService.getRoles();
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         for (RoleDto roleDto: roles) {
             RoleRest roleRest = getRoleRest(roleDto);

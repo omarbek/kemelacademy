@@ -8,7 +8,7 @@ import lombok.Data;
  * @project kemelacademy
  */
 @Data
-public class UserRest {
+public class UserRest {//todo get all roles
     
     private String userId;
     private String email;

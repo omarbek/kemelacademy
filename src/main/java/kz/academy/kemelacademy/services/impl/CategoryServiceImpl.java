@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -79,7 +78,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
     
     @Override
-    public CategoryDto updateCategory(long id, CategoryDto categoryDto) throws Exception{
+    public CategoryDto updateCategory(long id, CategoryDto categoryDto) throws Exception {
         CategoryDto returnValue = new CategoryDto();
         
         Optional<CategoryEntity> optional = categoryRepository.findById(id);
@@ -98,7 +97,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
     
     @Override
-    public void deleteCategory(long id)  throws Exception{
+    public void deleteCategory(long id) throws Exception {
         Optional<CategoryEntity> optional = categoryRepository.findById(id);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());

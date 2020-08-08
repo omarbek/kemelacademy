@@ -18,4 +18,18 @@ public class ThrowUtils {
         }
     }
     
+    public static void throwMissingRequiredFieldException(Object[] fields) {
+        for (Object field: fields) {
+            if (field == null) {
+                throw new ServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+            }
+            if (field instanceof String) {
+                String val = (String) field;
+                if (val.isEmpty()) {
+                    throw new ServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+                }
+            }
+        }
+    }
+    
 }

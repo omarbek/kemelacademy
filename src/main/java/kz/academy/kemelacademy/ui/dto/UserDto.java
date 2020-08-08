@@ -27,4 +27,17 @@ public class UserDto implements Serializable {
     private String userId;
     private Set<RoleEntity> roles = new HashSet<>();
     
+    @Override
+    public String toString() {
+        StringBuilder fullNameSB = new StringBuilder();
+        fullNameSB.append(lastName);
+        fullNameSB.append(" ");
+        fullNameSB.append(firstName);
+        if (patronymic != null) {
+            fullNameSB.append(" ");
+            fullNameSB.append(patronymic);
+        }
+        
+        return fullNameSB.toString();
+    }
 }

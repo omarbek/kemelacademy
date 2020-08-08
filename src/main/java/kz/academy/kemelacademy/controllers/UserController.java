@@ -57,7 +57,7 @@ public class UserController {
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()); //todo
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e); //todo
         }
         
         BeanUtils.copyProperties(createdUser, returnValue);
@@ -98,7 +98,7 @@ public class UserController {
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         BeanUtils.copyProperties(updatedUser, returnValue);
         
@@ -130,7 +130,7 @@ public class UserController {
         try {
             users = userService.getUsers(page, limit);
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.name());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.name(), e);
         }
         for (UserDto userDto: users) {
             UserRest userModel = new UserRest();

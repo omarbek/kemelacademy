@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("categories")
 public class CategoryController {
-    /////
+    
     @Autowired
     private ICategoryService categoryService;
     
@@ -37,21 +37,21 @@ public class CategoryController {
     public List<CategoryRest> getCategories(@RequestParam(value = "page", defaultValue = "0") int page,
                                             @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<CategoryRest> returnVal = new ArrayList<>();
-
+        
         List<CategoryDto> categories;
         try {
             categories = categoryService.getCategories(page, limit);
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         for (CategoryDto categoryDto: categories) {
             CategoryRest categoryRest = getCategoryRest(categoryDto);
             returnVal.add(categoryRest);
         }
-
+        
         return returnVal;
     }
-
+    
     private CategoryRest getCategoryRest(CategoryDto categoryDto) {
         CategoryRest categoryRest = new CategoryRest();
         String name;
@@ -66,29 +66,29 @@ public class CategoryController {
         categoryRest.setId(categoryDto.getId());
         return categoryRest;
     }
-
+    
     @PostMapping
     public CategoryRest createCategory(@RequestBody CategoryRequestModel categoryRequestModel) {
         CategoryRest returnValue = new CategoryRest();
-
+        
         String[] fields = {categoryRequestModel.getNameKz(), categoryRequestModel.getNameRu(),
                 categoryRequestModel.getNameEn()};
         ThrowUtils.throwMissingRequiredFieldException(fields);
-
+        
         CategoryDto categoryDto = new CategoryDto();
         BeanUtils.copyProperties(categoryRequestModel, categoryDto);
-
+        
         CategoryDto createdCategory;
         try {
             createdCategory = categoryService.createCategory(categoryDto);
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         BeanUtils.copyProperties(createdCategory, returnValue);
-
+        
         return returnValue;
     }
-
+    
     @GetMapping(path = "/{id}")
     public CategoryRest getCategory(@PathVariable("id") long id) {
         CategoryDto categoryDto;
@@ -97,42 +97,42 @@ public class CategoryController {
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-
+        
         return getCategoryRest(categoryDto);
     }
-
+    
     @PutMapping(path = "/{id}")
     public CategoryRest updateCategory(@PathVariable("id") long id,
                                        @RequestBody CategoryRequestModel categoryRequestModel) {
         CategoryRest returnValue = new CategoryRest();
-
+        
         String[] fields = {categoryRequestModel.getNameKz(), categoryRequestModel.getNameRu(),
                 categoryRequestModel.getNameEn()};
         ThrowUtils.throwMissingRequiredFieldException(fields);
-
+        
         CategoryDto categoryDto = new CategoryDto();
         BeanUtils.copyProperties(categoryRequestModel, categoryDto);
-
+        
         CategoryDto updatedCategory;
         try {
             updatedCategory = categoryService.updateCategory(id, categoryDto);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         BeanUtils.copyProperties(updatedCategory, returnValue);
-
+        
         return returnValue;
     }
-
+    
     @DeleteMapping(path = "/{id}")
     public OperationStatusModel deleteCategory(@PathVariable("id") long id) {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
         operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
-
+        
         try {
             categoryService.deleteCategory(id);
             operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
@@ -140,8 +140,8 @@ public class CategoryController {
             log.error(e.getLocalizedMessage(), e);
             operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
         }
-
+        
         return operationStatusModel;
     }
-
+    
 }
