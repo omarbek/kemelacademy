@@ -56,7 +56,7 @@ public class CourseEntity extends AbstractNameEntity {
     @Column(name = "about_course_en")
     private String aboutCourseEn;
     
-    private Boolean deleted;
+    private Boolean deleted = false;
     
     //todo add certificate_id
     
