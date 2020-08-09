@@ -6,7 +6,13 @@ import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.entity.CourseEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Omarbek.Dinassil
@@ -28,16 +34,39 @@ public class CourseServiceImpl implements ICourseService {
         BeanUtils.copyProperties(courseDto.getLanguage(), courseEntity.getLanguage());
         BeanUtils.copyProperties(courseDto, courseEntity);
         
-        CourseEntity storedCategory = courseRepository.save(courseEntity);
+        CourseEntity storedCourse = courseRepository.save(courseEntity);
         
+        return convertEntityToDto(storedCourse);
+    }
+    
+    private CourseDto convertEntityToDto(CourseEntity storedCourse) {
         CourseDto returnVal = new CourseDto();
-        BeanUtils.copyProperties(storedCategory.getAuthor(), returnVal.getAuthor());
-        BeanUtils.copyProperties(storedCategory.getCategory(), returnVal.getCategory());
-        BeanUtils.copyProperties(storedCategory.getLevel(), returnVal.getLevel());
-        BeanUtils.copyProperties(storedCategory.getLanguage(), returnVal.getLanguage());
-        BeanUtils.copyProperties(storedCategory, returnVal);
-        
+        BeanUtils.copyProperties(storedCourse.getAuthor(), returnVal.getAuthor());
+        BeanUtils.copyProperties(storedCourse.getCategory(), returnVal.getCategory());
+        BeanUtils.copyProperties(storedCourse.getLevel(), returnVal.getLevel());
+        BeanUtils.copyProperties(storedCourse.getLanguage(), returnVal.getLanguage());
+        BeanUtils.copyProperties(storedCourse, returnVal);
         return returnVal;
+    }
+    
+    @Override
+    public List<CourseDto> getAll(int page, int limit) {
+        List<CourseDto> returnValue = new ArrayList<>();
+        
+        if (page > 0) {
+            page -= 1;
+        }
+        
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<CourseEntity> coursePage = courseRepository.findAll(pageable);
+        List<CourseEntity> courses = coursePage.getContent();
+        
+        for (CourseEntity courseEntity: courses) {
+            CourseDto courseDto = convertEntityToDto(courseEntity);
+            returnValue.add(courseDto);
+        }
+        
+        return returnValue;
     }
     
 }
