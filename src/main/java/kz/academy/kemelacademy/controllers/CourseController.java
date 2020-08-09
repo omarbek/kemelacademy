@@ -154,4 +154,19 @@ public class CourseController {
         return returnVal;
     }
     
+    @Transactional
+    @GetMapping(path = "/{id}")
+    public CourseRest getCourse(@PathVariable("id") long id) {
+        CourseDto courseDto;
+        try {
+            courseDto = courseService.getCourseById(id);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        return convertDtoToModel(courseDto);
+    }
+    
 }
