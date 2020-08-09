@@ -169,4 +169,42 @@ public class CourseController {
         return convertDtoToModel(courseDto);
     }
     
+    @Transactional
+    @PutMapping(path = "/{id}")
+    public CourseRest updateCourse(@PathVariable("id") long id,
+                                   @RequestBody CourseRequestModel courseRequestModel) {
+        CourseRest returnValue = new CourseRest();
+        
+        Object[] fields = {
+                courseRequestModel.getCategoryId(),
+                courseRequestModel.getLevelId(),
+                courseRequestModel.getLanguageId(),
+                courseRequestModel.getPrice(),
+                courseRequestModel.getNameKz(),
+                courseRequestModel.getNameRu(),
+                courseRequestModel.getNameEn(),
+                courseRequestModel.getDescriptionKz(),
+                courseRequestModel.getDescriptionRu(),
+                courseRequestModel.getDescriptionEn(),
+                courseRequestModel.getAboutCourseKz(),
+                courseRequestModel.getAboutCourseRu(),
+                courseRequestModel.getAboutCourseEn()
+        };
+        ThrowUtils.throwMissingRequiredFieldException(fields);
+        
+        CourseDto courseDto = convertModelToDto(courseRequestModel);
+        
+        CourseDto updatedCourse;
+        try {
+            updatedCourse = courseService.updateCourse(id, courseDto);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        returnValue = convertDtoToModel(updatedCourse);
+        
+        return returnValue;
+    }
+    
 }

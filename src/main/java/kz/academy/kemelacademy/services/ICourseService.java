@@ -17,4 +17,6 @@ public interface ICourseService {
     
     CourseDto getCourseById(long id) throws Exception;
     
+    CourseDto updateCourse(long id, CourseDto courseDto) throws Exception;
+    
 }

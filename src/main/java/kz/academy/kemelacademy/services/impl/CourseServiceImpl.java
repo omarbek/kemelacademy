@@ -31,15 +31,19 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public CourseDto createCourse(CourseDto courseDto) throws Exception {
         CourseEntity courseEntity = new CourseEntity();
+        convertDtoToEntity(courseDto, courseEntity);
+        
+        CourseEntity storedCourse = courseRepository.save(courseEntity);
+        
+        return convertEntityToDto(storedCourse);
+    }
+    
+    private void convertDtoToEntity(CourseDto courseDto, CourseEntity courseEntity) {
         BeanUtils.copyProperties(courseDto.getAuthor(), courseEntity.getAuthor());
         BeanUtils.copyProperties(courseDto.getCategory(), courseEntity.getCategory());
         BeanUtils.copyProperties(courseDto.getLevel(), courseEntity.getLevel());
         BeanUtils.copyProperties(courseDto.getLanguage(), courseEntity.getLanguage());
         BeanUtils.copyProperties(courseDto, courseEntity);
-        
-        CourseEntity storedCourse = courseRepository.save(courseEntity);
-        
-        return convertEntityToDto(storedCourse);
     }
     
     private CourseDto convertEntityToDto(CourseEntity storedCourse) {
@@ -83,6 +87,23 @@ public class CourseServiceImpl implements ICourseService {
         CourseEntity courseEntity = optional.get();
         
         returnValue = convertEntityToDto(courseEntity);
+        
+        return returnValue;
+    }
+    
+    @Override
+    public CourseDto updateCourse(long id, CourseDto courseDto) throws Exception {
+        CourseDto returnValue;
+        
+        Optional<CourseEntity> optional = courseRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        CourseEntity courseEntity = optional.get();
+        convertDtoToEntity(courseDto, courseEntity);
+        
+        CourseEntity updatedCourse = courseRepository.save(courseEntity);
+        returnValue = convertEntityToDto(updatedCourse);
         
         return returnValue;
     }
