@@ -4,8 +4,11 @@ import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.*;
 import kz.academy.kemelacademy.ui.dto.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
+import kz.academy.kemelacademy.ui.enums.RequestOperationName;
+import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
 import kz.academy.kemelacademy.ui.model.request.CourseRequestModel;
 import kz.academy.kemelacademy.ui.model.response.CourseRest;
+import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.utils.ThrowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -205,6 +208,23 @@ public class CourseController {
         returnValue = convertDtoToModel(updatedCourse);
         
         return returnValue;
+    }
+    
+    @Transactional
+    @DeleteMapping(path = "/{id}")
+    public OperationStatusModel deleteCourse(@PathVariable("id") long id) {
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+        operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
+        
+        try {
+            courseService.deleteCourse(id);
+            operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+        
+        return operationStatusModel;
     }
     
 }

@@ -108,4 +108,16 @@ public class CourseServiceImpl implements ICourseService {
         return returnValue;
     }
     
+    @Override
+    public void deleteCourse(long id) throws Exception {
+        Optional<CourseEntity> optional = courseRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        CourseEntity courseEntity = optional.get();
+        courseEntity.setDeleted(true);
+        
+        courseRepository.save(courseEntity);
+    }
+    
 }
