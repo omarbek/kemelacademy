@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class CourseRest {
     
+    private long id;
     private String author;
     private String category;
     private String level;

@@ -66,7 +66,12 @@ public class CourseServiceImpl implements ICourseService {
         
         Pageable pageable = PageRequest.of(page, limit);
         Page<CourseEntity> coursePage = courseRepository.findAll(pageable);
-        List<CourseEntity> courses = coursePage.getContent();
+        List<CourseEntity> courses = new ArrayList<>();
+        for (CourseEntity courseEntity: coursePage.getContent()) {
+            if (!courseEntity.getDeleted()) {
+                courses.add(courseEntity);
+            }
+        }
         
         for (CourseEntity courseEntity: courses) {
             CourseDto courseDto = convertEntityToDto(courseEntity);

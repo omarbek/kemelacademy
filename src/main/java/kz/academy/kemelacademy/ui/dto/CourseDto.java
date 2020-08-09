@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Data
 public class CourseDto implements Serializable {
     
+    private long id;
     private UserDto author = new UserDto();
     private CategoryDto category = new CategoryDto();
     private LevelDto level = new LevelDto();
