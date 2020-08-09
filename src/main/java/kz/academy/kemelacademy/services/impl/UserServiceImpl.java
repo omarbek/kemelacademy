@@ -160,6 +160,13 @@ public class UserServiceImpl implements IUserService {
             RoleEntity roleEntity = iterator.next();
             iterator.remove();
         }
+        Iterator<CourseEntity> courses = userEntity.getCourses().iterator();
+        for (userEntity.getCourses().iterator(); courses.hasNext(); ) {
+            CourseEntity courseEntity = courses.next();
+            courseEntity.setDeleted(true);
+            courseEntity.setAuthor(null);
+        }
+        userEntity.setCourses(new HashSet<>());
         
         userRepository.delete(userEntity);
     }

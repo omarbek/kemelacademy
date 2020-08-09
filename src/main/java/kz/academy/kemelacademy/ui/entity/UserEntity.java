@@ -52,10 +52,9 @@ public class UserEntity implements Serializable {
     )
     private Set<RoleEntity> roles = new HashSet<>();
     
-    @OneToMany(//todo when delete -> deleted - true
+    @OneToMany(
             mappedBy = "author",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL
     )
     private Set<CourseEntity> courses = new HashSet<>();
     

@@ -18,7 +18,7 @@ import javax.persistence.*;
 @ToString
 public class CourseEntity extends AbstractNameEntity {
     
-    @ManyToOne(fetch = FetchType.LAZY)//todo
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
