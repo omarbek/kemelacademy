@@ -143,7 +143,8 @@ public class UserServiceImpl implements IUserService {
         userEntity.setLastName(userDto.getLastName());
         
         UserEntity updatedUserDetails = userRepository.save(userEntity);
-        BeanUtils.copyProperties(updatedUserDetails, returnValue);
+        
+        convertDomainToDto(updatedUserDetails, returnValue);
         
         return returnValue;
     }
@@ -177,7 +178,7 @@ public class UserServiceImpl implements IUserService {
         
         for (UserEntity userEntity: users) {
             UserDto userDto = new UserDto();
-            BeanUtils.copyProperties(userEntity, userDto);
+            convertDomainToDto(userEntity, userDto);
             returnValue.add(userDto);
         }
         

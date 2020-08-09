@@ -112,7 +112,7 @@ public class UserController {
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        BeanUtils.copyProperties(updatedUser, returnValue);
+        convertDtoToRest(updatedUser, returnValue);
         
         return returnValue;
     }
@@ -147,7 +147,7 @@ public class UserController {
         }
         for (UserDto userDto: users) {
             UserRest userModel = new UserRest();
-            BeanUtils.copyProperties(userDto, userModel);
+            convertDtoToRest(userDto, userModel);
             returnVal.add(userModel);
         }
         
