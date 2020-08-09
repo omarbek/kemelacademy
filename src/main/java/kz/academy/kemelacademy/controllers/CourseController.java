@@ -67,7 +67,7 @@ public class CourseController {
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
-        CourseDto courseDto = convertModelToDto(courseRequestModel);
+        CourseDto courseDto = convertModelToDto(courseRequestModel, false);
         
         CourseDto createdCourse;
         try {
@@ -95,42 +95,50 @@ public class CourseController {
         return courseRest;
     }
     
-    private CourseDto convertModelToDto(CourseRequestModel courseRequestModel) {
+    private CourseDto convertModelToDto(CourseRequestModel courseRequestModel, boolean update) {
         CourseDto courseDto = new CourseDto();
         
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDto userDto = userService.getUser(email);
-        courseDto.setAuthor(userDto);
-        
-        CategoryDto categoryDto;
-        try {
-            categoryDto = categoryService.getCategoryById(courseRequestModel.getCategoryId());
-        } catch (ServiceException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        if (!update) {
+            String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDto userDto = userService.getUser(email);
+            courseDto.setAuthor(userDto);
         }
-        courseDto.setCategory(categoryDto);
         
-        LevelDto levelDto;
-        try {
-            levelDto = levelService.getLevelById(courseRequestModel.getLevelId());
-        } catch (ServiceException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        if (courseRequestModel.getCategoryId() != null) {
+            CategoryDto categoryDto;
+            try {
+                categoryDto = categoryService.getCategoryById(courseRequestModel.getCategoryId());
+            } catch (ServiceException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+            }
+            courseDto.setCategory(categoryDto);
         }
-        courseDto.setLevel(levelDto);
         
-        LanguageDto languageDto;
-        try {
-            languageDto = languageService.getLanguageById(courseRequestModel.getLanguageId());
-        } catch (ServiceException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        if (courseRequestModel.getLevelId() != null) {
+            LevelDto levelDto;
+            try {
+                levelDto = levelService.getLevelById(courseRequestModel.getLevelId());
+            } catch (ServiceException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+            }
+            courseDto.setLevel(levelDto);
         }
-        courseDto.setLanguage(languageDto);
+        
+        if (courseRequestModel.getLanguageId() != null) {
+            LanguageDto languageDto;
+            try {
+                languageDto = languageService.getLanguageById(courseRequestModel.getLanguageId());
+            } catch (ServiceException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+            }
+            courseDto.setLanguage(languageDto);
+        }
         
         BeanUtils.copyProperties(courseRequestModel, courseDto);
         
@@ -176,26 +184,9 @@ public class CourseController {
     @PutMapping(path = "/{id}")
     public CourseRest updateCourse(@PathVariable("id") long id,
                                    @RequestBody CourseRequestModel courseRequestModel) {
-        CourseRest returnValue = new CourseRest();
+        CourseRest returnValue;
         
-        Object[] fields = {
-                courseRequestModel.getCategoryId(),
-                courseRequestModel.getLevelId(),
-                courseRequestModel.getLanguageId(),
-                courseRequestModel.getPrice(),
-                courseRequestModel.getNameKz(),
-                courseRequestModel.getNameRu(),
-                courseRequestModel.getNameEn(),
-                courseRequestModel.getDescriptionKz(),
-                courseRequestModel.getDescriptionRu(),
-                courseRequestModel.getDescriptionEn(),
-                courseRequestModel.getAboutCourseKz(),
-                courseRequestModel.getAboutCourseRu(),
-                courseRequestModel.getAboutCourseEn()
-        };
-        ThrowUtils.throwMissingRequiredFieldException(fields);
-        
-        CourseDto courseDto = convertModelToDto(courseRequestModel);
+        CourseDto courseDto = convertModelToDto(courseRequestModel, true);
         
         CourseDto updatedCourse;
         try {

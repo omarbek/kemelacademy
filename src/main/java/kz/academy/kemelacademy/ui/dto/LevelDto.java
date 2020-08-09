@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Data
 public class LevelDto implements Serializable {
     
-    private long id;
+    private Long id;
     private String nameKz;
     private String nameRu;
     private String nameEn;

@@ -31,19 +31,60 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public CourseDto createCourse(CourseDto courseDto) throws Exception {
         CourseEntity courseEntity = new CourseEntity();
-        convertDtoToEntity(courseDto, courseEntity);
+        convertDtoToEntity(courseDto, courseEntity, false);
         
         CourseEntity storedCourse = courseRepository.save(courseEntity);
         
         return convertEntityToDto(storedCourse);
     }
     
-    private void convertDtoToEntity(CourseDto courseDto, CourseEntity courseEntity) {
-        BeanUtils.copyProperties(courseDto.getAuthor(), courseEntity.getAuthor());
-        BeanUtils.copyProperties(courseDto.getCategory(), courseEntity.getCategory());
-        BeanUtils.copyProperties(courseDto.getLevel(), courseEntity.getLevel());
-        BeanUtils.copyProperties(courseDto.getLanguage(), courseEntity.getLanguage());
-        BeanUtils.copyProperties(courseDto, courseEntity);
+    private void convertDtoToEntity(CourseDto courseDto, CourseEntity courseEntity, boolean update) {
+        if (!update) {
+            BeanUtils.copyProperties(courseDto.getAuthor(), courseEntity.getAuthor());
+        }
+        if (courseDto.getCategory().getId() != null) {
+            BeanUtils.copyProperties(courseDto.getCategory(), courseEntity.getCategory());
+        }
+        if (courseDto.getLevel().getId() != null) {
+            BeanUtils.copyProperties(courseDto.getLevel(), courseEntity.getLevel());
+        }
+        if (courseDto.getLanguage().getId() != null) {
+            BeanUtils.copyProperties(courseDto.getLanguage(), courseEntity.getLanguage());
+        }
+        if (update) {
+            if (courseDto.getPrice() != null) {
+                courseEntity.setPrice(courseDto.getPrice());
+            }
+            if (courseDto.getNameKz() != null) {
+                courseEntity.setNameKz(courseDto.getNameKz());
+            }
+            if (courseDto.getNameRu() != null) {
+                courseEntity.setNameRu(courseDto.getNameRu());
+            }
+            if (courseDto.getNameEn() != null) {
+                courseEntity.setNameEn(courseDto.getNameEn());
+            }
+            if (courseDto.getDescriptionKz() != null) {
+                courseEntity.setDescriptionKz(courseDto.getDescriptionKz());
+            }
+            if (courseDto.getDescriptionRu() != null) {
+                courseEntity.setDescriptionRu(courseDto.getDescriptionRu());
+            }
+            if (courseDto.getDescriptionEn() != null) {
+                courseEntity.setDescriptionEn(courseDto.getDescriptionEn());
+            }
+            if (courseDto.getAboutCourseKz() != null) {
+                courseEntity.setAboutCourseKz(courseDto.getAboutCourseKz());
+            }
+            if (courseDto.getAboutCourseRu() != null) {
+                courseEntity.setAboutCourseRu(courseDto.getAboutCourseRu());
+            }
+            if (courseDto.getAboutCourseEn() != null) {
+                courseEntity.setAboutCourseEn(courseDto.getAboutCourseEn());
+            }
+        } else {
+            BeanUtils.copyProperties(courseDto, courseEntity);
+        }
     }
     
     private CourseDto convertEntityToDto(CourseEntity storedCourse) {
@@ -105,7 +146,7 @@ public class CourseServiceImpl implements ICourseService {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         CourseEntity courseEntity = optional.get();
-        convertDtoToEntity(courseDto, courseEntity);
+        convertDtoToEntity(courseDto, courseEntity, true);
         
         CourseEntity updatedCourse = courseRepository.save(courseEntity);
         returnValue = convertEntityToDto(updatedCourse);
