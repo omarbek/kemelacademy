@@ -13,7 +13,7 @@ import java.util.Set;
 @Data
 public class CategoryRest {
     
-    private long id;
+    private Long id;
     private String name;
     private String nameKz;
     private String nameRu;
