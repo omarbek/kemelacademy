@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("lesson_types")
-public class LessonTypeController {
+public class LessonTypeController {//
 
     @Autowired
     private ILessonTypeService lessonTypeService;
