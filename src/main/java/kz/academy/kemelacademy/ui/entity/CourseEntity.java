@@ -24,8 +24,10 @@ public class CourseEntity extends AbstractNameEntity {
     @EqualsAndHashCode.Exclude
     private UserEntity author = new UserEntity();
     
-    @OneToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private CategoryEntity category = new CategoryEntity();
     
     @OneToOne()

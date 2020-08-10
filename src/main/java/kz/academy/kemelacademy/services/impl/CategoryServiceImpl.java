@@ -4,7 +4,9 @@ import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.ICategoryRepository;
 import kz.academy.kemelacademy.services.ICategoryService;
 import kz.academy.kemelacademy.ui.dto.CategoryDto;
+import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.entity.CategoryEntity;
+import kz.academy.kemelacademy.ui.entity.CourseEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +43,22 @@ public class CategoryServiceImpl implements ICategoryService {
         List<CategoryEntity> categories = categoryPage.getContent();
         
         for (CategoryEntity categoryEntity: categories) {
-            CategoryDto categoryDto = new CategoryDto();
-            BeanUtils.copyProperties(categoryEntity, categoryDto);
+            CategoryDto categoryDto = convertEntityToDto(categoryEntity);
             returnValue.add(categoryDto);
         }
         
         return returnValue;
+    }
+    
+    private CategoryDto convertEntityToDto(CategoryEntity categoryEntity) {
+        CategoryDto categoryDto = new CategoryDto();
+        for (CourseEntity courseEntity: categoryEntity.getCourses()) {
+            CourseDto courseDto = new CourseDto();
+            BeanUtils.copyProperties(courseEntity, courseDto);
+            categoryDto.getCourses().add(courseDto);
+        }
+        BeanUtils.copyProperties(categoryEntity, categoryDto);
+        return categoryDto;
     }
     
     @Override

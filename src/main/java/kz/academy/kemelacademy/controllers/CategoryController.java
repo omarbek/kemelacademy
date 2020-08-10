@@ -3,6 +3,7 @@ package kz.academy.kemelacademy.controllers;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.ICategoryService;
 import kz.academy.kemelacademy.ui.dto.CategoryDto;
+import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.Locales;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
@@ -56,6 +57,8 @@ public class CategoryController {
     
     private CategoryRest getCategoryRest(CategoryDto categoryDto) {
         CategoryRest categoryRest = new CategoryRest();
+        categoryRest.setId(categoryDto.getId());
+        
         String name;
         if (LocaleUtils.checkLocale(Locales.KZ.getLocale())) {
             name = categoryDto.getNameKz();
@@ -65,7 +68,11 @@ public class CategoryController {
             name = categoryDto.getNameEn();
         }
         categoryRest.setName(name);
-        categoryRest.setId(categoryDto.getId());
+        
+        for (CourseDto courseDto: categoryDto.getCourses()) {
+            categoryRest.getCourses().add(courseDto.toString());
+        }
+        
         return categoryRest;
     }
     
