@@ -86,7 +86,7 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <configuration>
                     <changeLogFile>
-                        /Users/omar/Documents/projects/IdeaProjects/kemelacademy/src/main/resources/db/liquibase-changelog.xml
+                        /Users/omar/Documents/projects/IdeaProjects/kemel-service/src/main/resources/db/liquibase-changelog.xml
                     </changeLogFile>
                     <url>jdbc:mysql://localhost:3306/kemelacademy_db?useUnicode=true&amp;characterEncoding=UTF-8</url>
                     <username>root</username>
