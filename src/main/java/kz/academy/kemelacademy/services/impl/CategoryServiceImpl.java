@@ -15,9 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Omarbek.Dinassil
@@ -53,9 +51,11 @@ public class CategoryServiceImpl implements ICategoryService {
     private CategoryDto convertEntityToDto(CategoryEntity categoryEntity) {
         CategoryDto categoryDto = new CategoryDto();
         for (CourseEntity courseEntity: categoryEntity.getCourses()) {
-            CourseDto courseDto = new CourseDto();
-            BeanUtils.copyProperties(courseEntity, courseDto);
-            categoryDto.getCourses().add(courseDto);
+            if (!courseEntity.getDeleted()) {
+                CourseDto courseDto = new CourseDto();
+                BeanUtils.copyProperties(courseEntity, courseDto);
+                categoryDto.getCourses().add(courseDto);
+            }
         }
         BeanUtils.copyProperties(categoryEntity, categoryDto);
         return categoryDto;
@@ -122,7 +122,13 @@ public class CategoryServiceImpl implements ICategoryService {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         CategoryEntity categoryEntity = optional.get();
-        
+        Iterator<CourseEntity> courses = categoryEntity.getCourses().iterator();
+        for (categoryEntity.getCourses().iterator(); courses.hasNext(); ) {
+            CourseEntity courseEntity = courses.next();
+            courseEntity.setDeleted(true);
+            courseEntity.setAuthor(null);
+        }
+        categoryEntity.setCourses(new HashSet<>());
         categoryRepository.delete(categoryEntity);
     }
     
