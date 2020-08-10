@@ -98,9 +98,15 @@ public class CategoryServiceImpl implements ICategoryService {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         CategoryEntity categoryEntity = optional.get();
-        categoryEntity.setNameKz(categoryDto.getNameKz());
-        categoryEntity.setNameRu(categoryDto.getNameRu());
-        categoryEntity.setNameEn(categoryDto.getNameEn());
+        if (categoryDto.getNameKz() != null) {
+            categoryEntity.setNameKz(categoryDto.getNameKz());
+        }
+        if (categoryDto.getNameRu() != null) {
+            categoryEntity.setNameRu(categoryDto.getNameRu());
+        }
+        if (categoryDto.getNameEn() != null) {
+            categoryEntity.setNameEn(categoryDto.getNameEn());
+        }
         
         CategoryEntity updatedCategory = categoryRepository.save(categoryEntity);
         BeanUtils.copyProperties(updatedCategory, returnValue);

@@ -119,10 +119,6 @@ public class CategoryController {
                                        @RequestBody CategoryRequestModel categoryRequestModel) {
         CategoryRest returnValue = new CategoryRest();
         
-        String[] fields = {categoryRequestModel.getNameKz(), categoryRequestModel.getNameRu(),
-                categoryRequestModel.getNameEn()};
-        ThrowUtils.throwMissingRequiredFieldException(fields);
-        
         CategoryDto categoryDto = new CategoryDto();
         BeanUtils.copyProperties(categoryRequestModel, categoryDto);
         
