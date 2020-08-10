@@ -97,9 +97,11 @@ public class UserServiceImpl implements IUserService {
             returnVal.getRoles().add(roleDto);
         }
         for (CourseEntity courseEntity: storedUserDetails.getCourses()) {
-            CourseDto courseDto = new CourseDto();
-            BeanUtils.copyProperties(courseEntity, courseDto);
-            returnVal.getCourses().add(courseDto);
+            if (!courseEntity.getDeleted()) {
+                CourseDto courseDto = new CourseDto();
+                BeanUtils.copyProperties(courseEntity, courseDto);
+                returnVal.getCourses().add(courseDto);
+            }
         }
     }
     
