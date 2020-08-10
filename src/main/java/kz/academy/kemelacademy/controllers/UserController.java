@@ -2,6 +2,8 @@ package kz.academy.kemelacademy.controllers;
 
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IUserService;
+import kz.academy.kemelacademy.ui.dto.CourseDto;
+import kz.academy.kemelacademy.ui.dto.RoleDto;
 import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
@@ -39,8 +41,8 @@ public class UserController {
     @Autowired
     private MessageSource messageSource;
     
-    @Transactional
     @PostMapping
+    @Transactional
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
         UserRest returnValue = new UserRest();
         
@@ -57,10 +59,10 @@ public class UserController {
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()); //todo
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e); //todo
         }
         
-        BeanUtils.copyProperties(createdUser, returnValue);
+        convertDtoToRest(createdUser, returnValue);
         
         boolean sendEmail = userService.sendEmail(createdUser.getEmail(), createdUser.getEmailVerificationToken());
         if (!sendEmail) {
@@ -70,12 +72,22 @@ public class UserController {
         return returnValue;
     }
     
+    private void convertDtoToRest(UserDto createdUser, UserRest returnValue) {
+        BeanUtils.copyProperties(createdUser, returnValue);
+        for (RoleDto roleDto: createdUser.getRoles()) {
+            returnValue.getRoles().add(roleDto.toString());
+        }
+        for (CourseDto courseDto: createdUser.getCourses()) {
+            returnValue.getCourses().add(courseDto.toString());
+        }
+    }
+    
     @GetMapping(path = "/{id}")
     public UserRest getUser(@PathVariable("id") String userId) {
         UserRest returnValue = new UserRest();
         
         UserDto userDto = userService.getUserByUserId(userId);
-        BeanUtils.copyProperties(userDto, returnValue);
+        convertDtoToRest(userDto, returnValue);
         
         return returnValue;
     }
@@ -98,9 +110,9 @@ public class UserController {
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        BeanUtils.copyProperties(updatedUser, returnValue);
+        convertDtoToRest(updatedUser, returnValue);
         
         return returnValue;
     }
@@ -122,6 +134,7 @@ public class UserController {
     }
     
     @GetMapping
+    @Transactional
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<UserRest> returnVal = new ArrayList<>();
@@ -130,11 +143,11 @@ public class UserController {
         try {
             users = userService.getUsers(page, limit);
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.name());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.name(), e);
         }
         for (UserDto userDto: users) {
             UserRest userModel = new UserRest();
-            BeanUtils.copyProperties(userDto, userModel);
+            convertDtoToRest(userDto, userModel);
             returnVal.add(userModel);
         }
         

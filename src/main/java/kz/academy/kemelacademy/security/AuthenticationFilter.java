@@ -5,8 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kz.academy.kemelacademy.SpringApplicationContext;
 import kz.academy.kemelacademy.services.IUserService;
+import kz.academy.kemelacademy.ui.dto.RoleDto;
 import kz.academy.kemelacademy.ui.dto.UserDto;
-import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import kz.academy.kemelacademy.ui.model.request.UserLoginRequestModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -56,8 +56,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     
     private Set<GrantedAuthority> getAuthority(UserDto userDto) {
         Set<GrantedAuthority> set = new HashSet<>();
-        for (RoleEntity roleEntity: userDto.getRoles()) {
-            set.add((GrantedAuthority) roleEntity::getName);
+        for (RoleDto roleDto: userDto.getRoles()) {
+            set.add((GrantedAuthority) roleDto::getName);
         }
         return set;
     }

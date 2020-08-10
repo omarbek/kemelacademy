@@ -8,16 +8,27 @@ import java.io.Serializable;
 
 /**
  * @author Omarbek.Dinassil
- * on 2020-07-28
+ * on 2020-08-07
  * @project kemelacademy
  */
 @Data
-public class CategoryDto implements Serializable {
+public class CourseDto implements Serializable {
     
-    private Long id;
+    private long id;
+    private UserDto author = new UserDto();
+    private CategoryDto category = new CategoryDto();
+    private LevelDto level = new LevelDto();
+    private LanguageDto language = new LanguageDto();
+    private Integer price;
     private String nameKz;
     private String nameRu;
     private String nameEn;
+    private String descriptionKz;
+    private String descriptionRu;
+    private String descriptionEn;
+    private String aboutCourseKz;
+    private String aboutCourseRu;
+    private String aboutCourseEn;
     
     @Override
     public String toString() {

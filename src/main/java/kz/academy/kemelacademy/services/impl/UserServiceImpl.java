@@ -6,7 +6,10 @@ import kz.academy.kemelacademy.repositories.IPasswordResetTokenRepository;
 import kz.academy.kemelacademy.repositories.IRoleRepository;
 import kz.academy.kemelacademy.repositories.IUserRepository;
 import kz.academy.kemelacademy.services.IUserService;
+import kz.academy.kemelacademy.ui.dto.CourseDto;
+import kz.academy.kemelacademy.ui.dto.RoleDto;
 import kz.academy.kemelacademy.ui.dto.UserDto;
+import kz.academy.kemelacademy.ui.entity.CourseEntity;
 import kz.academy.kemelacademy.ui.entity.PasswordResetTokenEntity;
 import kz.academy.kemelacademy.ui.entity.RoleEntity;
 import kz.academy.kemelacademy.ui.entity.UserEntity;
@@ -81,9 +84,23 @@ public class UserServiceImpl implements IUserService {
         UserEntity storedUserDetails = userRepository.save(userEntity);
         
         UserDto returnVal = new UserDto();
-        BeanUtils.copyProperties(storedUserDetails, returnVal);
+        convertDomainToDto(storedUserDetails, returnVal);
         
         return returnVal;
+    }
+    
+    private void convertDomainToDto(UserEntity storedUserDetails, UserDto returnVal) {
+        BeanUtils.copyProperties(storedUserDetails, returnVal);
+        for (RoleEntity roleEntity: storedUserDetails.getRoles()) {
+            RoleDto roleDto = new RoleDto();
+            BeanUtils.copyProperties(roleEntity, roleDto);
+            returnVal.getRoles().add(roleDto);
+        }
+        for (CourseEntity courseEntity: storedUserDetails.getCourses()) {
+            CourseDto courseDto = new CourseDto();
+            BeanUtils.copyProperties(courseEntity, courseDto);
+            returnVal.getCourses().add(courseDto);
+        }
     }
     
     @Override
@@ -108,7 +125,7 @@ public class UserServiceImpl implements IUserService {
             throw new UsernameNotFoundException("user with id " + userId + " is not found");
         }
         
-        BeanUtils.copyProperties(userEntity, returnValue);
+        convertDomainToDto(userEntity, returnValue);
         
         return returnValue;
     }
@@ -126,7 +143,8 @@ public class UserServiceImpl implements IUserService {
         userEntity.setLastName(userDto.getLastName());
         
         UserEntity updatedUserDetails = userRepository.save(userEntity);
-        BeanUtils.copyProperties(updatedUserDetails, returnValue);
+        
+        convertDomainToDto(updatedUserDetails, returnValue);
         
         return returnValue;
     }
@@ -142,6 +160,13 @@ public class UserServiceImpl implements IUserService {
             RoleEntity roleEntity = iterator.next();
             iterator.remove();
         }
+        Iterator<CourseEntity> courses = userEntity.getCourses().iterator();
+        for (userEntity.getCourses().iterator(); courses.hasNext(); ) {
+            CourseEntity courseEntity = courses.next();
+            courseEntity.setDeleted(true);
+            courseEntity.setAuthor(null);
+        }
+        userEntity.setCourses(new HashSet<>());
         
         userRepository.delete(userEntity);
     }
@@ -160,7 +185,7 @@ public class UserServiceImpl implements IUserService {
         
         for (UserEntity userEntity: users) {
             UserDto userDto = new UserDto();
-            BeanUtils.copyProperties(userEntity, userDto);
+            convertDomainToDto(userEntity, userDto);
             returnValue.add(userDto);
         }
         
@@ -205,6 +230,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
+    @Transactional
     public boolean requestPasswordReset(String email) throws Exception {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
@@ -227,6 +253,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
+    @Transactional
     public boolean resetPassword(String token, String password) throws Exception {
         boolean returnVal = false;
         

@@ -15,4 +15,9 @@ public class ServiceException extends RuntimeException {
         log.error(message, this);
     }
     
+    public ServiceException(String message, Exception e) {
+        super(message);
+        log.error(message, e);
+    }
+    
 }

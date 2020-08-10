@@ -50,7 +50,13 @@ public class UserEntity implements Serializable {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    Set<RoleEntity> roles = new HashSet<>();
+    private Set<RoleEntity> roles = new HashSet<>();
+    
+    @OneToMany(
+            mappedBy = "author",
+            cascade = CascadeType.ALL
+    )
+    private Set<CourseEntity> courses = new HashSet<>();
     
     @Override
     public String toString() {

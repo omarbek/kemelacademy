@@ -13,4 +13,6 @@ public interface ILevelService {
     
     List<LevelDto> getAll() throws Exception;
     
+    LevelDto getLevelById(long id) throws Exception;
+    
 }

@@ -8,7 +8,9 @@ import kz.academy.kemelacademy.ui.enums.Locales;
 import kz.academy.kemelacademy.ui.model.response.LevelRest;
 import kz.academy.kemelacademy.utils.LocaleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +30,7 @@ public class LevelController {
     private ILevelService levelService;
     
     @GetMapping
+    @Transactional
     public List<LevelRest> getRoles() {
         List<LevelRest> returnVal = new ArrayList<>();
         
@@ -35,7 +38,7 @@ public class LevelController {
         try {
             levels = levelService.getAll();
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         for (LevelDto levelDto: levels) {
             LevelRest levelRest = getLevelRest(levelDto);
@@ -43,6 +46,21 @@ public class LevelController {
         }
         
         return returnVal;
+    }
+    
+    @GetMapping(path = "/{id}")
+    @Transactional
+    public LevelRest getLevel(@PathVariable("id") long id) {
+        LevelDto levelDto;
+        try {
+            levelDto = levelService.getLevelById(id);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        return getLevelRest(levelDto);
     }
     
     private LevelRest getLevelRest(LevelDto levelDto) {
