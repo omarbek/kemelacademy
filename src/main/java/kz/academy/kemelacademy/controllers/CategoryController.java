@@ -48,14 +48,14 @@ public class CategoryController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         for (CategoryDto categoryDto: categories) {
-            CategoryRest categoryRest = getCategoryRest(categoryDto);
+            CategoryRest categoryRest = convertDtoToRest(categoryDto);
             returnVal.add(categoryRest);
         }
         
         return returnVal;
     }
     
-    private CategoryRest getCategoryRest(CategoryDto categoryDto) {
+    private CategoryRest convertDtoToRest(CategoryDto categoryDto) {
         CategoryRest categoryRest = new CategoryRest();
         categoryRest.setId(categoryDto.getId());
         
@@ -110,14 +110,14 @@ public class CategoryController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        return getCategoryRest(categoryDto);
+        return convertDtoToRest(categoryDto);
     }
     
     @Transactional
     @PutMapping(path = "/{id}")
     public CategoryRest updateCategory(@PathVariable("id") long id,
                                        @RequestBody CategoryRequestModel categoryRequestModel) {
-        CategoryRest returnValue = new CategoryRest();
+        CategoryRest returnValue;
         
         CategoryDto categoryDto = new CategoryDto();
         BeanUtils.copyProperties(categoryRequestModel, categoryDto);
@@ -130,7 +130,8 @@ public class CategoryController {
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        BeanUtils.copyProperties(updatedCategory, returnValue);
+        
+        returnValue = convertDtoToRest(updatedCategory);
         
         return returnValue;
     }
