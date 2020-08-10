@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements ICategoryService {
     
     @Override
     public CategoryDto getCategoryById(long id) throws Exception {
-        CategoryDto returnValue = new CategoryDto();
+        CategoryDto returnValue;
         
         Optional<CategoryEntity> optional = categoryRepository.findById(id);
         if (!optional.isPresent()) {
@@ -84,7 +84,7 @@ public class CategoryServiceImpl implements ICategoryService {
         }
         CategoryEntity categoryEntity = optional.get();
         
-        BeanUtils.copyProperties(categoryEntity, returnValue);
+        returnValue = convertEntityToDto(categoryEntity);
         
         return returnValue;
     }
