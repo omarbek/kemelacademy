@@ -126,7 +126,7 @@ public class CategoryServiceImpl implements ICategoryService {
         for (categoryEntity.getCourses().iterator(); courses.hasNext(); ) {
             CourseEntity courseEntity = courses.next();
             courseEntity.setDeleted(true);
-            courseEntity.setAuthor(null);
+            courseEntity.setCategory(null);
         }
         categoryEntity.setCourses(new HashSet<>());
         categoryRepository.delete(categoryEntity);
