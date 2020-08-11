@@ -36,8 +36,10 @@ public class CourseEntity extends AbstractNameEntity {
     @EqualsAndHashCode.Exclude
     private LevelEntity level = new LevelEntity();
     
-    @OneToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "language_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private LanguageEntity language = new LanguageEntity();
     
     private Integer price;

@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.controllers;
 
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.ILanguageService;
+import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.dto.LanguageDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.Locales;
@@ -46,6 +47,8 @@ public class LanguageController {
     
     private LanguageRest getLanguageRest(LanguageDto languageDto) {
         LanguageRest languageRest = new LanguageRest();
+        languageRest.setId(languageDto.getId());
+        
         String name;
         if (LocaleUtils.checkLocale(Locales.KZ.getLocale())) {
             name = languageDto.getNameKz();
@@ -55,7 +58,11 @@ public class LanguageController {
             name = languageDto.getNameEn();
         }
         languageRest.setName(name);
-        languageRest.setId(languageDto.getId());
+        
+        for (CourseDto courseDto: languageDto.getCourses()) {
+            languageRest.getCourses().add(courseDto.toString());
+        }
+        
         return languageRest;
     }
     

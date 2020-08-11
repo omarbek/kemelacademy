@@ -5,6 +5,8 @@ import kz.academy.kemelacademy.utils.LocaleUtils;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class LanguageDto implements Serializable {
@@ -13,6 +15,7 @@ public class LanguageDto implements Serializable {
     private String nameKz;
     private String nameRu;
     private String nameEn;
+    private Set<CourseDto> courses = new HashSet<>();
     
     @Override
     public String toString() {

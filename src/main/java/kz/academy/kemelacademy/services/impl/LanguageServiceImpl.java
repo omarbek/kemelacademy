@@ -3,7 +3,9 @@ package kz.academy.kemelacademy.services.impl;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.ILanguageRepository;
 import kz.academy.kemelacademy.services.ILanguageService;
+import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.dto.LanguageDto;
+import kz.academy.kemelacademy.ui.entity.CourseEntity;
 import kz.academy.kemelacademy.ui.entity.LanguageEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import org.springframework.beans.BeanUtils;
@@ -36,12 +38,24 @@ public class LanguageServiceImpl implements ILanguageService {
         List<LanguageEntity> languages = languagePage.getContent();
         
         for (LanguageEntity languageEntity: languages) {
-            LanguageDto languageDto = new LanguageDto();
-            BeanUtils.copyProperties(languageEntity, languageDto);
+            LanguageDto languageDto = convertEntityToDto(languageEntity);
             returnValue.add(languageDto);
         }
         
         return returnValue;
+    }
+    
+    private LanguageDto convertEntityToDto(LanguageEntity languageEntity) {
+        LanguageDto languageDto = new LanguageDto();
+        for (CourseEntity courseEntity: languageEntity.getCourses()) {
+            if (!courseEntity.getDeleted()) {
+                CourseDto courseDto = new CourseDto();
+                BeanUtils.copyProperties(courseEntity, courseDto);
+                languageDto.getCourses().add(courseDto);
+            }
+        }
+        BeanUtils.copyProperties(languageEntity, languageDto);
+        return languageDto;
     }
     
     @Override
@@ -51,8 +65,7 @@ public class LanguageServiceImpl implements ILanguageService {
         
         LanguageEntity storedLanguage = languageRepository.save(languageEntity);
         
-        LanguageDto returnVal = new LanguageDto();
-        BeanUtils.copyProperties(storedLanguage, returnVal);
+        LanguageDto returnVal = convertEntityToDto(storedLanguage);
         
         return returnVal;
     }
@@ -64,8 +77,7 @@ public class LanguageServiceImpl implements ILanguageService {
             throw new ServiceException((ErrorMessages.NO_RECORD_FOUND.getErrorMessage()));
         }
         LanguageEntity languageEntity = optional.get();
-        LanguageDto returnVal = new LanguageDto();
-        BeanUtils.copyProperties(languageEntity, returnVal);
+        LanguageDto returnVal = convertEntityToDto(languageEntity);
         
         return returnVal;
     }
