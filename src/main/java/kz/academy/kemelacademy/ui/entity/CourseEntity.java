@@ -30,8 +30,10 @@ public class CourseEntity extends AbstractNameEntity {
     @EqualsAndHashCode.Exclude
     private CategoryEntity category = new CategoryEntity();
     
-    @OneToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "level_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private LevelEntity level = new LevelEntity();
     
     @OneToOne()

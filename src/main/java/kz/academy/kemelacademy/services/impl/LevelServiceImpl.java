@@ -3,7 +3,9 @@ package kz.academy.kemelacademy.services.impl;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.ILevelRepository;
 import kz.academy.kemelacademy.services.ILevelService;
+import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.dto.LevelDto;
+import kz.academy.kemelacademy.ui.entity.CourseEntity;
 import kz.academy.kemelacademy.ui.entity.LevelEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import org.springframework.beans.BeanUtils;
@@ -32,17 +34,29 @@ public class LevelServiceImpl implements ILevelService {
         List<LevelEntity> levels = levelRepository.findAll();
         
         for (LevelEntity levelEntity: levels) {
-            LevelDto levelDto = new LevelDto();
-            BeanUtils.copyProperties(levelEntity, levelDto);
+            LevelDto levelDto = convertEntityToDto(levelEntity);
             returnValue.add(levelDto);
         }
         
         return returnValue;
     }
     
+    private LevelDto convertEntityToDto(LevelEntity levelEntity) {
+        LevelDto levelDto = new LevelDto();
+        for (CourseEntity courseEntity: levelEntity.getCourses()) {
+            if (!courseEntity.getDeleted()) {
+                CourseDto courseDto = new CourseDto();
+                BeanUtils.copyProperties(courseEntity, courseDto);
+                levelDto.getCourses().add(courseDto);
+            }
+        }
+        BeanUtils.copyProperties(levelEntity, levelDto);
+        return levelDto;
+    }
+    
     @Override
     public LevelDto getLevelById(long id) throws Exception {
-        LevelDto returnValue = new LevelDto();
+        LevelDto returnValue;
         
         Optional<LevelEntity> optional = levelRepository.findById(id);
         if (!optional.isPresent()) {
@@ -50,7 +64,7 @@ public class LevelServiceImpl implements ILevelService {
         }
         LevelEntity levelEntity = optional.get();
         
-        BeanUtils.copyProperties(levelEntity, returnValue);
+        returnValue = convertEntityToDto(levelEntity);
         
         return returnValue;
     }

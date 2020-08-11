@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.controllers;
 
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.ILevelService;
+import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.dto.LevelDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.Locales;
@@ -76,6 +77,11 @@ public class LevelController {
             name = levelDto.getNameEn();
         }
         levelRest.setName(name);
+        
+        for (CourseDto courseDto: levelDto.getCourses()) {
+            levelRest.getCourses().add(courseDto.toString());
+        }
+        
         return levelRest;
     }
     
