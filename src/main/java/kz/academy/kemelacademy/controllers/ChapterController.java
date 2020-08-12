@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Omarbek.Dinassil
@@ -49,24 +49,24 @@ public class ChapterController {
         
         ChapterDto chapterDto = convertModelToDto(chapterRequestModel, false);
         
-        ChapterDto createdCourse;
+        ChapterDto createdChapter;
         try {
-            createdCourse = chapterService.createChapter(chapterDto);
+            createdChapter = chapterService.createChapter(chapterDto);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        returnValue = convertDtoToModel(createdCourse);
+        returnValue = convertDtoToModel(createdChapter);
         
         return returnValue;
     }
     
-    private ChapterRest convertDtoToModel(ChapterDto createdCourse) {
+    private ChapterRest convertDtoToModel(ChapterDto createdChapter) {
         ChapterRest ret = new ChapterRest();
         
-        ret.setCourse(createdCourse.getCourseDto().toString());
+        ret.setCourse(createdChapter.getCourseDto().toString());
         //        ret.setDuration();//todo
         //        ret.setLessonCount();//todo
-        BeanUtils.copyProperties(createdCourse, ret);
+        BeanUtils.copyProperties(createdChapter, ret);
         
         return ret;
     }
@@ -91,4 +91,25 @@ public class ChapterController {
         
         return ret;
     }
+    
+    @GetMapping
+    @Transactional
+    public List<ChapterRest> getChapters(@RequestParam(value = "page", defaultValue = "0") int page,
+                                         @RequestParam(value = "limit", defaultValue = "25") int limit) {
+        List<ChapterRest> returnVal = new ArrayList<>();
+        
+        List<ChapterDto> chapters;
+        try {
+            chapters = chapterService.getAll(page, limit);
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        for (ChapterDto chapterDto: chapters) {
+            ChapterRest chapterRest = convertDtoToModel(chapterDto);
+            returnVal.add(chapterRest);
+        }
+        
+        return returnVal;
+    }
+    
 }

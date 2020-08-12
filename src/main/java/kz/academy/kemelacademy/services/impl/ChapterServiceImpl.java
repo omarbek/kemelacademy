@@ -6,7 +6,13 @@ import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.entity.ChapterEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Omarbek.Dinassil
@@ -28,6 +34,26 @@ public class ChapterServiceImpl implements IChapterService {
         ChapterEntity savedChapter = chapterRepository.save(chapterEntity);
         
         return convertEntityToDto(savedChapter);
+    }
+    
+    @Override
+    public List<ChapterDto> getAll(int page, int limit) {
+        List<ChapterDto> returnValue = new ArrayList<>();
+        
+        if (page > 0) {
+            page -= 1;
+        }
+        
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<ChapterEntity> chapterEntityPage = chapterRepository.findAll(pageable);
+        List<ChapterEntity> chapters = chapterEntityPage.getContent();
+        
+        for (ChapterEntity chapterEntity: chapters) {
+            ChapterDto chapterDto = convertEntityToDto(chapterEntity);
+            returnValue.add(chapterDto);
+        }
+        
+        return returnValue;
     }
     
     private ChapterDto convertEntityToDto(ChapterEntity savedChapter) {
