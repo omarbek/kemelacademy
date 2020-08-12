@@ -49,13 +49,18 @@ public class ChapterServiceImpl implements IChapterService {
         List<ChapterEntity> chapters = chapterEntityPage.getContent();
         
         for (ChapterEntity chapterEntity: chapters) {
-            if (courseId != null && chapterEntity.getCourse().getId().equals(courseId)) {
+            if (!chapterEntity.isDeleted() && courseId != null && chapterEntity.getCourse().getId().equals(courseId)) {
                 ChapterDto chapterDto = convertEntityToDto(chapterEntity);
                 returnValue.add(chapterDto);
             }
         }
         
         return returnValue;
+    }
+    
+    @Override
+    public ChapterDto getChapterById(long id) {
+        return null;
     }
     
     private ChapterDto convertEntityToDto(ChapterEntity savedChapter) {

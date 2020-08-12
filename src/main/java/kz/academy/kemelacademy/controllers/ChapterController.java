@@ -113,4 +113,19 @@ public class ChapterController {
         return returnVal;
     }
     
+    @Transactional
+    @GetMapping(path = "/{id}")
+    public ChapterRest getChapter(@PathVariable("id") long id) {
+        ChapterDto chapterDto;
+        try {
+            chapterDto = chapterService.getChapterById(id);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        return convertDtoToModel(chapterDto);
+    }
+    
 }

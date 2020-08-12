@@ -27,4 +27,6 @@ public class ChapterEntity extends AbstractNameEntity {
     @Column(name = "chapter_no")
     private Integer chapterNo;
     
+    private boolean deleted = false;
+    
 }

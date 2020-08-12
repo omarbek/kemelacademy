@@ -15,4 +15,6 @@ public interface IChapterService {
     
     List<ChapterDto> getAll(int page, int limit, Long courseId);
     
+    ChapterDto getChapterById(long id);
+    
 }
