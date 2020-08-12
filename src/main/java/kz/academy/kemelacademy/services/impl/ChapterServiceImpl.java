@@ -37,7 +37,7 @@ public class ChapterServiceImpl implements IChapterService {
     }
     
     @Override
-    public List<ChapterDto> getAll(int page, int limit) {
+    public List<ChapterDto> getAll(int page, int limit, Long courseId) {
         List<ChapterDto> returnValue = new ArrayList<>();
         
         if (page > 0) {
@@ -49,8 +49,10 @@ public class ChapterServiceImpl implements IChapterService {
         List<ChapterEntity> chapters = chapterEntityPage.getContent();
         
         for (ChapterEntity chapterEntity: chapters) {
-            ChapterDto chapterDto = convertEntityToDto(chapterEntity);
-            returnValue.add(chapterDto);
+            if (courseId != null && chapterEntity.getCourse().getId().equals(courseId)) {
+                ChapterDto chapterDto = convertEntityToDto(chapterEntity);
+                returnValue.add(chapterDto);
+            }
         }
         
         return returnValue;
