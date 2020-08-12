@@ -1,9 +1,11 @@
 package kz.academy.kemelacademy.services.impl;
 
+import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.IChapterRepository;
 import kz.academy.kemelacademy.services.IChapterService;
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.entity.ChapterEntity;
+import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Omarbek.Dinassil
@@ -60,7 +63,17 @@ public class ChapterServiceImpl implements IChapterService {
     
     @Override
     public ChapterDto getChapterById(long id) {
-        return null;
+        ChapterDto returnValue;
+        
+        Optional<ChapterEntity> optional = chapterRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        ChapterEntity chapterEntity = optional.get();
+        
+        returnValue = convertEntityToDto(chapterEntity);
+        
+        return returnValue;
     }
     
     private ChapterDto convertEntityToDto(ChapterEntity savedChapter) {

@@ -13,8 +13,8 @@ public interface IChapterService {
     
     ChapterDto createChapter(ChapterDto chapterDto) throws Exception;
     
-    List<ChapterDto> getAll(int page, int limit, Long courseId);
+    List<ChapterDto> getAll(int page, int limit, Long courseId) throws Exception;
     
-    ChapterDto getChapterById(long id);
+    ChapterDto getChapterById(long id) throws Exception;
     
 }
