@@ -89,6 +89,8 @@ public class CourseController {
         courseRest.setLanguage(createdCourse.getLanguage().toString());
         //        courseRest.setRating();//todo
         //        courseRest.setDuration();//todo
+        //        courseRest.setChapterCount();//todo
+        //        courseRest.setLessonCount();//todo
         
         BeanUtils.copyProperties(createdCourse, courseRest);
         

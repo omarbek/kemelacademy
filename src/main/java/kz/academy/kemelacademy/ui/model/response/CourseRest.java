@@ -27,5 +27,7 @@ public class CourseRest {
     private String aboutCourseKz;
     private String aboutCourseRu;
     private String aboutCourseEn;
+    private Integer chapterCount;
+    private Integer lessonCount;
     
 }

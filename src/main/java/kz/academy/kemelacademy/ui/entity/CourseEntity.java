@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -63,6 +65,12 @@ public class CourseEntity extends AbstractNameEntity {
     private String aboutCourseEn;
     
     private Boolean deleted = false;
+    
+    @OneToMany(
+            mappedBy = "course",
+            cascade = CascadeType.ALL
+    )
+    private Set<ChapterEntity> chapters = new HashSet<>();
     
     //todo add certificate_id
     
