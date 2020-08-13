@@ -47,7 +47,7 @@ public class ChapterController {
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
-        ChapterDto chapterDto = convertModelToDto(chapterRequestModel, false);
+        ChapterDto chapterDto = convertModelToDto(chapterRequestModel);
         
         ChapterDto createdChapter;
         try {
@@ -71,7 +71,7 @@ public class ChapterController {
         return ret;
     }
     
-    private ChapterDto convertModelToDto(ChapterRequestModel chapterRequestModel, boolean update) {
+    private ChapterDto convertModelToDto(ChapterRequestModel chapterRequestModel) {
         ChapterDto ret = new ChapterDto();
         
         if (chapterRequestModel.getCourseId() != null) {
@@ -126,6 +126,27 @@ public class ChapterController {
         }
         
         return convertDtoToModel(chapterDto);
+    }
+    
+    @Transactional
+    @PutMapping(path = "/{id}")
+    public ChapterRest updateChapter(@PathVariable("id") long id,
+                                     @RequestBody ChapterRequestModel chapterRequestModel) {
+        ChapterRest returnValue;
+        
+        ChapterDto chapterDto = convertModelToDto(chapterRequestModel);
+        
+        ChapterDto updatedChapter;
+        try {
+            updatedChapter = chapterService.updateChapter(id, chapterDto);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        returnValue = convertDtoToModel(updatedChapter);
+        
+        return returnValue;
     }
     
 }
