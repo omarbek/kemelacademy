@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -28,5 +30,11 @@ public class ChapterEntity extends AbstractNameEntity {
     private Integer chapterNo;
     
     private boolean deleted = false;
+    
+    @OneToMany(
+            mappedBy = "chapter",
+            cascade = CascadeType.ALL
+    )
+    private Set<LessonEntity> lessons = new HashSet<>();
     
 }
