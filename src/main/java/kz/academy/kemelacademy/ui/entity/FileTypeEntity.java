@@ -18,6 +18,10 @@ import java.util.Set;
 @ToString(callSuper = true)
 public class FileTypeEntity extends AbstractNameEntity {
     
+    public static final Long FOR_DOWNLOAD = 1L;
+    public static final Long FOR_TESTS = 2L;
+    public static final Long FOR_CERTIFICATE = 3L;
+    
     @OneToMany(
             mappedBy = "fileType",
             cascade = CascadeType.ALL

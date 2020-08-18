@@ -13,10 +13,14 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "lesson_type")
+@Table(name = "lesson_types")
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class LessonTypeEntity extends AbstractNameEntity {
+    
+    public static final Long VIDEO = 1L;
+    public static final Long FILE = 2L;
+    public static final Long TEST = 3L;
     
     @OneToMany(
             mappedBy = "lessonType",

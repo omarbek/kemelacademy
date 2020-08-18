@@ -26,4 +26,6 @@ public class TestEntity {
     @JoinColumn(name = "file_id", referencedColumnName = "id")
     private FileEntity file = new FileEntity();
     
+    private String description;
+    
 }
