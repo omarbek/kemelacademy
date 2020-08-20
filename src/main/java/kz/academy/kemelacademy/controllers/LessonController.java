@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Omarbek.Dinassil
  * on 2020-08-14
@@ -82,6 +85,27 @@ public class LessonController {
         returnValue = convertDtoToModel(uploadedFileDto);
         
         return returnValue;
+    }
+    
+    @GetMapping
+    @Transactional
+    public List<LessonRest> getChapters(@RequestParam(value = "page", defaultValue = "0") int page,
+                                        @RequestParam(value = "limit", defaultValue = "25") int limit,
+                                        @RequestParam(value = "chapterId", required = false) Long chapterId) {
+        List<LessonRest> returnVal = new ArrayList<>();
+        
+        List<LessonDto> lessons;
+        try {
+            lessons = lessonService.getAll(page, limit, chapterId);
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        for (LessonDto lessonDto: lessons) {
+            LessonRest lessonRest = convertDtoToModel(lessonDto);
+            returnVal.add(lessonRest);
+        }
+        
+        return returnVal;
     }
     
     private LessonRest convertDtoToModel(LessonDto createdLesson) {

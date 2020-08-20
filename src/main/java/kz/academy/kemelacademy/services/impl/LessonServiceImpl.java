@@ -13,12 +13,17 @@ import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -93,6 +98,35 @@ public class LessonServiceImpl implements ILessonService {
         LessonEntity uploadedFileLessonEntity = lessonRepository.save(lessonEntity);
         
         return convertEntityToDto(uploadedFileLessonEntity);
+    }
+    
+    @Override
+    public List<LessonDto> getAll(int page, int limit, Long chapterId) throws Exception {
+        List<LessonDto> returnValue = new ArrayList<>();
+        
+        if (page > 0) {
+            page -= 1;
+        }
+        
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<LessonEntity> lessonEntityPage = lessonRepository.findAll(pageable);
+        List<LessonEntity> lessonEntities = lessonEntityPage.getContent();
+        
+        for (LessonEntity lessonEntity: lessonEntities) {
+            if (!lessonEntity.isDeleted()) {
+                if (chapterId != null) {
+                    if (lessonEntity.getChapter().getId().equals(chapterId)) {
+                        LessonDto lessonDto = convertEntityToDto(lessonEntity);
+                        returnValue.add(lessonDto);
+                    }
+                } else {
+                    LessonDto lessonDto = convertEntityToDto(lessonEntity);
+                    returnValue.add(lessonDto);
+                }
+            }
+        }
+        
+        return returnValue;
     }
     
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
