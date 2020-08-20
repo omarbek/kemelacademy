@@ -19,6 +19,9 @@ public class SecurityConstants {
     static final String PASSWORD_RESET_REQUEST_URL = "/users/password-reset-request";
     static final String PASSWORD_RESET_URL = "/users/password-reset";
     static final String HELLO_URL = "/users/hello-inter";
+    static final String INDEX = "/index";
+    static final String UPLOAD = "/upload";
+    static final String UPLOAD_STATUS = "/uploadStatus";
     
     public static String getTokenSecret() {
         AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("AppProperties");

@@ -21,6 +21,7 @@ public enum ErrorMessages {
     NO_RECORD_FOUND("no.record.found"),
     DID_NOT_SEND_EMAIL("did.not.send.email"),//Кажется здесь нужно еще добавить и неверно отправившихся почту
     EMAIL_ALREADY_EXISTS("email.already.exists"),//how to dont miss the InternalServerError in the cases like this
+    PLEASE_SELECT_FILE("please.select.file"),//how to dont miss the InternalServerError in the cases like this
     
     ;
     

@@ -9,6 +9,6 @@ import kz.academy.kemelacademy.ui.dto.LessonDto;
  */
 public interface ILessonService {
     
-    LessonDto createLesson(LessonDto lessonDto);
+    LessonDto createLesson(LessonDto lessonDto) throws Exception;
     
 }

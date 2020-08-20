@@ -31,7 +31,7 @@ public class LessonServiceImpl implements ILessonService {
     private IVideoRepository videoRepository;
     
     @Override
-    public LessonDto createLesson(LessonDto lessonDto) {
+    public LessonDto createLesson(LessonDto lessonDto) throws Exception {
         LessonEntity lessonEntity = new LessonEntity();
         
         convertDtoToEntity(lessonDto, lessonEntity, false);
@@ -88,7 +88,7 @@ public class LessonServiceImpl implements ILessonService {
                     throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
                 }
                 BeanUtils.copyProperties(fileTypeById, fileEntity.getFileType());
-                fileEntity.setName(lessonDto.getFileName());
+                fileEntity.setName(null);
                 
                 lessonEntity.setFile(fileEntity);
             } else {
