@@ -42,7 +42,7 @@ public class LessonController {
     
     @PostMapping
     @Transactional
-    public LessonRest createLesson(@RequestBody LessonRequestModel lessonRequestModel) {
+    public LessonRest create(@RequestBody LessonRequestModel lessonRequestModel) {
         LessonRest returnValue;
         
         Object[] fields = {
@@ -89,9 +89,9 @@ public class LessonController {
     
     @GetMapping
     @Transactional
-    public List<LessonRest> getChapters(@RequestParam(value = "page", defaultValue = "0") int page,
-                                        @RequestParam(value = "limit", defaultValue = "25") int limit,
-                                        @RequestParam(value = "chapterId", required = false) Long chapterId) {
+    public List<LessonRest> getAll(@RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "limit", defaultValue = "25") int limit,
+                                   @RequestParam(value = "chapterId", required = false) Long chapterId) {
         List<LessonRest> returnVal = new ArrayList<>();
         
         List<LessonDto> lessons;
@@ -106,6 +106,21 @@ public class LessonController {
         }
         
         return returnVal;
+    }
+    
+    @Transactional
+    @GetMapping(path = "/{id}")
+    public LessonRest getById(@PathVariable("id") long id) {
+        LessonDto lessonDto;
+        try {
+            lessonDto = lessonService.getLessonById(id);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        return convertDtoToModel(lessonDto);
     }
     
     private LessonRest convertDtoToModel(LessonDto createdLesson) {
