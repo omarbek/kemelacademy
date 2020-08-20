@@ -146,6 +146,17 @@ public class LessonServiceImpl implements ILessonService {
         return returnValue;
     }
     
+    @Override
+    public void delete(long id) throws Exception {
+        Optional<LessonEntity> optional = lessonRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        LessonEntity entity = optional.get();
+        entity.setDeleted(true);
+        lessonRepository.save(entity);
+    }
+    
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
         LessonDto ret = new LessonDto();
         

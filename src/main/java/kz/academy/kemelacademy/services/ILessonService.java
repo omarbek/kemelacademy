@@ -22,4 +22,6 @@ public interface ILessonService {
     
     LessonDto update(long id, LessonDto dto) throws Exception;
     
+    void delete(long id) throws Exception;
+    
 }
