@@ -42,25 +42,25 @@ public class LessonController {
     
     @PostMapping
     @Transactional
-    public LessonRest create(@RequestBody LessonRequestModel lessonRequestModel) {
+    public LessonRest create(@RequestBody LessonRequestModel requestModel) {
         LessonRest returnValue;
         
         Object[] fields = {
-                lessonRequestModel.getLessonTypeId(),
-                lessonRequestModel.getChapterId(),
-                lessonRequestModel.getLessonNo()
+                requestModel.getLessonTypeId(),
+                requestModel.getChapterId(),
+                requestModel.getLessonNo()
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
-        LessonDto lessonDto = convertModelToDto(lessonRequestModel);
+        LessonDto dto = convertModelToDto(requestModel, false);
         
-        LessonDto createdLesson;
+        LessonDto createdDto;
         try {
-            createdLesson = lessonService.createLesson(lessonDto);
+            createdDto = lessonService.create(dto);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        returnValue = convertDtoToModel(createdLesson);
+        returnValue = convertDtoToModel(createdDto);
         
         return returnValue;
     }
@@ -94,15 +94,15 @@ public class LessonController {
                                    @RequestParam(value = "chapterId", required = false) Long chapterId) {
         List<LessonRest> returnVal = new ArrayList<>();
         
-        List<LessonDto> lessons;
+        List<LessonDto> dtoList;
         try {
-            lessons = lessonService.getAll(page, limit, chapterId);
+            dtoList = lessonService.getAll(page, limit, chapterId);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        for (LessonDto lessonDto: lessons) {
-            LessonRest lessonRest = convertDtoToModel(lessonDto);
-            returnVal.add(lessonRest);
+        for (LessonDto dto: dtoList) {
+            LessonRest rest = convertDtoToModel(dto);
+            returnVal.add(rest);
         }
         
         return returnVal;
@@ -111,46 +111,48 @@ public class LessonController {
     @Transactional
     @GetMapping(path = "/{id}")
     public LessonRest getById(@PathVariable("id") long id) {
-        LessonDto lessonDto;
+        LessonDto dto;
         try {
-            lessonDto = lessonService.getLessonById(id);
+            dto = lessonService.getLessonById(id);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        return convertDtoToModel(lessonDto);
+        return convertDtoToModel(dto);
     }
     
-    private LessonRest convertDtoToModel(LessonDto createdLesson) {
+    private LessonRest convertDtoToModel(LessonDto createdDto) {
         LessonRest ret = new LessonRest();
         
-        ret.setLessonType(createdLesson.getLessonTypeDto().toString());
-        ret.setChapter(createdLesson.getChapterDto().toString());
-        BeanUtils.copyProperties(createdLesson, ret);
+        ret.setLessonType(createdDto.getLessonTypeDto().toString());
+        ret.setChapter(createdDto.getChapterDto().toString());
+        BeanUtils.copyProperties(createdDto, ret);
         
         return ret;
     }
     
-    private LessonDto convertModelToDto(LessonRequestModel lessonRequestModel) {
+    private LessonDto convertModelToDto(LessonRequestModel requestModel, boolean update) {
         LessonDto ret = new LessonDto();
         
-        if (lessonRequestModel.getLessonTypeId() != null) {
-            LessonTypeDto lessonTypeDto;
-            try {
-                lessonTypeDto = lessonTypeService.getLessonTypeById(lessonRequestModel.getLessonTypeId());
-            } catch (ServiceException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        if (!update) {
+            if (requestModel.getLessonTypeId() != null) {
+                LessonTypeDto lessonTypeDto;
+                try {
+                    lessonTypeDto = lessonTypeService.getLessonTypeById(requestModel.getLessonTypeId());
+                } catch (ServiceException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+                }
+                ret.setLessonTypeDto(lessonTypeDto);
             }
-            ret.setLessonTypeDto(lessonTypeDto);
         }
-        if (lessonRequestModel.getChapterId() != null) {
+        if (requestModel.getChapterId() != null) {
             ChapterDto chapterDto;
             try {
-                chapterDto = chapterService.getChapterById(lessonRequestModel.getChapterId());
+                chapterDto = chapterService.getChapterById(requestModel.getChapterId());
             } catch (ServiceException e) {
                 throw e;
             } catch (Exception e) {
@@ -159,9 +161,30 @@ public class LessonController {
             ret.setChapterDto(chapterDto);
         }
         
-        BeanUtils.copyProperties(lessonRequestModel, ret);
+        BeanUtils.copyProperties(requestModel, ret);
         
         return ret;
+    }
+    
+    @Transactional
+    @PutMapping(path = "/{id}")
+    public LessonRest update(@PathVariable("id") long id,
+                             @RequestBody LessonRequestModel requestModel) {
+        LessonRest returnValue;
+        
+        LessonDto dto = convertModelToDto(requestModel, true);
+        
+        LessonDto updatedDto;
+        try {
+            updatedDto = lessonService.update(id, dto);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        returnValue = convertDtoToModel(updatedDto);
+        
+        return returnValue;
     }
     
 }

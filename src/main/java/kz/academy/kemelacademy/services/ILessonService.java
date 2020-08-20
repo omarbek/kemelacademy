@@ -12,12 +12,14 @@ import java.util.List;
  */
 public interface ILessonService {
     
-    LessonDto createLesson(LessonDto lessonDto) throws Exception;
+    LessonDto create(LessonDto lessonDto) throws Exception;
     
     LessonDto getLessonById(Long lessonId);
     
     LessonDto uploadFile(Long lessonId, MultipartFile file) throws Exception;
     
     List<LessonDto> getAll(int page, int limit, Long chapterId) throws Exception;
+    
+    LessonDto update(long id, LessonDto dto) throws Exception;
     
 }

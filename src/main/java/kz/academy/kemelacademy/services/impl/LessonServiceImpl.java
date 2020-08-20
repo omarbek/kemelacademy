@@ -1,10 +1,7 @@
 package kz.academy.kemelacademy.services.impl;
 
 import kz.academy.kemelacademy.exceptions.ServiceException;
-import kz.academy.kemelacademy.repositories.IFileRepository;
-import kz.academy.kemelacademy.repositories.ILessonRepository;
-import kz.academy.kemelacademy.repositories.ITestRepository;
-import kz.academy.kemelacademy.repositories.IVideoRepository;
+import kz.academy.kemelacademy.repositories.*;
 import kz.academy.kemelacademy.services.IFileTypeService;
 import kz.academy.kemelacademy.services.ILessonService;
 import kz.academy.kemelacademy.ui.dto.FileTypeDto;
@@ -49,10 +46,13 @@ public class LessonServiceImpl implements ILessonService {
     @Autowired
     private ITestRepository testRepository;
     
+    @Autowired
+    private IChapterRepository chapterRepository;
+    
     private static String UPLOADED_FOLDER = "/Users/omar/Desktop/";
     
     @Override
-    public LessonDto createLesson(LessonDto lessonDto) throws Exception {
+    public LessonDto create(LessonDto lessonDto) throws Exception {
         LessonEntity lessonEntity = new LessonEntity();
         
         convertDtoToEntity(lessonDto, lessonEntity, false);
@@ -129,6 +129,23 @@ public class LessonServiceImpl implements ILessonService {
         return returnValue;
     }
     
+    @Override
+    public LessonDto update(long id, LessonDto dto) throws Exception {
+        LessonDto returnValue;
+        
+        Optional<LessonEntity> optional = lessonRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        LessonEntity entity = optional.get();
+        convertDtoToEntity(dto, entity, true);
+        
+        LessonEntity updatedEntity = lessonRepository.save(entity);
+        returnValue = convertEntityToDto(updatedEntity);
+        
+        return returnValue;
+    }
+    
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
         LessonDto ret = new LessonDto();
         
@@ -183,7 +200,7 @@ public class LessonServiceImpl implements ILessonService {
                 fileRepository.save(fileEntity);
                 
                 lessonEntity.setFile(fileEntity);
-            } else {
+            } else {//test
                 TestEntity testEntity = new TestEntity();
                 testEntity.setLesson(lessonEntity);
                 
@@ -206,6 +223,48 @@ public class LessonServiceImpl implements ILessonService {
                 testRepository.save(testEntity);
                 
                 lessonEntity.setTest(testEntity);
+            }
+        } else {
+            Long chapterId = lessonDto.getChapterDto().getId();
+            if (chapterId != null) {
+                if (!chapterId.equals(lessonEntity.getChapter().getId())) {
+                    Optional<ChapterEntity> optional = chapterRepository.findById(chapterId);
+                    ChapterEntity chapterEntity = optional.get();
+                    lessonEntity.setChapter(chapterEntity);
+                }
+            }
+            if (lessonDto.getLessonNo() != null) {
+                lessonEntity.setLessonNo(lessonDto.getLessonNo());
+            }
+            if (lessonDto.getDuration() != null) {
+                lessonEntity.setDuration(lessonDto.getDuration());
+            }
+            if (lessonDto.getNameKz() != null) {
+                lessonEntity.setNameKz(lessonDto.getNameKz());
+            }
+            if (lessonDto.getNameRu() != null) {
+                lessonEntity.setNameRu(lessonDto.getNameRu());
+            }
+            if (lessonDto.getNameEn() != null) {
+                lessonEntity.setNameEn(lessonDto.getNameEn());
+            }
+            
+            if (LessonTypeEntity.VIDEO.equals(lessonEntity.getLessonType().getId())) {
+                if (lessonDto.getUrl() != null) {
+                    lessonEntity.getVideo().setUrl(lessonDto.getUrl());
+                }
+                lessonEntity.getVideo().setAlwaysOpen(lessonDto.isAlwaysOpen());
+            } else if (LessonTypeEntity.FILE.equals(lessonEntity.getLessonType().getId())) {
+                if (lessonDto.getFileName() != null) {
+                    lessonEntity.getFile().setName(lessonDto.getFileName());
+                }
+            } else {//test
+                if (lessonDto.getTestFileName() != null) {
+                    lessonEntity.getTest().getFile().setName(lessonDto.getTestFileName());
+                }
+                if (lessonDto.getDescription() != null) {
+                    lessonEntity.getTest().setDescription(lessonDto.getDescription());
+                }
             }
         }
     }
