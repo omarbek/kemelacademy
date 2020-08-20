@@ -15,10 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Omarbek.Dinassil
@@ -60,6 +58,28 @@ public class LessonController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         returnValue = convertDtoToModel(createdLesson);
+        
+        return returnValue;
+    }
+    
+    @Transactional
+    @PostMapping(path = "createFile/{id}")
+    public LessonRest createFile(@RequestParam("file") MultipartFile file,
+                                 @PathVariable("id") Long lessonId) {
+        LessonRest returnValue;
+        
+        if (file == null || file.isEmpty()) {
+            throw new ServiceException(ErrorMessages.PLEASE_SELECT_FILE.getErrorMessage());
+        }
+        
+        LessonDto uploadedFileDto;
+        try {
+            uploadedFileDto = lessonService.uploadFile(lessonId, file);
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        returnValue = convertDtoToModel(uploadedFileDto);
         
         return returnValue;
     }

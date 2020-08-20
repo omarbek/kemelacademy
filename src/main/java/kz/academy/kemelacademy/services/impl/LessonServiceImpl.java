@@ -1,6 +1,7 @@
 package kz.academy.kemelacademy.services.impl;
 
 import kz.academy.kemelacademy.exceptions.ServiceException;
+import kz.academy.kemelacademy.repositories.IFileRepository;
 import kz.academy.kemelacademy.repositories.ILessonRepository;
 import kz.academy.kemelacademy.repositories.IVideoRepository;
 import kz.academy.kemelacademy.services.IFileTypeService;
@@ -12,6 +13,12 @@ import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 /**
  * @author Omarbek.Dinassil
@@ -30,6 +37,11 @@ public class LessonServiceImpl implements ILessonService {
     @Autowired
     private IVideoRepository videoRepository;
     
+    @Autowired
+    private IFileRepository fileRepository;
+    
+    private static String UPLOADED_FOLDER = "/Users/omar/Desktop/";
+    
     @Override
     public LessonDto createLesson(LessonDto lessonDto) throws Exception {
         LessonEntity lessonEntity = new LessonEntity();
@@ -41,6 +53,40 @@ public class LessonServiceImpl implements ILessonService {
         return convertEntityToDto(savedLesson);
     }
     
+    @Override
+    public LessonDto getLessonById(Long lessonId) {
+        LessonDto returnValue;
+        
+        LessonEntity lessonEntity = getLessonEntityById(lessonId);
+        
+        returnValue = convertEntityToDto(lessonEntity);
+        
+        return returnValue;
+    }
+    
+    private LessonEntity getLessonEntityById(Long lessonId) {
+        Optional<LessonEntity> optional = lessonRepository.findById(lessonId);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        return optional.get();
+    }
+    
+    @Override
+    public LessonDto uploadFile(Long lessonId, MultipartFile file) throws Exception {
+        String filename = UPLOADED_FOLDER + file.getOriginalFilename();
+        
+        byte[] bytes = file.getBytes();
+        Path path = Paths.get(filename);
+        Files.write(path, bytes);
+        
+        LessonEntity lessonEntity = getLessonEntityById(lessonId);
+        lessonEntity.getFile().setName(filename);
+        LessonEntity uploadedFileLessonEntity = lessonRepository.save(lessonEntity);
+        
+        return convertEntityToDto(uploadedFileLessonEntity);
+    }
+    
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
         LessonDto ret = new LessonDto();
         
@@ -48,8 +94,10 @@ public class LessonServiceImpl implements ILessonService {
         BeanUtils.copyProperties(savedLesson.getChapter(), ret.getChapterDto());
         BeanUtils.copyProperties(savedLesson, ret);
         
-        ret.setUrl(savedLesson.getVideo().getUrl());
-        ret.setAlwaysOpen(savedLesson.getVideo().isAlwaysOpen());
+        if (savedLesson.getVideo() != null) {
+            ret.setUrl(savedLesson.getVideo().getUrl());
+            ret.setAlwaysOpen(savedLesson.getVideo().isAlwaysOpen());
+        }
         
         ret.setFileName(savedLesson.getFile() != null ? savedLesson.getFile().getName() : null);
         
@@ -89,6 +137,8 @@ public class LessonServiceImpl implements ILessonService {
                 }
                 BeanUtils.copyProperties(fileTypeById, fileEntity.getFileType());
                 fileEntity.setName(null);
+                
+                fileRepository.save(fileEntity);
                 
                 lessonEntity.setFile(fileEntity);
             } else {

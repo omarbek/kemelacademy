@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "file_type")
+@Table(name = "file_types")
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class FileTypeEntity extends AbstractNameEntity {
