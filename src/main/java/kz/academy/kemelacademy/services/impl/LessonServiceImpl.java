@@ -3,6 +3,7 @@ package kz.academy.kemelacademy.services.impl;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.IFileRepository;
 import kz.academy.kemelacademy.repositories.ILessonRepository;
+import kz.academy.kemelacademy.repositories.ITestRepository;
 import kz.academy.kemelacademy.repositories.IVideoRepository;
 import kz.academy.kemelacademy.services.IFileTypeService;
 import kz.academy.kemelacademy.services.ILessonService;
@@ -39,6 +40,9 @@ public class LessonServiceImpl implements ILessonService {
     
     @Autowired
     private IFileRepository fileRepository;
+    
+    @Autowired
+    private ITestRepository testRepository;
     
     private static String UPLOADED_FOLDER = "/Users/omar/Desktop/";
     
@@ -81,7 +85,11 @@ public class LessonServiceImpl implements ILessonService {
         Files.write(path, bytes);
         
         LessonEntity lessonEntity = getLessonEntityById(lessonId);
-        lessonEntity.getFile().setName(filename);
+        if (LessonTypeEntity.FILE.equals(lessonEntity.getLessonType().getId())) {
+            lessonEntity.getFile().setName(filename);
+        } else if (LessonTypeEntity.TEST.equals(lessonEntity.getLessonType().getId())) {
+            lessonEntity.getTest().getFile().setName(filename);
+        }
         LessonEntity uploadedFileLessonEntity = lessonRepository.save(lessonEntity);
         
         return convertEntityToDto(uploadedFileLessonEntity);
@@ -156,9 +164,12 @@ public class LessonServiceImpl implements ILessonService {
                 }
                 BeanUtils.copyProperties(fileTypeById, fileEntity.getFileType());
                 fileEntity.setName(lessonDto.getTestFileName());
+                fileEntity.setLesson(null);
                 
                 testEntity.setFile(fileEntity);
                 testEntity.setDescription(lessonDto.getDescription());
+                
+                testRepository.save(testEntity);
                 
                 lessonEntity.setTest(testEntity);
             }
