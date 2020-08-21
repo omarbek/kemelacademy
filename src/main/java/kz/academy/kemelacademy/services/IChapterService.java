@@ -19,4 +19,6 @@ public interface IChapterService {
     
     ChapterDto updateChapter(long id, ChapterDto chapterDto) throws Exception;
     
+    void delete(long id) throws Exception;
+    
 }

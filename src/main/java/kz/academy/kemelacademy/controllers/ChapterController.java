@@ -6,8 +6,11 @@ import kz.academy.kemelacademy.services.ICourseService;
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
+import kz.academy.kemelacademy.ui.enums.RequestOperationName;
+import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
 import kz.academy.kemelacademy.ui.model.request.ChapterRequestModel;
 import kz.academy.kemelacademy.ui.model.response.ChapterRest;
+import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.utils.ThrowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -147,6 +150,23 @@ public class ChapterController {
         returnValue = convertDtoToModel(updatedChapter);
         
         return returnValue;
+    }
+    
+    @Transactional
+    @DeleteMapping(path = "/{id}")
+    public OperationStatusModel delete(@PathVariable("id") long id) {
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+        operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
+        
+        try {
+            chapterService.delete(id);
+            operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+        
+        return operationStatusModel;
     }
     
 }

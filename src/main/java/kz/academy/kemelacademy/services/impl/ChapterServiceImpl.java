@@ -98,6 +98,17 @@ public class ChapterServiceImpl implements IChapterService {
         return returnValue;
     }
     
+    @Override
+    public void delete(long id) throws Exception {
+        Optional<ChapterEntity> optional = chapterRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        ChapterEntity entity = optional.get();
+        entity.setDeleted(true);
+        chapterRepository.save(entity);
+    }
+    
     private ChapterDto convertEntityToDto(ChapterEntity savedChapter) {
         ChapterDto ret = new ChapterDto();
         
