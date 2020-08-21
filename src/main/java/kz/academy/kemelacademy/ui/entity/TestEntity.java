@@ -3,6 +3,7 @@ package kz.academy.kemelacademy.ui.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -27,5 +28,8 @@ public class TestEntity {
     private FileEntity file = new FileEntity();
     
     private String description;
+    
+    @OneToMany(mappedBy = "test")
+    private Set<UserTestEntity> userTests;
     
 }

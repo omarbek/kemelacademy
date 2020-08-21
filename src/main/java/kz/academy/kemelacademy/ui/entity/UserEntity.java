@@ -58,6 +58,9 @@ public class UserEntity implements Serializable {
     )
     private Set<CourseEntity> courses = new HashSet<>();
     
+    @OneToMany(mappedBy = "user")
+    private Set<UserTestEntity> userTests;
+    
     @Override
     public String toString() {
         StringBuilder fullNameSB = new StringBuilder();

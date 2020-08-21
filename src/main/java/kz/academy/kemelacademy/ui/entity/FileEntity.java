@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -34,5 +36,10 @@ public class FileEntity {
     
     @OneToOne(mappedBy = "file")
     private TestEntity test;
+    
+    @ManyToMany(mappedBy = "files")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<UserTestEntity> userTests = new HashSet<>();
     
 }
