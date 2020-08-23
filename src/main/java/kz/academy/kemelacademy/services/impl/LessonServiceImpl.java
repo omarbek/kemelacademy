@@ -4,10 +4,13 @@ import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.*;
 import kz.academy.kemelacademy.services.IFileTypeService;
 import kz.academy.kemelacademy.services.ILessonService;
+import kz.academy.kemelacademy.ui.dto.FileDto;
 import kz.academy.kemelacademy.ui.dto.FileTypeDto;
 import kz.academy.kemelacademy.ui.dto.LessonDto;
+import kz.academy.kemelacademy.ui.dto.UserTestDto;
 import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
+import kz.academy.kemelacademy.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,6 +51,18 @@ public class LessonServiceImpl implements ILessonService {
     
     @Autowired
     private IChapterRepository chapterRepository;
+    
+    @Autowired
+    private ITestStatusRepository testStatusRepository;
+    
+    @Autowired
+    private IUserTestRepository userTestRepository;
+    
+    @Autowired
+    private IFileTypeRepository fileTypeRepository;
+    
+    @Autowired
+    private UserUtils userUtils;
     
     private static String UPLOADED_FOLDER = "/Users/omar/Desktop/";
     
@@ -157,6 +172,81 @@ public class LessonServiceImpl implements ILessonService {
         lessonRepository.save(entity);
     }
     
+    @Override
+    public UserTestDto uploadTest(Long testId) throws Exception {
+        UserTestEntity entity = new UserTestEntity();
+        entity.setUser(userUtils.getCurrentUserEntity());
+        
+        Optional<TestEntity> optional = testRepository.findById(testId);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        TestEntity testEntity = optional.get();
+        entity.setTest(testEntity);
+        
+        Optional<TestStatusEntity> testEntityOptional = testStatusRepository.findById(TestStatusEntity.NOT_OPEN);
+        if (!testEntityOptional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        TestStatusEntity testStatusEntity = testEntityOptional.get();
+        entity.setTestStatus(testStatusEntity);
+        
+        userTestRepository.save(entity);
+        
+        UserTestDto ret = new UserTestDto();
+        BeanUtils.copyProperties(entity.getUser(), ret.getUser());
+        BeanUtils.copyProperties(entity.getTestStatus(), ret.getTestStatus());
+        BeanUtils.copyProperties(entity.getTest().getLesson(), ret.getTest());
+        BeanUtils.copyProperties(entity, ret);
+        
+        return ret;
+    }
+    
+    @Override
+    public UserTestDto uploadHomeWork(Long userTestId, MultipartFile file) throws Exception {
+        String filename = UPLOADED_FOLDER + file.getOriginalFilename();
+        
+        byte[] bytes = file.getBytes();
+        Path path = Paths.get(filename);
+        Files.write(path, bytes);
+        
+        Optional<UserTestEntity> optional = userTestRepository.findById(userTestId);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        UserTestEntity entity = optional.get();
+        
+        FileEntity fileEntity = new FileEntity();
+        
+        Optional<FileTypeEntity> entityOptional = fileTypeRepository.findById(FileTypeEntity.FOR_UPLOAD_TESTS);
+        if (!entityOptional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        FileTypeEntity fileTypeEntity = entityOptional.get();
+        fileEntity.setFileType(fileTypeEntity);
+        fileEntity.setName(filename);
+        fileEntity.setLesson(null);
+        fileRepository.save(fileEntity);
+        
+        entity.getFiles().add(fileEntity);
+        userTestRepository.save(entity);
+        
+        UserTestDto ret = new UserTestDto();
+        BeanUtils.copyProperties(entity.getUser(), ret.getUser());
+        BeanUtils.copyProperties(entity.getTestStatus(), ret.getTestStatus());
+        BeanUtils.copyProperties(entity.getTest().getLesson(), ret.getTest());
+        
+        for (FileEntity val: entity.getFiles()) {
+            FileDto fileDto = new FileDto();
+            fileDto.setName(val.getName());
+            ret.getFiles().add(fileDto);
+        }
+        
+        BeanUtils.copyProperties(entity, ret);
+        
+        return ret;
+    }
+    
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
         LessonDto ret = new LessonDto();
         
@@ -218,7 +308,7 @@ public class LessonServiceImpl implements ILessonService {
                 FileEntity fileEntity = new FileEntity();
                 FileTypeDto fileTypeById;
                 try {
-                    fileTypeById = fileTypeService.getFileTypeById(FileTypeEntity.FOR_TESTS);
+                    fileTypeById = fileTypeService.getFileTypeById(FileTypeEntity.FOR_SEND_TESTS);
                 } catch (ServiceException e) {
                     throw e;
                 } catch (Exception e) {

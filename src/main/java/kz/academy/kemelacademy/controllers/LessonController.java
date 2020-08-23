@@ -4,15 +4,14 @@ import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IChapterService;
 import kz.academy.kemelacademy.services.ILessonService;
 import kz.academy.kemelacademy.services.ILessonTypeService;
-import kz.academy.kemelacademy.ui.dto.ChapterDto;
-import kz.academy.kemelacademy.ui.dto.LessonDto;
-import kz.academy.kemelacademy.ui.dto.LessonTypeDto;
+import kz.academy.kemelacademy.ui.dto.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
 import kz.academy.kemelacademy.ui.model.request.LessonRequestModel;
 import kz.academy.kemelacademy.ui.model.response.LessonRest;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
+import kz.academy.kemelacademy.ui.model.response.UserTestRest;
 import kz.academy.kemelacademy.utils.ThrowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -207,6 +206,54 @@ public class LessonController {
         }
         
         return operationStatusModel;
+    }
+    
+    @Transactional
+    @PostMapping(path = "sendTestWork/{testId}")
+    public UserTestRest sendTestWork(@PathVariable("testId") Long testId) {
+        UserTestDto dto;
+        try {
+            dto = lessonService.uploadTest(testId);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        UserTestRest ret = new UserTestRest();
+        ret.setTest(dto.getTest().toString());
+        ret.setStatus(dto.getTestStatus().toString());
+        BeanUtils.copyProperties(dto, ret);
+        
+        return ret;
+    }
+    
+    @Transactional
+    @PostMapping(path = "uploadHomeWork/{id}")
+    public UserTestRest uploadHomeWork(@RequestParam("file") MultipartFile file,
+                                       @PathVariable("id") Long userTestId) {
+        if (file == null || file.isEmpty()) {
+            throw new ServiceException(ErrorMessages.PLEASE_SELECT_FILE.getErrorMessage());
+        }
+        
+        UserTestDto uploadedFileDto;
+        try {
+            uploadedFileDto = lessonService.uploadHomeWork(userTestId, file);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        UserTestRest ret = new UserTestRest();
+        ret.setTest(uploadedFileDto.getTest().toString());
+        ret.setStatus(uploadedFileDto.getTestStatus().toString());
+        for (FileDto fileDto: uploadedFileDto.getFiles()) {
+            ret.getFileNames().add(fileDto.getName());
+        }
+        BeanUtils.copyProperties(uploadedFileDto, ret);
+        
+        return ret;
     }
     
 }

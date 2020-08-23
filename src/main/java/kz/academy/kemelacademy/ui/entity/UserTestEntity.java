@@ -32,7 +32,7 @@ public class UserTestEntity implements Serializable {
     private TestEntity test;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_status_id")
+    @JoinColumn(name = "status_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private TestStatusEntity testStatus = new TestStatusEntity();

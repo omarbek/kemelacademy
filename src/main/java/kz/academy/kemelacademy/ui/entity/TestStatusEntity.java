@@ -16,6 +16,10 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class TestStatusEntity extends AbstractNameEntity {
     
+    public static final Long NOT_OPEN = 1L;
+    public static final Long DOWNLOADED = 2L;
+    public static final Long COMPLETE = 3L;
+    
     @OneToMany(
             mappedBy = "testStatus",
             cascade = CascadeType.ALL

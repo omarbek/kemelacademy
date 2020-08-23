@@ -1,6 +1,8 @@
 package kz.academy.kemelacademy.ui.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -21,6 +23,8 @@ public class TestEntity {
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "lesson_id", referencedColumnName = "id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private LessonEntity lesson = new LessonEntity();
     
     @OneToOne(cascade = CascadeType.ALL)

@@ -19,8 +19,9 @@ import java.util.Set;
 public class FileTypeEntity extends AbstractNameEntity {
     
     public static final Long FOR_DOWNLOAD = 1L;
-    public static final Long FOR_TESTS = 2L;
+    public static final Long FOR_SEND_TESTS = 2L;
     public static final Long FOR_CERTIFICATE = 3L;
+    public static final Long FOR_UPLOAD_TESTS = 4L;
     
     @OneToMany(
             mappedBy = "fileType",
