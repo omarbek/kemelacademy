@@ -247,6 +247,36 @@ public class LessonServiceImpl implements ILessonService {
         return ret;
     }
     
+    @Override
+    public void changeStatus(Long userTestId, Long statusId) throws Exception {
+        Optional<UserTestEntity> entityOptional = userTestRepository.findById(userTestId);
+        if (!entityOptional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        UserTestEntity userTestEntity = entityOptional.get();
+        
+        Optional<TestStatusEntity> optional = testStatusRepository.findById(statusId);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        TestStatusEntity testStatusEntity = optional.get();
+        userTestEntity.setTestStatus(testStatusEntity);
+        
+        userTestRepository.save(userTestEntity);
+    }
+    
+    @Override
+    public void setGrade(Long userTestId, Integer grade, String comment) throws Exception {
+        Optional<UserTestEntity> entityOptional = userTestRepository.findById(userTestId);
+        if (!entityOptional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        UserTestEntity userTestEntity = entityOptional.get();
+        userTestEntity.setGrade(grade);
+        userTestEntity.setComment(comment);
+        userTestRepository.save(userTestEntity);
+    }
+    
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
         LessonDto ret = new LessonDto();
         

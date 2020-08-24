@@ -256,4 +256,42 @@ public class LessonController {
         return ret;
     }
     
+    @Transactional
+    @PostMapping(path = "changeStatus/{userTestId}/{statusId}")
+    public OperationStatusModel changeStatus(@PathVariable("userTestId") Long userTestId,
+                                             @PathVariable("statusId") Long statusId) {
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+        operationStatusModel.setOperationName(RequestOperationName.CHANGE_STATUS.name());
+        
+        try {
+            lessonService.changeStatus(userTestId, statusId);
+            operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+        
+        return operationStatusModel;
+    }
+    
+    @Transactional
+    @PostMapping(path = "setGrade/{userTestId}/{grade}/{comment}")
+    public OperationStatusModel setGrade(@PathVariable("userTestId") Long userTestId,
+                                         @PathVariable("grade") Integer grade,
+                                         @PathVariable(value = "comment", required = false) String comment) {
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+        operationStatusModel.setOperationName(RequestOperationName.SET_GRADE.name());
+        
+        try {
+            lessonService.setGrade(userTestId, grade, comment);
+            lessonService.changeStatus(userTestId, 3L);
+            operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+        
+        return operationStatusModel;
+    }
+    
 }

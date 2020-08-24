@@ -29,4 +29,8 @@ public interface ILessonService {
     
     UserTestDto uploadHomeWork(Long userTestId, MultipartFile file) throws Exception;
     
+    void changeStatus(Long userTestId, Long statusId) throws Exception;
+    
+    void setGrade(Long userTestId, Integer grade, String comment) throws Exception;
+    
 }
