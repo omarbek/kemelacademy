@@ -30,6 +30,18 @@
     <changeSet logicalFilePath="path-independent" id="omar_08" author="omar">
         <sqlFile path="/omar/20200803/script_1.sql" relativeToChangelogFile="true" splitStatements="true"/>
     </changeSet>
+    <changeSet logicalFilePath="path-independent" id="aknur_01" author="aknur">
+        <sqlFile path="/aknur/20200806/script_1.sql" relativeToChangelogFile="true" splitStatements="true"/>
+    </changeSet>
+    <changeSet logicalFilePath="path-independent" id="aknur_02" author="aknur">
+        <sqlFile path="/aknur/20200807/script_1.sql" relativeToChangelogFile="true" splitStatements="true"/>
+    </changeSet>
+    <changeSet logicalFilePath="path-independent" id="aknur_03" author="aknur">
+        <sqlFile path="/aknur/20200807/script_2.sql" relativeToChangelogFile="true" splitStatements="true"/>
+    </changeSet>
+    <changeSet logicalFilePath="path-independent" id="aknur_04" author="aknur">
+        <sqlFile path="/aknur/20200807/script_3.sql" relativeToChangelogFile="true" splitStatements="true"/>
+    </changeSet>
     <changeSet logicalFilePath="path-independent" id="omar_09" author="omar">
         <sqlFile path="/omar/20200806/script_1.sql" relativeToChangelogFile="true" splitStatements="true"/>
     </changeSet>
