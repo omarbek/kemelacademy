@@ -139,8 +139,15 @@ public class UserController {
     }
     
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}",
-                    paramType = "header")
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${userController.authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
     })
     @GetMapping
     @Transactional
