@@ -1,7 +1,8 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -13,11 +14,11 @@ import java.util.Set;
  * on 2020-08-06
  * @project kemelacademy
  */
-@Data
 @Entity
+@Setter
+@Getter
 @Table(name = "courses")
-@EqualsAndHashCode(callSuper = true)
-@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class CourseEntity extends AbstractNameEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -73,5 +74,10 @@ public class CourseEntity extends AbstractNameEntity {
     private Set<ChapterEntity> chapters = new HashSet<>();
     
     //todo add certificate_id
+    
+    @Override
+    public String toString() {
+        return super.toString();
+    }
     
 }

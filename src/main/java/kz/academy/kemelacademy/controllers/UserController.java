@@ -1,5 +1,8 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
@@ -82,6 +85,8 @@ public class UserController {
         }
     }
     
+    @ApiOperation(value = "The Get User Details Web Service Endpoint",
+            notes = "${userController.getUser.apiOperation.notes}")
     @GetMapping(path = "/{id}")
     public UserRest getUser(@PathVariable("id") String userId) {
         UserRest returnValue = new UserRest();
@@ -133,6 +138,10 @@ public class UserController {
         return operationStatusModel;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}",
+                    paramType = "header")
+    })
     @GetMapping
     @Transactional
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
