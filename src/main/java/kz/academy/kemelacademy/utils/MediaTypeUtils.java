@@ -1,4 +1,4 @@
-package kz.academy.kemelacademy.controllers;
+package kz.academy.kemelacademy.utils;
 
 import org.springframework.http.MediaType;
 
