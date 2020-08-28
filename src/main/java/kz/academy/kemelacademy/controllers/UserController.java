@@ -87,6 +87,17 @@ public class UserController {
     
     @ApiOperation(value = "The Get User Details Web Service Endpoint",
             notes = "${userController.getUser.apiOperation.notes}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping(path = "/{id}")
     public UserRest getUser(@PathVariable("id") String userId) {
         UserRest returnValue = new UserRest();
@@ -97,6 +108,17 @@ public class UserController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PutMapping(path = "/{id}")
     public UserRest updateUser(@PathVariable("id") String userId,
                                @RequestBody UserDetailsRequestModel userDetailsRequestModel) {
@@ -122,6 +144,17 @@ public class UserController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @DeleteMapping(path = "/{id}")
     public OperationStatusModel deleteUser(@PathVariable("id") String userId) {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
@@ -141,7 +174,7 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(
                     name = "authorization",
-                    value = "${userController.authorizationHeader.description}",
+                    value = "${authorizationHeader.description}",
                     paramType = "header"),
             @ApiImplicitParam(
                     name = "accept-language",
