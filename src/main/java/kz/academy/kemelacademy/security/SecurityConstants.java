@@ -29,6 +29,7 @@ public class SecurityConstants {
     static final String CHAPTERS_URL = "/chapters/**";
     static final String COURSES_URL = "/courses/**";
     static final String FILE_TYPES_URL = "/file_types/**";
+    static final String LANGUAGES_URL = "/languages/**";
     
     public static String getTokenSecret() {
         AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("AppProperties");

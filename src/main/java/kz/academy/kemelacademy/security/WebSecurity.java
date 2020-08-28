@@ -39,6 +39,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, SecurityConstants.CHAPTERS_URL).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.COURSES_URL).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.FILE_TYPES_URL).permitAll()
+                .antMatchers(HttpMethod.GET, SecurityConstants.LANGUAGES_URL).permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.HELLO_URL).hasRole("MODERATOR")
                 .anyRequest().authenticated().and()

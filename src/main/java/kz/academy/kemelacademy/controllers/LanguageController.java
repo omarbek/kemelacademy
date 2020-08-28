@@ -1,5 +1,7 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.ILanguageService;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
@@ -66,6 +68,17 @@ public class LanguageController {
         return languageRest;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping
     public LanguageRest createLanguage(@RequestBody LanguageRequestModel languageRequestModel) {
         LanguageRest returnValue = new LanguageRest();
