@@ -1,5 +1,7 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.*;
 import kz.academy.kemelacademy.ui.dto.*;
@@ -45,6 +47,17 @@ public class CourseController {
     @Autowired
     private ILanguageService languageService;
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping
     @Transactional
     public CourseRest createCategory(@RequestBody CourseRequestModel courseRequestModel) {
@@ -182,6 +195,17 @@ public class CourseController {
         return convertDtoToModel(courseDto);
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @PutMapping(path = "/{id}")
     public CourseRest updateCourse(@PathVariable("id") long id,
@@ -203,6 +227,17 @@ public class CourseController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @DeleteMapping(path = "/{id}")
     public OperationStatusModel deleteCourse(@PathVariable("id") long id) {
