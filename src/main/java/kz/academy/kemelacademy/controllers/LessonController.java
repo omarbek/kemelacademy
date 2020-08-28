@@ -1,5 +1,7 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IChapterService;
 import kz.academy.kemelacademy.services.ILessonService;
@@ -42,6 +44,17 @@ public class LessonController {
     @Autowired
     private ILessonService lessonService;
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping
     @Transactional
     public LessonRest create(@RequestBody LessonRequestModel requestModel) {
@@ -67,6 +80,17 @@ public class LessonController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @PostMapping(path = "createFile/{id}")
     public LessonRest createFile(@RequestParam("file") MultipartFile file,
@@ -91,6 +115,17 @@ public class LessonController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     @Transactional
     public List<LessonRest> getAll(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -112,6 +147,17 @@ public class LessonController {
         return returnVal;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @GetMapping(path = "/{id}")
     public LessonRest getById(@PathVariable("id") long id) {
@@ -170,6 +216,17 @@ public class LessonController {
         return ret;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @PutMapping(path = "/{id}")
     public LessonRest update(@PathVariable("id") long id,
@@ -191,6 +248,17 @@ public class LessonController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @DeleteMapping(path = "/{id}")
     public OperationStatusModel delete(@PathVariable("id") long id) {
@@ -208,6 +276,17 @@ public class LessonController {
         return operationStatusModel;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @PostMapping(path = "sendTestWork/{testId}")
     public UserTestRest sendTestWork(@PathVariable("testId") Long testId) {
@@ -228,6 +307,17 @@ public class LessonController {
         return ret;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @PostMapping(path = "uploadHomeWork/{id}")
     public UserTestRest uploadHomeWork(@RequestParam("file") MultipartFile file,
@@ -256,6 +346,17 @@ public class LessonController {
         return ret;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @PostMapping(path = "changeStatus/{userTestId}/{statusId}")
     public OperationStatusModel changeStatus(@PathVariable("userTestId") Long userTestId,
@@ -274,6 +375,17 @@ public class LessonController {
         return operationStatusModel;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @PostMapping(path = "setGrade/{userTestId}/{grade}/{comment}")
     public OperationStatusModel setGrade(@PathVariable("userTestId") Long userTestId,
