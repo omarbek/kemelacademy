@@ -1,5 +1,7 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.ITestStatusService;
 import kz.academy.kemelacademy.ui.dto.TestStatusDto;
@@ -58,7 +60,18 @@ public class TestStatusController {
         testStatusRest.setId(testStatusDto.getId());
         return testStatusRest;
     }
-
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping
     public TestStatusRest createLessonType(@RequestBody TestStatusRequestModel testStatusRequestModel) {
         TestStatusRest returnValue = new TestStatusRest();
