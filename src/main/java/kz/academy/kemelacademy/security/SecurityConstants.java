@@ -25,7 +25,8 @@ public class SecurityConstants {
     static final String UPLOAD = "/upload";
     static final String UPLOAD_STATUS = "/uploadStatus";
     
-    static final String GET_CATEGORIES_URL = "/categories/**";
+    static final String CATEGORIES_URL = "/categories/**";
+    static final String CHAPTERS_URL = "/chapters/**";
     
     public static String getTokenSecret() {
         AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("AppProperties");

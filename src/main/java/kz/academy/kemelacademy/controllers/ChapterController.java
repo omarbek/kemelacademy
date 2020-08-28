@@ -1,5 +1,7 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IChapterService;
 import kz.academy.kemelacademy.services.ICourseService;
@@ -37,6 +39,17 @@ public class ChapterController {
     @Autowired
     private ICourseService courseService;
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping
     @Transactional
     public ChapterRest createChapter(@RequestBody ChapterRequestModel chapterRequestModel) {
@@ -131,6 +144,17 @@ public class ChapterController {
         return convertDtoToModel(chapterDto);
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @PutMapping(path = "/{id}")
     public ChapterRest updateChapter(@PathVariable("id") long id,
@@ -152,6 +176,17 @@ public class ChapterController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @DeleteMapping(path = "/{id}")
     public OperationStatusModel delete(@PathVariable("id") long id) {
