@@ -160,6 +160,13 @@ public class CourseController {
         return courseDto;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     @Transactional
     public List<CourseRest> getCourses(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -180,6 +187,13 @@ public class CourseController {
         return returnVal;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @GetMapping(path = "/{id}")
     public CourseRest getCourse(@PathVariable("id") long id) {

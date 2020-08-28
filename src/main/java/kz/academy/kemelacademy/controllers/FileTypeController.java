@@ -26,7 +26,14 @@ public class FileTypeController {
 
     @Autowired
     private IFileTypeService fileTypeService;
-
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     public List<FileTypeRest> getFileTypes(@RequestParam(value = "page", defaultValue = "0") int page,
                                            @RequestParam(value = "limit", defaultValue = "25") int limit) {
@@ -93,7 +100,14 @@ public class FileTypeController {
 
         return returnValue;
     }
-
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping(path = "/{id}")
     public FileTypeRest getFiletype(@PathVariable("id") long id) {
         FileTypeDto fileTypeDto;

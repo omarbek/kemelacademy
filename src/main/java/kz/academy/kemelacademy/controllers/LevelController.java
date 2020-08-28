@@ -1,5 +1,7 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.ILevelService;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
@@ -30,6 +32,13 @@ public class LevelController {
     @Autowired
     private ILevelService levelService;
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     @Transactional
     public List<LevelRest> getRoles() {
@@ -49,6 +58,13 @@ public class LevelController {
         return returnVal;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping(path = "/{id}")
     @Transactional
     public LevelRest getLevel(@PathVariable("id") long id) {

@@ -28,6 +28,13 @@ public class LanguageController {
     @Autowired
     private ILanguageService languageService;
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     public List<LanguageRest> getLanguages(@RequestParam(value = "page", defaultValue = "0") int page,
                                            @RequestParam(value = "limit", defaultValue = "25") int limit) {
@@ -101,6 +108,13 @@ public class LanguageController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping(path = "/{id}")
     public LanguageRest getLanguage(@PathVariable("id") long id) {
         LanguageDto languageDto;

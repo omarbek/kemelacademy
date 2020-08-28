@@ -44,6 +44,13 @@ public class UserController {
     @Autowired
     private MessageSource messageSource;
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping
     @Transactional
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
@@ -203,6 +210,13 @@ public class UserController {
         return returnVal;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping(path = "email-verification")
     public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
         OperationStatusModel returnValue = new OperationStatusModel();
@@ -226,6 +240,13 @@ public class UserController {
         return messageSource.getMessage("good.morning.message", null, LocaleContextHolder.getLocale());
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping(path = "/password-reset-request")
     public OperationStatusModel requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
         OperationStatusModel returnValue = new OperationStatusModel();
@@ -247,6 +268,13 @@ public class UserController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping(path = "/password-reset")
     public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
         OperationStatusModel returnVal = new OperationStatusModel();

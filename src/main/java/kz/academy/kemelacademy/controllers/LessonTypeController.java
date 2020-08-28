@@ -26,7 +26,14 @@ public class LessonTypeController {//
 
     @Autowired
     private ILessonTypeService lessonTypeService;
-
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     public List<LessonTypeRest> getLessonTypes(@RequestParam(value = "page", defaultValue = "0") int page,
                                              @RequestParam(value = "limit", defaultValue = "25") int limit) {
@@ -93,7 +100,14 @@ public class LessonTypeController {//
 
         return returnValue;
     }
-
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping(path = "/{id}")
     public LessonTypeRest getLessonType(@PathVariable("id") long id) {
         LessonTypeDto lessonTypeDto;

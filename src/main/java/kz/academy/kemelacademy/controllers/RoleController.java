@@ -1,5 +1,7 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IRoleService;
 import kz.academy.kemelacademy.ui.dto.RoleDto;
@@ -29,6 +31,13 @@ public class RoleController {
     @Autowired
     private IRoleService roleService;
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping(path = "/{id}")
     @Transactional
     public RoleRest getRole(@PathVariable("id") long id) {
@@ -44,6 +53,13 @@ public class RoleController {
         return getRoleRest(roleDto);
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     @Transactional
     public List<RoleRest> getRoles() {

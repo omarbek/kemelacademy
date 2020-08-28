@@ -37,6 +37,13 @@ public class CategoryController {
     @Autowired
     private ICategoryService categoryService;
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     @Transactional
     public List<CategoryRest> getCategories(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -111,6 +118,13 @@ public class CategoryController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @GetMapping(path = "/{id}")
     public CategoryRest getCategory(@PathVariable("id") long id) {

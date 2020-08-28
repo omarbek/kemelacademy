@@ -108,6 +108,13 @@ public class ChapterController {
         return ret;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     @Transactional
     public List<ChapterRest> getChapters(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -129,6 +136,13 @@ public class ChapterController {
         return returnVal;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @Transactional
     @GetMapping(path = "/{id}")
     public ChapterRest getChapter(@PathVariable("id") long id) {

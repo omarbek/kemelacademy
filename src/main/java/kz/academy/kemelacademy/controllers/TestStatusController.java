@@ -26,7 +26,14 @@ public class TestStatusController {
 
     @Autowired
     private ITestStatusService testStatusService;
-
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping
     public List<TestStatusRest> getStatusDtos(@RequestParam(value = "page", defaultValue = "0") int page,
                                                @RequestParam(value = "limit", defaultValue = "25") int limit) {
@@ -93,7 +100,14 @@ public class TestStatusController {
 
         return returnValue;
     }
-
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping(path = "/{id}")
     public TestStatusRest getStatusType(@PathVariable("id") long id) {
         TestStatusDto testStatusDto;
