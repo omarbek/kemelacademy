@@ -1,5 +1,7 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IFileTypeService;
 import kz.academy.kemelacademy.ui.dto.FileTypeDto;
@@ -58,7 +60,18 @@ public class FileTypeController {
         fileTypeRest.setId(fileTypeDto.getId());
         return fileTypeRest;
     }
-
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping
     public FileTypeRest createFileType(@RequestBody FileTypeRequestModel fileTypeRequestModel) {
         FileTypeRest returnValue = new FileTypeRest();
