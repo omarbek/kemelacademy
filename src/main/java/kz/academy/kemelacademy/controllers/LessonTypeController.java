@@ -1,5 +1,7 @@
 package kz.academy.kemelacademy.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.ILessonTypeService;
 import kz.academy.kemelacademy.ui.dto.LessonTypeDto;
@@ -58,7 +60,18 @@ public class LessonTypeController {//
         lessonTypeRest.setId(lessonTypeDto.getId());
         return lessonTypeRest;
     }
-
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @PostMapping
     public LessonTypeRest createLessonType(@RequestBody LessonTypeRequestModel lessonTypeRequestModel) {
         LessonTypeRest returnValue = new LessonTypeRest();
