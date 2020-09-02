@@ -57,9 +57,6 @@ public class CourseEntity {
     @Column(nullable = false)
     private String description;
     
-    @Column(name = "about_course", nullable = false)
-    private String aboutCourse;
-    
     private Boolean deleted = false;
     
     @OneToMany(

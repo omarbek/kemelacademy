@@ -16,6 +16,5 @@ public class CourseRequestModel {
     private Integer price;
     private String name;
     private String description;
-    private String aboutCourse;
     
 }

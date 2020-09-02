@@ -20,7 +20,6 @@ public class CourseRest {
     private Integer duration;
     private String name;
     private String description;
-    private String aboutCourse;
     private Integer chapterCount;
     private Integer lessonCount;
     
