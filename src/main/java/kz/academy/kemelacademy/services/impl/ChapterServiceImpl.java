@@ -137,14 +137,8 @@ public class ChapterServiceImpl implements IChapterService {
             if (chapterDto.getChapterNo() != null) {
                 chapterEntity.setChapterNo(chapterDto.getChapterNo());
             }
-            if (chapterDto.getNameKz() != null) {
-                chapterEntity.setNameKz(chapterDto.getNameKz());
-            }
-            if (chapterDto.getNameRu() != null) {
-                chapterEntity.setNameRu(chapterDto.getNameRu());
-            }
-            if (chapterDto.getNameEn() != null) {
-                chapterEntity.setNameEn(chapterDto.getNameEn());
+            if (chapterDto.getName() != null) {
+                chapterEntity.setName(chapterDto.getName());
             }
         }
     }

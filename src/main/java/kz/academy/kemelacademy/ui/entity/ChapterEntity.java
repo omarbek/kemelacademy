@@ -16,9 +16,15 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "chapters")
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class ChapterEntity extends AbstractNameEntity {
+@EqualsAndHashCode()
+public class ChapterEntity {
+    
+    @Id
+    @GeneratedValue
+    private Long id;
+    
+    @Column(nullable = false)
+    private String name;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
@@ -36,5 +42,10 @@ public class ChapterEntity extends AbstractNameEntity {
             cascade = CascadeType.ALL
     )
     private Set<LessonEntity> lessons = new HashSet<>();
+    
+    @Override
+    public String toString() {
+        return name;
+    }
     
 }

@@ -12,8 +12,6 @@ public class ChapterRequestModel {
     
     private Long courseId;
     private Integer chapterNo;
-    private String nameKz;
-    private String nameRu;
-    private String nameEn;
+    private String name;
     
 }

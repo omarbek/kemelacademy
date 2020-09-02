@@ -13,9 +13,7 @@ public class ChapterRest {
     private Long id;
     private String course;
     private Integer chapterNo;
-    private String nameKz;
-    private String nameRu;
-    private String nameEn;
+    private String name;
     private Integer lessonCount;
     private Integer duration;
     

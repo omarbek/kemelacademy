@@ -57,9 +57,7 @@ public class ChapterController {
         
         Object[] fields = {
                 chapterRequestModel.getChapterNo(),
-                chapterRequestModel.getNameKz(),
-                chapterRequestModel.getNameRu(),
-                chapterRequestModel.getNameEn()
+                chapterRequestModel.getName()
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
