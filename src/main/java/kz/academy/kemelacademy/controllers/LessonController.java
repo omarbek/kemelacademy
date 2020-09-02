@@ -130,12 +130,13 @@ public class LessonController {
     @Transactional
     public List<LessonRest> getAll(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit,
-                                   @RequestParam(value = "chapterId", required = false) Long chapterId) {
+                                   @RequestParam(value = "chapterId", required = false) Long chapterId,
+                                   @RequestParam(value = "courseId") Long courseId) {
         List<LessonRest> returnVal = new ArrayList<>();
         
         List<LessonDto> dtoList;
         try {
-            dtoList = lessonService.getAll(page, limit, chapterId);
+            dtoList = lessonService.getAll(page, limit, chapterId, courseId);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }

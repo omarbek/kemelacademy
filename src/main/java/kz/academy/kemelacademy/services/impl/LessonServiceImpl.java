@@ -116,7 +116,7 @@ public class LessonServiceImpl implements ILessonService {
     }
     
     @Override
-    public List<LessonDto> getAll(int page, int limit, Long chapterId) throws Exception {
+    public List<LessonDto> getAll(int page, int limit, Long chapterId, Long courseId) throws Exception {
         List<LessonDto> returnValue = new ArrayList<>();
         
         if (page > 0) {
@@ -128,7 +128,8 @@ public class LessonServiceImpl implements ILessonService {
         List<LessonEntity> lessonEntities = lessonEntityPage.getContent();
         
         for (LessonEntity lessonEntity: lessonEntities) {
-            if (!lessonEntity.isDeleted()) {
+            if (!lessonEntity.isDeleted()
+                    && courseId != null && courseId.equals(lessonEntity.getChapter().getCourse().getId())) {
                 if (chapterId != null) {
                     if (lessonEntity.getChapter().getId().equals(chapterId)) {
                         LessonDto lessonDto = convertEntityToDto(lessonEntity);

@@ -19,7 +19,7 @@ public interface ILessonService {
     
     LessonDto uploadFile(Long lessonId, MultipartFile file) throws Exception;
     
-    List<LessonDto> getAll(int page, int limit, Long chapterId) throws Exception;
+    List<LessonDto> getAll(int page, int limit, Long chapterId, Long courseId) throws Exception;
     
     LessonDto update(long id, LessonDto dto) throws Exception;
     
