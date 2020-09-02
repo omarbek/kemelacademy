@@ -20,6 +20,8 @@ public class CourseDto implements Serializable {
     private Integer price;
     private String name;
     private String description;
+    private String requirements;
+    private String learns;
     
     @Override
     public String toString() {

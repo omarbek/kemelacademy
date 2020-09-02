@@ -59,6 +59,12 @@ public class CourseEntity {
     
     private Boolean deleted = false;
     
+    @Column(nullable = false)
+    private String requirements;
+    
+    @Column(nullable = false)
+    private String learns;
+    
     @OneToMany(
             mappedBy = "course",
             cascade = CascadeType.ALL

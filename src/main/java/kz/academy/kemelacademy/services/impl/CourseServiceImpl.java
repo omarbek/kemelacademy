@@ -61,6 +61,12 @@ public class CourseServiceImpl implements ICourseService {
             if (courseDto.getDescription() != null) {
                 courseEntity.setDescription(courseDto.getDescription());
             }
+            if (courseDto.getRequirements() != null) {
+                courseEntity.setRequirements(courseDto.getRequirements());
+            }
+            if (courseDto.getLearns() != null) {
+                courseEntity.setLearns(courseDto.getLearns());
+            }
         } else {
             BeanUtils.copyProperties(courseDto, courseEntity);
         }

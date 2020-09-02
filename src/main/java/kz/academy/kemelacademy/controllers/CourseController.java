@@ -69,7 +69,9 @@ public class CourseController {
                 courseRequestModel.getLanguageId(),
                 courseRequestModel.getPrice(),
                 courseRequestModel.getName(),
-                courseRequestModel.getDescription()
+                courseRequestModel.getDescription(),
+                courseRequestModel.getRequirements(),
+                courseRequestModel.getLearns()
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
