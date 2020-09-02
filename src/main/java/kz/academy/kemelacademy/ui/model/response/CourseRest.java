@@ -18,15 +18,9 @@ public class CourseRest {
     private Integer price;
     private Double rating;
     private Integer duration;
-    private String nameKz;
-    private String nameRu;
-    private String nameEn;
-    private String descriptionKz;
-    private String descriptionRu;
-    private String descriptionEn;
-    private String aboutCourseKz;
-    private String aboutCourseRu;
-    private String aboutCourseEn;
+    private String name;
+    private String description;
+    private String aboutCourse;
     private Integer chapterCount;
     private Integer lessonCount;
     

@@ -55,32 +55,14 @@ public class CourseServiceImpl implements ICourseService {
             if (courseDto.getPrice() != null) {
                 courseEntity.setPrice(courseDto.getPrice());
             }
-            if (courseDto.getNameKz() != null) {
-                courseEntity.setNameKz(courseDto.getNameKz());
+            if (courseDto.getName() != null) {
+                courseEntity.setName(courseDto.getName());
             }
-            if (courseDto.getNameRu() != null) {
-                courseEntity.setNameRu(courseDto.getNameRu());
+            if (courseDto.getDescription() != null) {
+                courseEntity.setDescription(courseDto.getDescription());
             }
-            if (courseDto.getNameEn() != null) {
-                courseEntity.setNameEn(courseDto.getNameEn());
-            }
-            if (courseDto.getDescriptionKz() != null) {
-                courseEntity.setDescriptionKz(courseDto.getDescriptionKz());
-            }
-            if (courseDto.getDescriptionRu() != null) {
-                courseEntity.setDescriptionRu(courseDto.getDescriptionRu());
-            }
-            if (courseDto.getDescriptionEn() != null) {
-                courseEntity.setDescriptionEn(courseDto.getDescriptionEn());
-            }
-            if (courseDto.getAboutCourseKz() != null) {
-                courseEntity.setAboutCourseKz(courseDto.getAboutCourseKz());
-            }
-            if (courseDto.getAboutCourseRu() != null) {
-                courseEntity.setAboutCourseRu(courseDto.getAboutCourseRu());
-            }
-            if (courseDto.getAboutCourseEn() != null) {
-                courseEntity.setAboutCourseEn(courseDto.getAboutCourseEn());
+            if (courseDto.getAboutCourse() != null) {
+                courseEntity.setAboutCourse(courseDto.getAboutCourse());
             }
         } else {
             BeanUtils.copyProperties(courseDto, courseEntity);
@@ -98,7 +80,7 @@ public class CourseServiceImpl implements ICourseService {
     }
     
     @Override
-    public List<CourseDto> getAll(int page, int limit) throws Exception {
+    public List<CourseDto> getAll(int page, int limit, Long categoryId) throws Exception {
         List<CourseDto> returnValue = new ArrayList<>();
         
         if (page > 0) {
@@ -110,7 +92,13 @@ public class CourseServiceImpl implements ICourseService {
         List<CourseEntity> courses = new ArrayList<>();
         for (CourseEntity courseEntity: coursePage.getContent()) {
             if (!courseEntity.getDeleted()) {
-                courses.add(courseEntity);
+                if (categoryId != null) {
+                    if (categoryId.equals(courseEntity.getCategory().getId())) {
+                        courses.add(courseEntity);
+                    }
+                } else {
+                    courses.add(courseEntity);
+                }
             }
         }
         

@@ -60,7 +60,7 @@ public class CourseController {
     })
     @PostMapping
     @Transactional
-    public CourseRest createCategory(@RequestBody CourseRequestModel courseRequestModel) {
+    public CourseRest createCourse(@RequestBody CourseRequestModel courseRequestModel) {
         CourseRest returnValue;
         
         Object[] fields = {
@@ -68,15 +68,9 @@ public class CourseController {
                 courseRequestModel.getLevelId(),
                 courseRequestModel.getLanguageId(),
                 courseRequestModel.getPrice(),
-                courseRequestModel.getNameKz(),
-                courseRequestModel.getNameRu(),
-                courseRequestModel.getNameEn(),
-                courseRequestModel.getDescriptionKz(),
-                courseRequestModel.getDescriptionRu(),
-                courseRequestModel.getDescriptionEn(),
-                courseRequestModel.getAboutCourseKz(),
-                courseRequestModel.getAboutCourseRu(),
-                courseRequestModel.getAboutCourseEn()
+                courseRequestModel.getName(),
+                courseRequestModel.getDescription(),
+                courseRequestModel.getAboutCourse(),
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
@@ -170,12 +164,13 @@ public class CourseController {
     @GetMapping
     @Transactional
     public List<CourseRest> getCourses(@RequestParam(value = "page", defaultValue = "0") int page,
-                                       @RequestParam(value = "limit", defaultValue = "25") int limit) {
+                                       @RequestParam(value = "limit", defaultValue = "25") int limit,
+                                       @RequestParam(value = "categoryId", required = false) Long categoryId) {
         List<CourseRest> returnVal = new ArrayList<>();
         
         List<CourseDto> courses;
         try {
-            courses = courseService.getAll(page, limit);
+            courses = courseService.getAll(page, limit, categoryId);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }

@@ -14,14 +14,8 @@ public class CourseRequestModel {
     private Long levelId;
     private Long languageId;
     private Integer price;
-    private String nameKz;
-    private String nameRu;
-    private String nameEn;
-    private String descriptionKz;
-    private String descriptionRu;
-    private String descriptionEn;
-    private String aboutCourseKz;
-    private String aboutCourseRu;
-    private String aboutCourseEn;
+    private String name;
+    private String description;
+    private String aboutCourse;
     
 }

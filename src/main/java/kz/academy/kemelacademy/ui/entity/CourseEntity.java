@@ -19,7 +19,14 @@ import java.util.Set;
 @Getter
 @Table(name = "courses")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class CourseEntity extends AbstractNameEntity {
+public class CourseEntity {
+    
+    @Id
+    @GeneratedValue
+    private Long id;
+    
+    @Column(nullable = false)
+    private String name;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
@@ -47,23 +54,11 @@ public class CourseEntity extends AbstractNameEntity {
     
     private Integer price;
     
-    @Column(name = "description_kz")
-    private String descriptionKz;
+    @Column(nullable = false)
+    private String description;
     
-    @Column(name = "description_ru")
-    private String descriptionRu;
-    
-    @Column(name = "description_en")
-    private String descriptionEn;
-    
-    @Column(name = "about_course_kz")
-    private String aboutCourseKz;
-    
-    @Column(name = "about_course_ru")
-    private String aboutCourseRu;
-    
-    @Column(name = "about_course_en")
-    private String aboutCourseEn;
+    @Column(name = "about_course", nullable = false)
+    private String aboutCourse;
     
     private Boolean deleted = false;
     
@@ -77,7 +72,7 @@ public class CourseEntity extends AbstractNameEntity {
     
     @Override
     public String toString() {
-        return super.toString();
+        return name;
     }
     
 }

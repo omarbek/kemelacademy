@@ -13,7 +13,7 @@ public interface ICourseService {
     
     CourseDto createCourse(CourseDto courseDto) throws Exception;
     
-    List<CourseDto> getAll(int page, int limit) throws Exception;
+    List<CourseDto> getAll(int page, int limit, Long categoryId) throws Exception;
     
     CourseDto getCourseById(long id) throws Exception;
     
