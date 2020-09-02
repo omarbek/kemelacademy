@@ -1,7 +1,5 @@
 package kz.academy.kemelacademy.ui.dto;
 
-import kz.academy.kemelacademy.ui.enums.Locales;
-import kz.academy.kemelacademy.utils.LocaleUtils;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,9 +17,7 @@ public class LessonDto implements Serializable {
     private ChapterDto chapterDto = new ChapterDto();
     private Integer lessonNo;
     private Integer duration;
-    private String nameKz;
-    private String nameRu;
-    private String nameEn;
+    private String name;
     
     private String url;
     private boolean alwaysOpen;
@@ -33,14 +29,7 @@ public class LessonDto implements Serializable {
     
     @Override
     public String toString() {
-        String ret;
-        if (LocaleUtils.checkLocale(Locales.KZ.getLocale())) {
-            ret = nameKz;
-        } else if (LocaleUtils.checkLocale(Locales.RU.getLocale())) {
-            ret = nameRu;
-        } else {
-            ret = nameEn;
-        }
-        return ret;
+        return name;
     }
+    
 }

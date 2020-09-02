@@ -14,9 +14,7 @@ public class LessonRequestModel {
     private Long chapterId;
     private Integer lessonNo;
     private Integer duration;
-    private String nameKz;
-    private String nameRu;
-    private String nameEn;
+    private String name;
     
     private String url;
     private boolean alwaysOpen;

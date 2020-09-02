@@ -371,14 +371,8 @@ public class LessonServiceImpl implements ILessonService {
             if (lessonDto.getDuration() != null) {
                 lessonEntity.setDuration(lessonDto.getDuration());
             }
-            if (lessonDto.getNameKz() != null) {
-                lessonEntity.setNameKz(lessonDto.getNameKz());
-            }
-            if (lessonDto.getNameRu() != null) {
-                lessonEntity.setNameRu(lessonDto.getNameRu());
-            }
-            if (lessonDto.getNameEn() != null) {
-                lessonEntity.setNameEn(lessonDto.getNameEn());
+            if (lessonDto.getName() != null) {
+                lessonEntity.setName(lessonDto.getName());
             }
             
             if (LessonTypeEntity.VIDEO.equals(lessonEntity.getLessonType().getId())) {

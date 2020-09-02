@@ -14,9 +14,15 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "lessons")
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class LessonEntity extends AbstractNameEntity {
+@EqualsAndHashCode
+public class LessonEntity {
+    
+    @Id
+    @GeneratedValue
+    private Long id;
+    
+    @Column(nullable = false)
+    private String name;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_type_id")
@@ -45,5 +51,10 @@ public class LessonEntity extends AbstractNameEntity {
     
     @OneToOne(mappedBy = "lesson")
     private TestEntity test;
+    
+    @Override
+    public String toString() {
+        return name;
+    }
     
 }
