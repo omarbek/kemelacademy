@@ -11,18 +11,18 @@ import java.util.Set;
 @Entity
 @Table(name = "user_courses")
 public class UserCourseEntity implements Serializable {
-
+    
     @Id
     @GeneratedValue
     private long id;
-
+    
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
-
+    
     @Column(nullable = false)
     private Boolean finished = false;
-
+    
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "user_courses",
@@ -30,7 +30,7 @@ public class UserCourseEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "course_id")}
     )
     private Set<CourseEntity> courses = new HashSet<>();
-
+    
     private Boolean deleted = false;
-
+    
 }
