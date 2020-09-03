@@ -2,6 +2,9 @@ package kz.academy.kemelacademy.ui.model.response;
 
 import lombok.Data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Omarbek.Dinassil
  * on 2020-08-07
@@ -25,5 +28,6 @@ public class CourseRest {
     private Integer chapterCount;
     private Integer lessonCount;
     private String courseStatus;
+    private Set<String> pupils = new HashSet<>();
     
 }

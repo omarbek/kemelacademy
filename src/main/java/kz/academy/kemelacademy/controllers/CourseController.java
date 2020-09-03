@@ -75,7 +75,8 @@ public class CourseController {
                 courseRequestModel.getDescription(),
                 courseRequestModel.getRequirements(),
                 courseRequestModel.getLearns(),
-                courseRequestModel.getCourseStatusId()
+                courseRequestModel.getCourseStatusId(),
+                courseRequestModel.getPupils()
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
@@ -100,6 +101,9 @@ public class CourseController {
         courseRest.setLevel(createdCourse.getLevel().toString());
         courseRest.setLanguage(createdCourse.getLanguage().toString());
         courseRest.setCourseStatus(createdCourse.getCourseStatus().toString());
+        for (UserDto userDto: createdCourse.getPupils()) {
+            courseRest.getPupils().add(userDto.toString());
+        }
         //        courseRest.setRating();//todo
         //        courseRest.setDuration();//todo
         //        courseRest.setChapterCount();//todo
@@ -161,6 +165,17 @@ public class CourseController {
                 throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
             }
             courseDto.setCourseStatus(courseStatusDto);
+        }
+        for (Long pupilId: courseRequestModel.getPupils()) {
+            UserDto userDto;
+            try {
+                userDto = userService.getUserById(pupilId);
+            } catch (ServiceException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+            }
+            courseDto.getPupils().add(userDto);
         }
         
         BeanUtils.copyProperties(courseRequestModel, courseDto);

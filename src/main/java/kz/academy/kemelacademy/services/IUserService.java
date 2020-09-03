@@ -32,4 +32,6 @@ public interface IUserService extends UserDetailsService {
     
     boolean resetPassword(String token, String password) throws Exception;
     
+    UserDto getUserById(Long pupilId) throws Exception;
+    
 }

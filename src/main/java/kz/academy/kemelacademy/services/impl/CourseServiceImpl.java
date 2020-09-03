@@ -3,7 +3,9 @@ package kz.academy.kemelacademy.services.impl;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.*;
 import kz.academy.kemelacademy.services.ICourseService;
+import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
+import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import org.springframework.beans.BeanUtils;
@@ -13,9 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Omarbek.Dinassil
@@ -39,6 +39,12 @@ public class CourseServiceImpl implements ICourseService {
     
     @Autowired
     private ILanguageRepository languageRepository;
+    
+    @Autowired
+    private IUserRepository userRepository;
+    
+    @Autowired
+    private IUserService userService;
     
     @Override
     public CourseDto createCourse(CourseDto courseDto) throws Exception {
@@ -82,6 +88,12 @@ public class CourseServiceImpl implements ICourseService {
                 courseEntity.setCourseStatus(courseStatusEntity);
             }
         }
+        for (UserDto userDto: courseDto.getPupils()) {
+            Set<UserEntity> pupils = new HashSet<>();
+            UserEntity userEntity = userRepository.findByUserId(userDto.getUserId());
+            pupils.add(userEntity);
+            courseEntity.setPupils(pupils);
+        }
         if (update) {
             if (courseDto.getPrice() != null) {
                 courseEntity.setPrice(courseDto.getPrice());
@@ -110,6 +122,10 @@ public class CourseServiceImpl implements ICourseService {
         BeanUtils.copyProperties(storedCourse.getLevel(), returnVal.getLevel());
         BeanUtils.copyProperties(storedCourse.getLanguage(), returnVal.getLanguage());
         BeanUtils.copyProperties(storedCourse.getCourseStatus(), returnVal.getCourseStatus());
+        for (UserEntity userEntity: storedCourse.getPupils()) {
+            UserDto userDto = userService.getUserByUserId(userEntity.getUserId());
+            returnVal.getPupils().add(userDto);
+        }
         BeanUtils.copyProperties(storedCourse, returnVal);
         return returnVal;
     }
@@ -185,6 +201,7 @@ public class CourseServiceImpl implements ICourseService {
         }
         CourseEntity courseEntity = optional.get();
         courseEntity.setDeleted(true);
+        courseEntity.setPupils(new HashSet<>());
         
         courseRepository.save(courseEntity);
     }

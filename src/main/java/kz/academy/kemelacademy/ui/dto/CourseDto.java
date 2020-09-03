@@ -3,6 +3,8 @@ package kz.academy.kemelacademy.ui.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -23,6 +25,7 @@ public class CourseDto implements Serializable {
     private String requirements;
     private String learns;
     private CourseStatusDto courseStatus = new CourseStatusDto();
+    private Set<UserDto> pupils = new HashSet<>();
     
     @Override
     public String toString() {

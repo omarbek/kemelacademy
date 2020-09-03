@@ -284,6 +284,21 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
+    public UserDto getUserById(Long pupilId) throws Exception {
+        UserDto returnValue = new UserDto();
+        
+        Optional<UserEntity> optional = userRepository.findById(pupilId);
+        if (!optional.isPresent()) {
+            throw new UsernameNotFoundException("user with id " + pupilId + " is not found");
+        }
+        
+        UserEntity userEntity = optional.get();
+        convertDomainToDto(userEntity, returnValue);
+        
+        return returnValue;
+    }
+    
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {//login-2
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {

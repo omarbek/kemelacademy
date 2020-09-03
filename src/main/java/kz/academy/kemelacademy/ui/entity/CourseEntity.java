@@ -77,6 +77,14 @@ public class CourseEntity {
     )
     private Set<ChapterEntity> chapters = new HashSet<>();
     
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "course_users",
+            joinColumns = {@JoinColumn(name = "course_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+    )
+    private Set<UserEntity> pupils = new HashSet<>();
+    
     //todo add certificate_id
     
     @Override

@@ -2,6 +2,8 @@ package kz.academy.kemelacademy.ui.model.request;
 
 import lombok.Data;
 
+import java.util.Set;
+
 /**
  * @author Omarbek.Dinassil
  * on 2020-08-07
@@ -19,5 +21,6 @@ public class CourseRequestModel {
     private String requirements;
     private String learns;
     private Long courseStatusId;
+    private Set<Long> pupils;
     
 }

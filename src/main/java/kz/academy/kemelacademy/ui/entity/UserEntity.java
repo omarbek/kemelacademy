@@ -1,6 +1,8 @@
 package kz.academy.kemelacademy.ui.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -60,6 +62,11 @@ public class UserEntity implements Serializable {
     
     @OneToMany(mappedBy = "user")
     private Set<UserTestEntity> userTests;
+    
+    @ManyToMany(mappedBy = "pupils")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<CourseEntity> coursesAsPupil = new HashSet<>();
     
     @Override
     public String toString() {
