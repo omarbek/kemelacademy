@@ -65,6 +65,12 @@ public class CourseEntity {
     @Column(nullable = false)
     private String learns;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_status_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private CourseStatusEntity courseStatus = new CourseStatusEntity();
+    
     @OneToMany(
             mappedBy = "course",
             cascade = CascadeType.ALL

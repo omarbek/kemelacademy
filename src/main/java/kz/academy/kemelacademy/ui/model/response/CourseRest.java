@@ -24,5 +24,6 @@ public class CourseRest {
     private String learns;
     private Integer chapterCount;
     private Integer lessonCount;
+    private String courseStatus;
     
 }

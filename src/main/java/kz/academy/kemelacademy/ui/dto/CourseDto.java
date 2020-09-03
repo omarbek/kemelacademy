@@ -22,6 +22,7 @@ public class CourseDto implements Serializable {
     private String description;
     private String requirements;
     private String learns;
+    private CourseStatusDto courseStatus = new CourseStatusDto();
     
     @Override
     public String toString() {

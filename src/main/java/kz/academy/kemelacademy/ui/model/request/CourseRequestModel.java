@@ -18,5 +18,6 @@ public class CourseRequestModel {
     private String description;
     private String requirements;
     private String learns;
+    private Long courseStatusId;
     
 }

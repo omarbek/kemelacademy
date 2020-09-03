@@ -47,6 +47,9 @@ public class CourseController {
     @Autowired
     private ILanguageService languageService;
     
+    @Autowired
+    private ICourseStatusService courseStatusService;
+    
     @ApiImplicitParams({
             @ApiImplicitParam(
                     name = "authorization",
@@ -71,7 +74,8 @@ public class CourseController {
                 courseRequestModel.getName(),
                 courseRequestModel.getDescription(),
                 courseRequestModel.getRequirements(),
-                courseRequestModel.getLearns()
+                courseRequestModel.getLearns(),
+                courseRequestModel.getCourseStatusId()
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
@@ -95,6 +99,7 @@ public class CourseController {
         courseRest.setCategory(createdCourse.getCategory().toString());
         courseRest.setLevel(createdCourse.getLevel().toString());
         courseRest.setLanguage(createdCourse.getLanguage().toString());
+        courseRest.setCourseStatus(createdCourse.getCourseStatus().toString());
         //        courseRest.setRating();//todo
         //        courseRest.setDuration();//todo
         //        courseRest.setChapterCount();//todo
@@ -113,7 +118,6 @@ public class CourseController {
             UserDto userDto = userService.getUser(email);
             courseDto.setAuthor(userDto);
         }
-        
         if (courseRequestModel.getCategoryId() != null) {
             CategoryDto categoryDto;
             try {
@@ -125,7 +129,6 @@ public class CourseController {
             }
             courseDto.setCategory(categoryDto);
         }
-        
         if (courseRequestModel.getLevelId() != null) {
             LevelDto levelDto;
             try {
@@ -137,7 +140,6 @@ public class CourseController {
             }
             courseDto.setLevel(levelDto);
         }
-        
         if (courseRequestModel.getLanguageId() != null) {
             LanguageDto languageDto;
             try {
@@ -148,6 +150,17 @@ public class CourseController {
                 throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
             }
             courseDto.setLanguage(languageDto);
+        }
+        if (courseRequestModel.getCourseStatusId() != null) {
+            CourseStatusDto courseStatusDto;
+            try {
+                courseStatusDto = courseStatusService.getEntityById(courseRequestModel.getCourseStatusId());
+            } catch (ServiceException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+            }
+            courseDto.setCourseStatus(courseStatusDto);
         }
         
         BeanUtils.copyProperties(courseRequestModel, courseDto);

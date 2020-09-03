@@ -1,10 +1,10 @@
 package kz.academy.kemelacademy.services.impl;
 
 import kz.academy.kemelacademy.exceptions.ServiceException;
-import kz.academy.kemelacademy.repositories.ICourseRepository;
+import kz.academy.kemelacademy.repositories.*;
 import kz.academy.kemelacademy.services.ICourseService;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
-import kz.academy.kemelacademy.ui.entity.CourseEntity;
+import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,18 @@ public class CourseServiceImpl implements ICourseService {
     @Autowired
     private ICourseRepository courseRepository;
     
+    @Autowired
+    private ICourseStatusRepository courseStatusRepository;
+    
+    @Autowired
+    private ICategoryRepository categoryRepository;
+    
+    @Autowired
+    private ILevelRepository levelRepository;
+    
+    @Autowired
+    private ILanguageRepository languageRepository;
+    
     @Override
     public CourseDto createCourse(CourseDto courseDto) throws Exception {
         CourseEntity courseEntity = new CourseEntity();
@@ -43,13 +55,32 @@ public class CourseServiceImpl implements ICourseService {
             BeanUtils.copyProperties(courseDto.getAuthor(), courseEntity.getAuthor());
         }
         if (courseDto.getCategory().getId() != null) {
-            BeanUtils.copyProperties(courseDto.getCategory(), courseEntity.getCategory());
+            if (!courseDto.getCategory().getId().equals(courseEntity.getCategory().getId())) {
+                CategoryEntity categoryEntity = categoryRepository
+                        .findById(courseDto.getCategory().getId()).get();
+                courseEntity.setCategory(categoryEntity);
+            }
         }
         if (courseDto.getLevel().getId() != null) {
-            BeanUtils.copyProperties(courseDto.getLevel(), courseEntity.getLevel());
+            if (!courseDto.getLevel().getId().equals(courseEntity.getLevel().getId())) {
+                LevelEntity levelEntity = levelRepository
+                        .findById(courseDto.getLevel().getId()).get();
+                courseEntity.setLevel(levelEntity);
+            }
         }
         if (courseDto.getLanguage().getId() != null) {
-            BeanUtils.copyProperties(courseDto.getLanguage(), courseEntity.getLanguage());
+            if (!courseDto.getLanguage().getId().equals(courseEntity.getLanguage().getId())) {
+                LanguageEntity languageEntity = languageRepository
+                        .findById(courseDto.getLanguage().getId()).get();
+                courseEntity.setLanguage(languageEntity);
+            }
+        }
+        if (courseDto.getCourseStatus().getId() != null) {
+            if (!courseDto.getCourseStatus().getId().equals(courseEntity.getCourseStatus().getId())) {
+                CourseStatusEntity courseStatusEntity = courseStatusRepository
+                        .findById(courseDto.getCourseStatus().getId()).get();
+                courseEntity.setCourseStatus(courseStatusEntity);
+            }
         }
         if (update) {
             if (courseDto.getPrice() != null) {
@@ -78,6 +109,7 @@ public class CourseServiceImpl implements ICourseService {
         BeanUtils.copyProperties(storedCourse.getCategory(), returnVal.getCategory());
         BeanUtils.copyProperties(storedCourse.getLevel(), returnVal.getLevel());
         BeanUtils.copyProperties(storedCourse.getLanguage(), returnVal.getLanguage());
+        BeanUtils.copyProperties(storedCourse.getCourseStatus(), returnVal.getCourseStatus());
         BeanUtils.copyProperties(storedCourse, returnVal);
         return returnVal;
     }
