@@ -20,10 +20,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,8 +102,13 @@ public class LessonServiceImpl implements ILessonService {
     
     @Override
     public LessonDto uploadFile(Long lessonId, MultipartFile file) throws Exception {
-        String uploadFolder = systemParameterUtils.getPathFolder();
-        String filename = uploadFolder + file.getOriginalFilename();
+        String pathFolder = systemParameterUtils.getPathFolder() + userUtils.getCurrentUserEntity().getUserId() + "/"
+                + "lesssons/" + lessonId + "/";
+        File directory = new File(pathFolder);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        String filename = pathFolder + new Date().getTime() + "_" + file.getOriginalFilename();
         
         byte[] bytes = file.getBytes();
         Path path = Paths.get(filename);
@@ -208,8 +215,13 @@ public class LessonServiceImpl implements ILessonService {
     
     @Override
     public UserTestDto uploadHomeWork(Long userTestId, MultipartFile file) throws Exception {
-        String uploadFolder = systemParameterUtils.getPathFolder();
-        String filename = uploadFolder + file.getOriginalFilename();
+        String pathFolder = systemParameterUtils.getPathFolder() + userUtils.getCurrentUserEntity().getUserId() + "/"
+                + "homework/" + userTestId + "/";
+        File directory = new File(pathFolder);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        String filename = pathFolder + new Date().getTime() + "_" + file.getOriginalFilename();
         
         byte[] bytes = file.getBytes();
         Path path = Paths.get(filename);
