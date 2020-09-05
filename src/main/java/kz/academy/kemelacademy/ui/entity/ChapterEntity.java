@@ -5,8 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Omarbek.Dinassil
@@ -16,7 +16,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "chapters")
-@EqualsAndHashCode()
+@EqualsAndHashCode
 public class ChapterEntity {
     
     @Id
@@ -41,7 +41,7 @@ public class ChapterEntity {
             mappedBy = "chapter",
             cascade = CascadeType.ALL
     )
-    private Set<LessonEntity> lessons = new HashSet<>();
+    private List<LessonEntity> lessons = new ArrayList<>();
     
     @Override
     public String toString() {

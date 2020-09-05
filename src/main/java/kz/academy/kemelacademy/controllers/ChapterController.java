@@ -7,6 +7,7 @@ import kz.academy.kemelacademy.services.IChapterService;
 import kz.academy.kemelacademy.services.ICourseService;
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
+import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
@@ -78,8 +79,12 @@ public class ChapterController {
         ChapterRest ret = new ChapterRest();
         
         ret.setCourse(createdChapter.getCourseDto().toString());
-        //        ret.setDuration();//todo
-        //        ret.setLessonCount();//todo
+        Integer duration = 0;
+        for (LessonDto lessonDto: createdChapter.getLessons()) {
+            duration += lessonDto.getDuration();
+        }
+        ret.setDuration(duration);
+        ret.setLessonCount(createdChapter.getLessons().size());
         BeanUtils.copyProperties(createdChapter, ret);
         
         return ret;

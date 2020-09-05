@@ -5,8 +5,10 @@ import kz.academy.kemelacademy.repositories.IChapterRepository;
 import kz.academy.kemelacademy.repositories.ICourseRepository;
 import kz.academy.kemelacademy.services.IChapterService;
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
+import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.entity.ChapterEntity;
 import kz.academy.kemelacademy.ui.entity.CourseEntity;
+import kz.academy.kemelacademy.ui.entity.LessonEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +115,11 @@ public class ChapterServiceImpl implements IChapterService {
         ChapterDto ret = new ChapterDto();
         
         BeanUtils.copyProperties(savedChapter.getCourse(), ret.getCourseDto());
+        for (LessonEntity lessonEntity: savedChapter.getLessons()) {
+            LessonDto lessonDto = new LessonDto();
+            BeanUtils.copyProperties(lessonEntity, lessonDto);
+            ret.getLessons().add(lessonDto);
+        }
         BeanUtils.copyProperties(savedChapter, ret);
         
         return ret;

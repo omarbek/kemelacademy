@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.ui.model.request;
 
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -21,6 +22,6 @@ public class CourseRequestModel {
     private String requirements;
     private String learns;
     private Long courseStatusId;
-    private Set<Long> pupils;
+    private Set<Long> pupils = new HashSet<>();
     
 }
