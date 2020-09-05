@@ -92,8 +92,8 @@ public class LessonController {
             )
     })
     @Transactional
-    @PostMapping(path = "createFile/{id}")
-    public LessonRest createFile(@RequestParam("file") MultipartFile file,
+    @PostMapping(path = "uploadFile/{id}")
+    public LessonRest uploadFile(@RequestParam("file") MultipartFile file,
                                  @PathVariable("id") Long lessonId) {
         LessonRest returnValue;
         

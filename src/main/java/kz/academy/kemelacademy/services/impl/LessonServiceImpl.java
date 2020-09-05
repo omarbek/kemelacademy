@@ -10,6 +10,7 @@ import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.dto.UserTestDto;
 import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
+import kz.academy.kemelacademy.utils.SystemParameterUtils;
 import kz.academy.kemelacademy.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,8 @@ public class LessonServiceImpl implements ILessonService {
     @Autowired
     private UserUtils userUtils;
     
-    private static String UPLOADED_FOLDER = "/Users/omar/Desktop/";
+    @Autowired
+    private SystemParameterUtils systemParameterUtils;
     
     @Override
     public LessonDto create(LessonDto lessonDto) throws Exception {
@@ -98,7 +100,8 @@ public class LessonServiceImpl implements ILessonService {
     
     @Override
     public LessonDto uploadFile(Long lessonId, MultipartFile file) throws Exception {
-        String filename = UPLOADED_FOLDER + file.getOriginalFilename();
+        String uploadFolder = systemParameterUtils.getPathFolder();
+        String filename = uploadFolder + file.getOriginalFilename();
         
         byte[] bytes = file.getBytes();
         Path path = Paths.get(filename);
@@ -205,7 +208,8 @@ public class LessonServiceImpl implements ILessonService {
     
     @Override
     public UserTestDto uploadHomeWork(Long userTestId, MultipartFile file) throws Exception {
-        String filename = UPLOADED_FOLDER + file.getOriginalFilename();
+        String uploadFolder = systemParameterUtils.getPathFolder();
+        String filename = uploadFolder + file.getOriginalFilename();
         
         byte[] bytes = file.getBytes();
         Path path = Paths.get(filename);
