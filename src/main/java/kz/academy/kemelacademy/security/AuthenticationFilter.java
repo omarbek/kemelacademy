@@ -8,6 +8,7 @@ import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.ui.dto.RoleDto;
 import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.model.request.UserLoginRequestModel;
+import kz.academy.kemelacademy.utils.SystemParameterUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,9 +35,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final IUserService userService;
     
-    AuthenticationFilter(AuthenticationManager authenticationManager, IUserService userService) {
+    private Long expirationTime;
+    
+    AuthenticationFilter(AuthenticationManager authenticationManager, IUserService userService,
+                         SystemParameterUtils systemParameterUtils) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        
+        expirationTime = systemParameterUtils.getExpirationTime();
     }
     
     @Override
@@ -77,7 +83,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String token = Jwts.builder()
                 .setSubject(((User) authResult.getPrincipal()).getUsername())
                 .setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
                 .compact();
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
@@ -93,7 +99,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String username = ((User) authResult.getPrincipal()).getUsername();
         
         String token = Jwts.builder().setSubject(username)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
         
         IUserService userService = (IUserService) SpringApplicationContext.getBean("userServiceImpl");

@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kz.academy.kemelacademy.security.SecurityConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -20,6 +21,9 @@ public class GeneratorUtils {
     
     private final Random RANDOM = new SecureRandom();
     
+    @Autowired
+    private SystemParameterUtils systemParameterUtils;
+    
     public static boolean hasTokenExpired(String token) {
         Claims claims = Jwts.parser().setSigningKey(SecurityConstants.getTokenSecret()).parseClaimsJws(token).getBody();
         
@@ -30,9 +34,10 @@ public class GeneratorUtils {
     }
     
     public String generatePasswordResetToken(String userId) {
+        long expirationTime = SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME;
         return Jwts.builder()
                 .setSubject(userId)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
                 .compact();
     }
@@ -53,8 +58,9 @@ public class GeneratorUtils {
     }
     
     public String generateEmailVerificationToken(String userId) {
+        Long expirationTime = systemParameterUtils.getExpirationTime();
         return Jwts.builder().setSubject(userId)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
     }
     

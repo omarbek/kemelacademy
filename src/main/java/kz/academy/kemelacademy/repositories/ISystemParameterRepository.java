@@ -13,6 +13,7 @@ public interface ISystemParameterRepository extends JpaRepository<SystemParamete
     
     String UPLOADED_FOLDER_LOCAL = "UPLOADED_FOLDER_LOCAL";
     String UPLOADED_FOLDER_REAL = "UPLOADED_FOLDER_REAL";
+    String EXPIRATION_TIME = "EXPIRATION_TIME";
     
     @Query("select spe.value from SystemParameterEntity spe where spe.code = :code")
     String getValueByCode(String code);

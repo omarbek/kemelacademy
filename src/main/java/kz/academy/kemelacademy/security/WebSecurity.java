@@ -1,6 +1,7 @@
 package kz.academy.kemelacademy.security;
 
 import kz.academy.kemelacademy.services.IUserService;
+import kz.academy.kemelacademy.utils.SystemParameterUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,10 +20,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     
     private final IUserService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final SystemParameterUtils systemParameterUtils;
     
-    public WebSecurity(IUserService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public WebSecurity(IUserService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder,
+                       SystemParameterUtils systemParameterUtils) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.systemParameterUtils = systemParameterUtils;
     }
     
     @Override
@@ -62,7 +66,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
     
     private AuthenticationFilter getAuthenticationFilter() throws Exception {
-        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager(), userDetailsService);
+        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager(), userDetailsService,
+                systemParameterUtils);
         filter.setFilterProcessesUrl("/users/login");
         return filter;
     }

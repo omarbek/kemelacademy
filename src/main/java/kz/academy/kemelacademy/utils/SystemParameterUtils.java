@@ -29,4 +29,9 @@ public class SystemParameterUtils {
         return pathFolder;
     }
     
+    public Long getExpirationTime() {
+        String valueByCode = systemParameterRepository.getValueByCode(ISystemParameterRepository.EXPIRATION_TIME);
+        return Long.parseLong(valueByCode);
+    }
+    
 }
