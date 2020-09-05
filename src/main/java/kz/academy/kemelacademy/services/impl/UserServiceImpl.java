@@ -141,8 +141,19 @@ public class UserServiceImpl implements IUserService {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         
-        userEntity.setFirstName(userDto.getFirstName());
-        userEntity.setLastName(userDto.getLastName());
+        if (userDto.getFirstName() != null) {
+            userEntity.setFirstName(userDto.getFirstName());
+        }
+        if (userDto.getLastName() != null) {
+            userEntity.setLastName(userDto.getLastName());
+        }
+        if (userDto.getPatronymic() != null) {
+            userEntity.setPatronymic(userDto.getPatronymic());
+        }
+        if (userDto.getPassword() != null) {
+            String encodedPassword = bCryptPasswordEncoder.encode(userDto.getPassword());
+            userEntity.setEncryptedPassword(encodedPassword);
+        }
         
         UserEntity updatedUserDetails = userRepository.save(userEntity);
         

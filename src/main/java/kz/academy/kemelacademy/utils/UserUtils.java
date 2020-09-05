@@ -36,4 +36,8 @@ public class UserUtils {
         return userRepository.findByEmail(email);
     }
     
+    public boolean userIdBelongsToCurUser(String userId) {
+        return userId.equals(getCurrentUserEntity().getUserId());
+    }
+    
 }

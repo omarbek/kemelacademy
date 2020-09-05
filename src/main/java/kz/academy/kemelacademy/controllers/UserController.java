@@ -17,6 +17,7 @@ import kz.academy.kemelacademy.ui.model.request.UserDetailsRequestModel;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.ui.model.response.UserRest;
 import kz.academy.kemelacademy.utils.ThrowUtils;
+import kz.academy.kemelacademy.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class UserController {
     
     @Autowired
     private MessageSource messageSource;
+    
+    @Autowired
+    private UserUtils userUtils;
     
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -129,11 +133,11 @@ public class UserController {
     @PutMapping(path = "/{id}")
     public UserRest updateUser(@PathVariable("id") String userId,
                                @RequestBody UserDetailsRequestModel userDetailsRequestModel) {
-        UserRest returnValue = new UserRest();
+        if (!userUtils.userIdBelongsToCurUser(userId)) {
+            throw new ServiceException(ErrorMessages.THIS_USER_ID_DOES_NOT_BELONG_TO_CUR_USER.getErrorMessage());
+        }
         
-        String[] fields = {userDetailsRequestModel.getFirstName(), userDetailsRequestModel.getLastName(),
-                userDetailsRequestModel.getPassword()};
-        ThrowUtils.throwMissingRequiredFieldException(fields);
+        UserRest returnValue = new UserRest();
         
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetailsRequestModel, userDto);

@@ -22,6 +22,7 @@ public enum ErrorMessages {
     DID_NOT_SEND_EMAIL("did.not.send.email"),//Кажется здесь нужно еще добавить и неверно отправившихся почту
     EMAIL_ALREADY_EXISTS("email.already.exists"),//how to dont miss the InternalServerError in the cases like this
     PLEASE_SELECT_FILE("please.select.file"),//how to dont miss the InternalServerError in the cases like this
+    THIS_USER_ID_DOES_NOT_BELONG_TO_CUR_USER("this.user.id.does.not.belong.to.cur.user"),
     
     ;
     
