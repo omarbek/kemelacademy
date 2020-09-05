@@ -4,7 +4,9 @@ import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.*;
 import kz.academy.kemelacademy.services.ICourseService;
 import kz.academy.kemelacademy.services.IUserService;
+import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
+import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
@@ -125,6 +127,17 @@ public class CourseServiceImpl implements ICourseService {
         for (UserEntity userEntity: storedCourse.getPupils()) {
             UserDto userDto = userService.getUserByUserId(userEntity.getUserId());
             returnVal.getPupils().add(userDto);
+        }
+        for (ChapterEntity chapterEntity: storedCourse.getChapters()) {
+            ChapterDto chapterDto = new ChapterDto();
+            for (LessonEntity lessonEntity: chapterEntity.getLessons()) {
+                LessonDto lessonDto = new LessonDto();
+                BeanUtils.copyProperties(lessonEntity, lessonDto);
+                chapterDto.getLessons().add(lessonDto);
+            }
+            BeanUtils.copyProperties(chapterEntity.getCourse(), chapterDto.getCourseDto());
+            BeanUtils.copyProperties(chapterEntity, chapterDto);
+            returnVal.getChapters().add(chapterDto);
         }
         BeanUtils.copyProperties(storedCourse, returnVal);
         return returnVal;

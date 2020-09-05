@@ -104,10 +104,18 @@ public class CourseController {
         for (UserDto userDto: createdCourse.getPupils()) {
             courseRest.getPupils().add(userDto.toString());
         }
+        Integer duration = 0;
+        Integer lessonCount = 0;
+        for (ChapterDto chapterDto: createdCourse.getChapters()) {
+            for (LessonDto lessonDto: chapterDto.getLessons()) {
+                duration += lessonDto.getDuration();
+                lessonCount++;
+            }
+        }
+        courseRest.setDuration(duration);
+        courseRest.setChapterCount(createdCourse.getChapters().size());
+        courseRest.setLessonCount(lessonCount);
         //        courseRest.setRating();//todo
-        //        courseRest.setDuration();//todo
-        //        courseRest.setChapterCount();//todo
-        //        courseRest.setLessonCount();//todo
         
         BeanUtils.copyProperties(createdCourse, courseRest);
         
