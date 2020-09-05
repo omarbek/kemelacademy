@@ -18,7 +18,7 @@ import java.util.Set;
 public class TestEntity {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @OneToOne(cascade = CascadeType.ALL)

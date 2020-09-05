@@ -20,7 +20,7 @@ import java.util.Set;
 public class UserTestEntity implements Serializable {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne

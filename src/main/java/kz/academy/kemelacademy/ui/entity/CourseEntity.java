@@ -22,7 +22,7 @@ import java.util.Set;
 public class CourseEntity {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @Column(nullable = false)

@@ -4,10 +4,7 @@ import kz.academy.kemelacademy.ui.enums.Locales;
 import kz.academy.kemelacademy.utils.LocaleUtils;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 /**
  * @author Omarbek.Dinassil
@@ -19,7 +16,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class AbstractNameEntity {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @Column(nullable = false)

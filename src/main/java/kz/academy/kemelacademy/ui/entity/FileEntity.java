@@ -19,7 +19,7 @@ import java.util.Set;
 public class FileEntity {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @OneToOne(cascade = CascadeType.ALL)
