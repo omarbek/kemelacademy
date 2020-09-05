@@ -267,7 +267,7 @@ public class LessonController {
         operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
         
         try {
-            lessonService.delete(id);
+            lessonService.delete(id);//todo delete with all children
             operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);

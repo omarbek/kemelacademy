@@ -192,7 +192,7 @@ public class CategoryController {
         operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
         
         try {
-            categoryService.deleteCategory(id);
+            categoryService.deleteCategory(id);//todo delete with all children
             operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);
