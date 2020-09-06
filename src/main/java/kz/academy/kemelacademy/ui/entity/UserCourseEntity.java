@@ -4,8 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @Entity
@@ -14,23 +12,16 @@ public class UserCourseEntity implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
     
-    @Column(nullable = false)
-    private Boolean finished = false;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private CourseEntity course;
     
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "user_courses",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "course_id")}
-    )
-    private Set<CourseEntity> courses = new HashSet<>();
-    
-    private Boolean deleted = false;
+    private Boolean finished;
     
 }
