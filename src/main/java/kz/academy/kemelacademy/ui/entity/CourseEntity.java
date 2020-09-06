@@ -85,6 +85,9 @@ public class CourseEntity {
     )
     private Set<UserEntity> pupils = new HashSet<>();
     
+    @OneToMany(mappedBy = "course")
+    private Set<UserCourseEntity> userCourses;
+    
     //todo add certificate_id
     
     @Override

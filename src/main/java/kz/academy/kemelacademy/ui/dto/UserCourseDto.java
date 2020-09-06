@@ -7,6 +7,6 @@ public class UserCourseDto {
     
     private Long id;
     private Boolean finished;
-    private CourseDto course;
+    private CourseDto course = new CourseDto();
     
 }

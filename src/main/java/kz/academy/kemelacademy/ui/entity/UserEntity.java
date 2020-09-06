@@ -68,6 +68,9 @@ public class UserEntity implements Serializable {
     @EqualsAndHashCode.Exclude
     private Set<CourseEntity> coursesAsPupil = new HashSet<>();
     
+    @OneToMany(mappedBy = "user")
+    private Set<UserCourseEntity> userCourses;
+    
     @Override
     public String toString() {
         StringBuilder fullNameSB = new StringBuilder();

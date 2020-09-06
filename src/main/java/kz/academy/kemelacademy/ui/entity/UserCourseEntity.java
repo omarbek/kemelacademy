@@ -20,7 +20,7 @@ public class UserCourseEntity implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "course_id")
-    private CourseEntity course;
+    private CourseEntity course = new CourseEntity();
     
     private Boolean finished;
     
