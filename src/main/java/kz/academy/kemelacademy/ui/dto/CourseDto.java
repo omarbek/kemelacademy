@@ -1,19 +1,20 @@
 package kz.academy.kemelacademy.ui.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 /**
  * @author Omarbek.Dinassil
  * on 2020-08-07
  * @project kemelacademy
  */
-@Data
+@Getter
+@Setter
 public class CourseDto implements Serializable {
     
     private Long id;
@@ -27,7 +28,7 @@ public class CourseDto implements Serializable {
     private String requirements;
     private String learns;
     private CourseStatusDto courseStatus = new CourseStatusDto();
-    private Set<UserDto> pupils = new HashSet<>();
+    private List<UserDto> pupils = new ArrayList<>();
     private List<ChapterDto> chapters = new ArrayList<>();
     
     @Override
@@ -35,4 +36,29 @@ public class CourseDto implements Serializable {
         return name;
     }
     
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        CourseDto courseDto = (CourseDto) o;
+        return Objects.equals(id, courseDto.id) &&
+                Objects.equals(author, courseDto.author) &&
+                Objects.equals(category, courseDto.category) &&
+                Objects.equals(level, courseDto.level) &&
+                Objects.equals(language, courseDto.language) &&
+                Objects.equals(price, courseDto.price) &&
+                Objects.equals(name, courseDto.name) &&
+                Objects.equals(description, courseDto.description) &&
+                Objects.equals(requirements, courseDto.requirements) &&
+                Objects.equals(learns, courseDto.learns) &&
+                Objects.equals(courseStatus, courseDto.courseStatus) &&
+                Objects.equals(pupils, courseDto.pupils) &&
+                Objects.equals(chapters, courseDto.chapters);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, author, category, level, language, price, name, description, requirements, learns,
+                courseStatus, pupils, chapters);
+    }
 }

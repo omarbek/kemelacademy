@@ -48,12 +48,22 @@ public class CourseServiceImpl implements ICourseService {
     @Autowired
     private IUserService userService;
     
+    @Autowired
+    private IUserCourseRepository userCourseRepository;
+    
     @Override
     public CourseDto createCourse(CourseDto courseDto) throws Exception {
         CourseEntity courseEntity = new CourseEntity();
         convertDtoToEntity(courseDto, courseEntity, false);
         
         CourseEntity storedCourse = courseRepository.save(courseEntity);
+        for (UserCourseEntity userCourseEntity: storedCourse.getUsers()) {
+            UserCourseId userCourseId = new UserCourseId();
+            userCourseId.setUserId(userCourseEntity.getUser().getId());
+            userCourseId.setCourseId(userCourseEntity.getCourse().getId());
+            userCourseEntity.setUserCourseId(userCourseId);
+            userCourseRepository.save(userCourseEntity);
+        }
         
         return convertEntityToDto(storedCourse);
     }
@@ -90,12 +100,19 @@ public class CourseServiceImpl implements ICourseService {
                 courseEntity.setCourseStatus(courseStatusEntity);
             }
         }
+        Set<UserCourseEntity> userCourses = new HashSet<>();
         for (UserDto userDto: courseDto.getPupils()) {
-            Set<UserEntity> pupils = new HashSet<>();
             UserEntity userEntity = userRepository.findByUserId(userDto.getUserId());
-            pupils.add(userEntity);
-            courseEntity.setPupils(pupils);
+            
+            UserCourseEntity userCourseEntity = new UserCourseEntity();
+            userCourseEntity.setUser(userEntity);
+            userCourseEntity.setCourse(courseEntity);
+            userCourseEntity.setFinished(false);
+            
+            userCourses.add(userCourseEntity);
         }
+        courseEntity.setUsers(userCourses);
+        
         if (update) {
             if (courseDto.getPrice() != null) {
                 courseEntity.setPrice(courseDto.getPrice());
@@ -124,8 +141,15 @@ public class CourseServiceImpl implements ICourseService {
         BeanUtils.copyProperties(storedCourse.getLevel(), returnVal.getLevel());
         BeanUtils.copyProperties(storedCourse.getLanguage(), returnVal.getLanguage());
         BeanUtils.copyProperties(storedCourse.getCourseStatus(), returnVal.getCourseStatus());
-        for (UserEntity userEntity: storedCourse.getPupils()) {
-            UserDto userDto = userService.getUserByUserId(userEntity.getUserId());
+        
+        Set<UserCourseEntity> users = new HashSet<>();
+        try {
+            users = storedCourse.getUsers();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        for (UserCourseEntity userCourseEntity: users) {
+            UserDto userDto = userService.getUserByUserId(userCourseEntity.getUser().getUserId());
             returnVal.getPupils().add(userDto);
         }
         for (ChapterEntity chapterEntity: storedCourse.getChapters()) {
@@ -214,7 +238,7 @@ public class CourseServiceImpl implements ICourseService {
         }
         CourseEntity courseEntity = optional.get();
         courseEntity.setDeleted(true);
-        courseEntity.setPupils(new HashSet<>());
+        courseEntity.setUsers(new HashSet<>());
         
         courseRepository.save(courseEntity);
     }

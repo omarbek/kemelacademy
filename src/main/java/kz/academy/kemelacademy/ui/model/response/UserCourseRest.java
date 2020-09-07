@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserCourseRest {
     
     private Long id;
-    private CourseRest courseRest;
+    private CourseRest courseRest = new CourseRest();
     private boolean finished;
     
 }

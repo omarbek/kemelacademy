@@ -1,12 +1,12 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -14,7 +14,8 @@ import java.util.Set;
  * on 2020-07-20
  * @project kemelacademy
  */
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "users")
 public class UserEntity implements Serializable {
@@ -61,15 +62,10 @@ public class UserEntity implements Serializable {
     private Set<CourseEntity> courses = new HashSet<>();
     
     @OneToMany(mappedBy = "user")
-    private Set<UserTestEntity> userTests;
-    
-    @ManyToMany(mappedBy = "pupils")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Set<CourseEntity> coursesAsPupil = new HashSet<>();
+    private Set<UserTestEntity> userTests = new HashSet<>();
     
     @OneToMany(mappedBy = "user")
-    private Set<UserCourseEntity> userCourses;
+    private Set<UserCourseEntity> pupils = new HashSet<>();
     
     @Override
     public String toString() {
@@ -85,4 +81,29 @@ public class UserEntity implements Serializable {
         return fullNameSB.toString();
     }
     
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        UserEntity that = (UserEntity) o;
+        return id == that.id &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(emailVerificationStatus, that.emailVerificationStatus) &&
+                Objects.equals(emailVerificationToken, that.emailVerificationToken) &&
+                Objects.equals(encryptedPassword, that.encryptedPassword) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(patronymic, that.patronymic) &&
+                Objects.equals(userId, that.userId) &&
+                Objects.equals(roles, that.roles) &&
+                Objects.equals(courses, that.courses) &&
+                Objects.equals(userTests, that.userTests) &&
+                Objects.equals(pupils, that.pupils);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, emailVerificationStatus, emailVerificationToken, encryptedPassword, firstName,
+                lastName, patronymic, userId);
+    }
 }

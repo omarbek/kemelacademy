@@ -1,12 +1,12 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -17,8 +17,8 @@ import java.util.Set;
 @Entity
 @Setter
 @Getter
+@NoArgsConstructor
 @Table(name = "courses")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class CourseEntity {
     
     @Id
@@ -30,26 +30,18 @@ public class CourseEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private UserEntity author = new UserEntity();
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private CategoryEntity category = new CategoryEntity();
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "level_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private LevelEntity level = new LevelEntity();
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "language_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private LanguageEntity language = new LanguageEntity();
     
     private Integer price;
@@ -67,8 +59,6 @@ public class CourseEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_status_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private CourseStatusEntity courseStatus = new CourseStatusEntity();
     
     @OneToMany(
@@ -77,16 +67,8 @@ public class CourseEntity {
     )
     private Set<ChapterEntity> chapters = new HashSet<>();
     
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "course_users",
-            joinColumns = {@JoinColumn(name = "course_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")}
-    )
-    private Set<UserEntity> pupils = new HashSet<>();
-    
     @OneToMany(mappedBy = "course")
-    private Set<UserCourseEntity> userCourses;
+    private Set<UserCourseEntity> users = new HashSet<>();
     
     //todo add certificate_id
     
@@ -95,4 +77,30 @@ public class CourseEntity {
         return name;
     }
     
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        CourseEntity that = (CourseEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(author, that.author) &&
+                Objects.equals(category, that.category) &&
+                Objects.equals(level, that.level) &&
+                Objects.equals(language, that.language) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(deleted, that.deleted) &&
+                Objects.equals(requirements, that.requirements) &&
+                Objects.equals(learns, that.learns) &&
+                Objects.equals(courseStatus, that.courseStatus) &&
+                Objects.equals(chapters, that.chapters) &&
+                Objects.equals(users, that.users);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, author, category, level, language, price, description, deleted, requirements,
+                learns, courseStatus);
+    }
 }
