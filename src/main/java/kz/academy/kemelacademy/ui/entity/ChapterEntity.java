@@ -1,22 +1,23 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Omarbek.Dinassil
  * on 2020-08-11
  * @project kemelacademy
  */
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "chapters")
-@EqualsAndHashCode
 public class ChapterEntity {
     
     @Id
@@ -46,6 +47,24 @@ public class ChapterEntity {
     @Override
     public String toString() {
         return name;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        ChapterEntity that = (ChapterEntity) o;
+        return deleted == that.deleted &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(course, that.course) &&
+                Objects.equals(chapterNo, that.chapterNo) &&
+                Objects.equals(lessons, that.lessons);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, chapterNo, deleted);
     }
     
 }

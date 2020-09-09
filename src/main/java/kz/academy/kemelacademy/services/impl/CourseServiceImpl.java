@@ -10,13 +10,20 @@ import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.dto.UserDto;
 import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
+import kz.academy.kemelacademy.utils.SystemParameterUtils;
+import kz.academy.kemelacademy.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -50,6 +57,15 @@ public class CourseServiceImpl implements ICourseService {
     
     @Autowired
     private IUserCourseRepository userCourseRepository;
+    
+    @Autowired
+    private UserUtils userUtils;
+    
+    @Autowired
+    private SystemParameterUtils systemParameterUtils;
+    
+    @Autowired
+    private IFileTypeRepository fileTypeRepository;
     
     @Override
     public CourseDto createCourse(CourseDto courseDto) throws Exception {
@@ -163,6 +179,9 @@ public class CourseServiceImpl implements ICourseService {
             BeanUtils.copyProperties(chapterEntity, chapterDto);
             returnVal.getChapters().add(chapterDto);
         }
+        if (storedCourse.getCertificate() != null) {
+            returnVal.setCertificateName(storedCourse.getCertificate().getName());
+        }
         BeanUtils.copyProperties(storedCourse, returnVal);
         return returnVal;
     }
@@ -202,26 +221,26 @@ public class CourseServiceImpl implements ICourseService {
     public CourseDto getCourseById(long id) throws Exception {
         CourseDto returnValue;
         
-        Optional<CourseEntity> optional = courseRepository.findById(id);
-        if (!optional.isPresent()) {
-            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
-        }
-        CourseEntity courseEntity = optional.get();
+        CourseEntity courseEntity = getCourseEntity(id);
         
         returnValue = convertEntityToDto(courseEntity);
         
         return returnValue;
     }
     
-    @Override
-    public CourseDto updateCourse(long id, CourseDto courseDto) throws Exception {
-        CourseDto returnValue;
-        
+    private CourseEntity getCourseEntity(long id) {
         Optional<CourseEntity> optional = courseRepository.findById(id);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        CourseEntity courseEntity = optional.get();
+        return optional.get();
+    }
+    
+    @Override
+    public CourseDto updateCourse(long id, CourseDto courseDto) throws Exception {
+        CourseDto returnValue;
+        
+        CourseEntity courseEntity = getCourseEntity(id);
         convertDtoToEntity(courseDto, courseEntity, true);
         
         CourseEntity updatedCourse = courseRepository.save(courseEntity);
@@ -232,15 +251,43 @@ public class CourseServiceImpl implements ICourseService {
     
     @Override
     public void deleteCourse(long id) throws Exception {
-        Optional<CourseEntity> optional = courseRepository.findById(id);
-        if (!optional.isPresent()) {
-            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
-        }
-        CourseEntity courseEntity = optional.get();
+        CourseEntity courseEntity = getCourseEntity(id);
         courseEntity.setDeleted(true);
         courseEntity.setUsers(new HashSet<>());
         
         courseRepository.save(courseEntity);
     }
+    
+    @Override
+    public CourseDto uploadFile(Long courseId, MultipartFile file) throws Exception {
+        String pathFolder = systemParameterUtils.getPathFolder() + "courses/" + courseId + "/";
+        File directory = new File(pathFolder);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        String filename = pathFolder + new Date().getTime() + "_" + file.getOriginalFilename();
+        
+        byte[] bytes = file.getBytes();
+        Path path = Paths.get(filename);
+        Files.write(path, bytes);
+        
+        CourseEntity courseEntity = getCourseEntity(courseId);
+        
+        FileEntity fileEntity = new FileEntity();
+        Optional<FileTypeEntity> optional = fileTypeRepository.findById(FileTypeEntity.FOR_CERTIFICATE);
+        if (!optional.isPresent()) {
+            throw new ServiceException((ErrorMessages.NO_RECORD_FOUND.getErrorMessage()));
+        }
+        FileTypeEntity fileTypeEntity = optional.get();
+        fileEntity.setFileType(fileTypeEntity);
+        fileEntity.setLesson(null);
+        fileEntity.setName(filename);
+        
+        courseEntity.setCertificate(fileEntity);
+        CourseEntity uploadedFileCourseEntity = courseRepository.save(courseEntity);
+        
+        return convertEntityToDto(uploadedFileCourseEntity);
+    }
+    
     
 }

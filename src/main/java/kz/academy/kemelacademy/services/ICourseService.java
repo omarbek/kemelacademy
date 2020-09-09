@@ -1,6 +1,7 @@
 package kz.academy.kemelacademy.services;
 
 import kz.academy.kemelacademy.ui.dto.CourseDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface ICourseService {
     CourseDto updateCourse(long id, CourseDto courseDto) throws Exception;
     
     void deleteCourse(long id) throws Exception;
+    
+    CourseDto uploadFile(Long courseId, MultipartFile file) throws Exception;
     
 }

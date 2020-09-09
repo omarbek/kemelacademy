@@ -29,5 +29,6 @@ public class CourseRest {
     private Integer lessonCount;
     private String courseStatus;
     private Set<String> pupils = new HashSet<>();
+    private String certificateName;
     
 }

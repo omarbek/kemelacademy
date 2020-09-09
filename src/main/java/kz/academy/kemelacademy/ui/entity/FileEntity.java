@@ -1,11 +1,10 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -13,8 +12,11 @@ import java.util.Set;
  * on 2020-08-16
  * @project kemelacademy
  */
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "files")
 public class FileEntity {
     
@@ -41,5 +43,32 @@ public class FileEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<UserTestEntity> userTests = new HashSet<>();
+    
+    @OneToOne(mappedBy = "certificate")
+    private CourseEntity course;
+    
+    @Override
+    public String toString() {
+        return name;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        FileEntity that = (FileEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(lesson, that.lesson) &&
+                Objects.equals(fileType, that.fileType) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(test, that.test) &&
+                Objects.equals(userTests, that.userTests) &&
+                Objects.equals(course, that.course);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
     
 }

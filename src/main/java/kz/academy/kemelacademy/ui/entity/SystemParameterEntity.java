@@ -1,19 +1,24 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * @author Omarbek.Dinassil
  * on 2020-09-05
  * @project kemelacademy
  */
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "system_parameters")
-@EqualsAndHashCode()
 public class SystemParameterEntity {
     
     @Id
@@ -29,6 +34,21 @@ public class SystemParameterEntity {
     @Override
     public String toString() {
         return value;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        SystemParameterEntity that = (SystemParameterEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(code, that.code) &&
+                Objects.equals(value, that.value);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code, value);
     }
     
 }

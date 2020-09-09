@@ -1,5 +1,6 @@
 package kz.academy.kemelacademy.ui.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "courses")
 public class CourseEntity {
     
@@ -70,7 +72,9 @@ public class CourseEntity {
     @OneToMany(mappedBy = "course")
     private Set<UserCourseEntity> users = new HashSet<>();
     
-    //todo add certificate_id
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "certificate_id", referencedColumnName = "id")
+    private FileEntity certificate;
     
     @Override
     public String toString() {
@@ -100,7 +104,7 @@ public class CourseEntity {
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, author, category, level, language, price, description, deleted, requirements,
-                learns, courseStatus);
+        return Objects.hash(id, name, price, description, deleted, requirements, learns);
     }
+    
 }

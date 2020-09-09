@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +117,6 @@ public class CourseController {
         courseRest.setChapterCount(createdCourse.getChapters().size());
         courseRest.setLessonCount(lessonCount);
         //        courseRest.setRating();//todo
-        
         BeanUtils.copyProperties(createdCourse, courseRest);
         
         return courseRest;
@@ -299,6 +299,36 @@ public class CourseController {
         }
         
         return operationStatusModel;
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header")
+    })
+    @Transactional
+    @PostMapping(path = "uploadFile/{id}")
+    public CourseRest uploadFile(@RequestParam("file") MultipartFile file,
+                                 @PathVariable("id") Long courseId) {
+        CourseRest returnValue;
+        
+        if (file == null || file.isEmpty()) {
+            throw new ServiceException(ErrorMessages.PLEASE_SELECT_FILE.getErrorMessage());
+        }
+        
+        CourseDto uploadedFileDto;
+        try {
+            uploadedFileDto = courseService.uploadFile(courseId, file);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        returnValue = convertDtoToModel(uploadedFileDto);
+        
+        return returnValue;
     }
     
 }

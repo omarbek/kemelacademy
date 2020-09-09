@@ -1,20 +1,21 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * @author Omarbek.Dinassil
  * on 2020-08-14
  * @project kemelacademy
  */
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "lessons")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class LessonEntity {
     
     @Id
@@ -55,6 +56,28 @@ public class LessonEntity {
     @Override
     public String toString() {
         return name;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        LessonEntity that = (LessonEntity) o;
+        return deleted == that.deleted &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(lessonType, that.lessonType) &&
+                Objects.equals(chapter, that.chapter) &&
+                Objects.equals(lessonNo, that.lessonNo) &&
+                Objects.equals(duration, that.duration) &&
+                Objects.equals(video, that.video) &&
+                Objects.equals(file, that.file) &&
+                Objects.equals(test, that.test);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, lessonNo, duration, deleted);
     }
     
 }
