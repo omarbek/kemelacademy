@@ -13,5 +13,6 @@ public enum RequestOperationName {
     PASSWORD_RESET,
     CHANGE_STATUS,
     SET_GRADE,
+    FINISH_COURSE,
     
 }

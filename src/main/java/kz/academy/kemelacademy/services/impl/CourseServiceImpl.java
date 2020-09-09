@@ -289,5 +289,19 @@ public class CourseServiceImpl implements ICourseService {
         return convertEntityToDto(uploadedFileCourseEntity);
     }
     
+    @Override
+    public void finishCourse(Long userId, Long courseId) throws Exception {
+        UserCourseId userCourseId = new UserCourseId();
+        userCourseId.setUserId(userId);
+        userCourseId.setCourseId(courseId);
+        Optional<UserCourseEntity> optional = userCourseRepository.findById(userCourseId);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        UserCourseEntity userCourseEntity = optional.get();
+        userCourseEntity.setFinished(true);
+        userCourseRepository.save(userCourseEntity);
+    }
+    
     
 }

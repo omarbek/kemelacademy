@@ -24,4 +24,6 @@ public interface ICourseService {
     
     CourseDto uploadFile(Long courseId, MultipartFile file) throws Exception;
     
+    void finishCourse(Long userId, Long courseId) throws Exception;
+    
 }
