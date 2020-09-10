@@ -182,6 +182,15 @@ public class CourseServiceImpl implements ICourseService {
         if (storedCourse.getCertificate() != null) {
             returnVal.setCertificateName(storedCourse.getCertificate().getName());
         }
+        Double ratingSum = 0.0;
+        int numberOfUsers = 0;
+        for (UserCourseEntity userCourseEntity: storedCourse.getUsers()) {
+            if (userCourseEntity.getRating() != null) {
+                ratingSum += userCourseEntity.getRating();
+                numberOfUsers++;
+            }
+        }
+        returnVal.setRating(ratingSum / numberOfUsers);
         BeanUtils.copyProperties(storedCourse, returnVal);
         return returnVal;
     }

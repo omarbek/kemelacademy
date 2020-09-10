@@ -1,6 +1,8 @@
 package kz.academy.kemelacademy.ui.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -15,6 +17,8 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CourseDto implements Serializable {
     
     private Long id;
@@ -31,6 +35,7 @@ public class CourseDto implements Serializable {
     private List<UserDto> pupils = new ArrayList<>();
     private List<ChapterDto> chapters = new ArrayList<>();
     private String certificateName;
+    private Double rating;
     
     @Override
     public String toString() {
@@ -55,12 +60,13 @@ public class CourseDto implements Serializable {
                 Objects.equals(courseStatus, courseDto.courseStatus) &&
                 Objects.equals(pupils, courseDto.pupils) &&
                 Objects.equals(chapters, courseDto.chapters) &&
-                Objects.equals(certificateName, courseDto.certificateName);
+                Objects.equals(certificateName, courseDto.certificateName) &&
+                Objects.equals(rating, courseDto.rating);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, price, name, description, requirements, learns, certificateName);
+        return Objects.hash(id, price, name, description, requirements, learns, certificateName, rating);
     }
     
 }

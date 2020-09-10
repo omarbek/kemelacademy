@@ -16,7 +16,6 @@ public class UserCourseDto {
     private Long id;
     private Boolean finished;
     private CourseDto course = new CourseDto();
-    private Double rating;
     
     @Override
     public boolean equals(Object o) {
@@ -25,13 +24,12 @@ public class UserCourseDto {
         UserCourseDto that = (UserCourseDto) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(finished, that.finished) &&
-                Objects.equals(course, that.course) &&
-                Objects.equals(rating, that.rating);
+                Objects.equals(course, that.course);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, finished, course, rating);
+        return Objects.hash(id, finished, course);
     }
     
     @Override
@@ -40,7 +38,6 @@ public class UserCourseDto {
                 "id=" + id +
                 ", finished=" + finished +
                 ", course=" + course +
-                ", rating=" + rating +
                 '}';
     }
     
