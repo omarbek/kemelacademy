@@ -23,6 +23,7 @@ public enum ErrorMessages {
     EMAIL_ALREADY_EXISTS("email.already.exists"),//how to dont miss the InternalServerError in the cases like this
     PLEASE_SELECT_FILE("please.select.file"),//how to dont miss the InternalServerError in the cases like this
     THIS_USER_ID_DOES_NOT_BELONG_TO_CUR_USER("this.user.id.does.not.belong.to.cur.user"),
+    YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION("your.role.has.no.grants.to.execute.this.operation"),
     
     ;
     
