@@ -338,7 +338,7 @@ public class CourseController {
                     paramType = "header")
     })
     @Transactional
-    @PostMapping(path = "/{userId}/{courseId}")
+    @PostMapping(path = "finishCourse/{userId}/{courseId}")
     public OperationStatusModel finishCourse(@PathVariable("userId") Long userId,
                                              @PathVariable("courseId") Long courseId) {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
@@ -346,6 +346,30 @@ public class CourseController {
         
         try {
             courseService.finishCourse(userId, courseId);
+            operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+        
+        return operationStatusModel;
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header")
+    })
+    @Transactional
+    @PostMapping(path = "setRating/{courseId}/{rating}")
+    public OperationStatusModel setRating(@PathVariable("courseId") Long courseId,
+                                          @PathVariable("rating") Double rating) {
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+        operationStatusModel.setOperationName(RequestOperationName.SET_RATING.name());
+        
+        try {
+            courseService.setRating(courseId, rating);
             operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);

@@ -303,5 +303,19 @@ public class CourseServiceImpl implements ICourseService {
         userCourseRepository.save(userCourseEntity);
     }
     
+    @Override
+    public void setRating(Long courseId, Double rating) {
+        UserCourseId userCourseId = new UserCourseId();
+        userCourseId.setUserId(userUtils.getCurrentUserEntity().getId());
+        userCourseId.setCourseId(courseId);
+        Optional<UserCourseEntity> optional = userCourseRepository.findById(userCourseId);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        UserCourseEntity userCourseEntity = optional.get();
+        userCourseEntity.setRating(rating);
+        userCourseRepository.save(userCourseEntity);
+    }
+    
     
 }

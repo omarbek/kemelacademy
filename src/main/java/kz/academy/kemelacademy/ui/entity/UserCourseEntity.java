@@ -28,6 +28,8 @@ public class UserCourseEntity implements Serializable {
     
     private Boolean finished;
     
+    private Double rating;
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
@@ -36,12 +38,13 @@ public class UserCourseEntity implements Serializable {
         return Objects.equals(userCourseId, that.userCourseId) &&
                 Objects.equals(user, that.user) &&
                 Objects.equals(course, that.course) &&
-                Objects.equals(finished, that.finished);
+                Objects.equals(finished, that.finished) &&
+                Objects.equals(rating, that.rating);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(userCourseId, user, finished);
+        return Objects.hash(userCourseId, user, finished, rating);
     }
     
     @Override
@@ -51,8 +54,8 @@ public class UserCourseEntity implements Serializable {
                 ", user=" + user +
                 ", course=" + course +
                 ", finished=" + finished +
+                ", rating=" + rating +
                 '}';
-        
-        
     }
+    
 }

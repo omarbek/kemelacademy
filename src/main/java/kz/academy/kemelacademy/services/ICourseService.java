@@ -26,4 +26,6 @@ public interface ICourseService {
     
     void finishCourse(Long userId, Long courseId) throws Exception;
     
+    void setRating(Long courseId, Double rating);
+    
 }

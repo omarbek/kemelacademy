@@ -14,5 +14,6 @@ public enum RequestOperationName {
     CHANGE_STATUS,
     SET_GRADE,
     FINISH_COURSE,
+    SET_RATING,
     
 }
