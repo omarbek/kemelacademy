@@ -116,7 +116,6 @@ public class CourseController {
         courseRest.setDuration(duration);
         courseRest.setChapterCount(createdCourse.getChapters().size());
         courseRest.setLessonCount(lessonCount);
-        //        courseRest.setRating();//todo
         BeanUtils.copyProperties(createdCourse, courseRest);
         
         return courseRest;
