@@ -1,6 +1,8 @@
 package kz.academy.kemelacademy.ui.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -17,6 +19,8 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class UserEntity implements Serializable {
     

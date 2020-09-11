@@ -86,7 +86,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
                 .compact();
-        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        response.addHeader(SecurityConstants.HEADER_STRING, /*SecurityConstants.TOKEN_PREFIX +*/ token);
         String resp = new ObjectMapper().writeValueAsString(Collections.singletonMap("token", token));
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -95,18 +95,29 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.getWriter().close();
     }
     
-    private void middle(HttpServletResponse response, Authentication authResult) {//login-3
+    private void middle(HttpServletResponse response, Authentication authResult) throws IOException {//login-3
         String username = ((User) authResult.getPrincipal()).getUsername();
         
+        Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
         String token = Jwts.builder().setSubject(username)
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
         
         IUserService userService = (IUserService) SpringApplicationContext.getBean("userServiceImpl");
         UserDto userDto = userService.getUser(username);
         
-        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-        response.addHeader("UserId", userDto.getUserId());
+        //        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        //                response.addHeader("UserId", userDto.getUserId());
+        
+        Map<String, Object> map = new HashMap<>();
+        map.put("token", token);
+        map.put("expirationDate", expirationDate);
+        String resp = new ObjectMapper().writeValueAsString(map);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().print(resp);
+        response.getWriter().flush();
+        //        response.getWriter().close();
     }
     
 }

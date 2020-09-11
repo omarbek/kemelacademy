@@ -106,6 +106,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
+    @Transactional
     public UserDto getUser(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
@@ -113,7 +114,7 @@ public class UserServiceImpl implements IUserService {
         }
         
         UserDto returnVal = new UserDto();
-        BeanUtils.copyProperties(userEntity, returnVal);
+        convertDomainToDto(userEntity, returnVal);
         
         return returnVal;
     }
