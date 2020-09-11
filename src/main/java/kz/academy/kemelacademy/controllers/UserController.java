@@ -26,6 +26,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,9 @@ public class UserController {
     
     @Autowired
     private UserUtils userUtils;
+    
+    @Autowired
+    private HttpServletRequest request;
     
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -193,10 +197,22 @@ public class UserController {
                     paramType = "header"
             )
     })
+    //    @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping
     @Transactional
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit) {
+        //        UserDetails details = userService.loadUserByUsername(userUtils.getCurrentUserEmail());
+        //        if (details == null || details.getAuthorities().stream()
+        //                .noneMatch(a -> a.getAuthority().equals("Moderator"))) {
+        //            throw new ServiceException(ErrorMessages.YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION
+        //                    .getErrorMessage());
+        //        }
+        if (!request.isUserInRole("ROLE_MODERATOR")) {
+            throw new ServiceException(ErrorMessages.YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION
+                    .getErrorMessage());
+        }
+        
         List<UserRest> returnVal = new ArrayList<>();
         
         List<UserDto> users;
@@ -239,7 +255,6 @@ public class UserController {
     }
     
     @GetMapping(path = "/hello-inter")
-    //    @PreAuthorize("hasAuthority('ROLE_MODERATOR')")//todo
     public String helloWorldInter() {
         return messageSource.getMessage("good.morning.message", null, LocaleContextHolder.getLocale());
     }
