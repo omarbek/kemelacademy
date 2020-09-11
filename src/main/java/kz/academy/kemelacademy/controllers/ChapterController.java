@@ -211,7 +211,7 @@ public class ChapterController {
         operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
         
         try {
-            chapterService.delete(id);//todo delete with all children
+            chapterService.delete(id);
             operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);

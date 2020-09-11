@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.services;
 
 import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.dto.UserTestDto;
+import kz.academy.kemelacademy.ui.entity.LessonEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public interface ILessonService {
     LessonDto update(long id, LessonDto dto) throws Exception;
     
     void delete(long id) throws Exception;
+    
+    void delete(LessonEntity entity) throws Exception;
     
     UserTestDto uploadTest(Long testId) throws Exception;
     

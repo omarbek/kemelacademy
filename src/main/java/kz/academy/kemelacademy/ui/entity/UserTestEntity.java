@@ -1,12 +1,11 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -14,8 +13,11 @@ import java.util.Set;
  * on 2020-08-21
  * @project kemelacademy
  */
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user_tests")
 public class UserTestEntity implements Serializable {
     
@@ -48,5 +50,29 @@ public class UserTestEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "file_id")}
     )
     private Set<FileEntity> files = new HashSet<>();
+    
+    @Override
+    public String toString() {
+        return grade + ", " + comment;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        UserTestEntity that = (UserTestEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(user, that.user) &&
+                Objects.equals(test, that.test) &&
+                Objects.equals(testStatus, that.testStatus) &&
+                Objects.equals(grade, that.grade) &&
+                Objects.equals(comment, that.comment) &&
+                Objects.equals(files, that.files);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, grade, comment);
+    }
     
 }

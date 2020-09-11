@@ -1,6 +1,7 @@
 package kz.academy.kemelacademy.services;
 
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
+import kz.academy.kemelacademy.ui.entity.ChapterEntity;
 
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface IChapterService {
     ChapterDto updateChapter(long id, ChapterDto chapterDto) throws Exception;
     
     void delete(long id) throws Exception;
+    
+    public void delete(ChapterEntity entity) throws Exception;
     
 }

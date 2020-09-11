@@ -138,8 +138,7 @@ public class LessonServiceImpl implements ILessonService {
         List<LessonEntity> lessonEntities = lessonEntityPage.getContent();
         
         for (LessonEntity lessonEntity: lessonEntities) {
-            if (!lessonEntity.isDeleted()
-                    && courseId != null && courseId.equals(lessonEntity.getChapter().getCourse().getId())) {
+            if (courseId != null && courseId.equals(lessonEntity.getChapter().getCourse().getId())) {
                 if (chapterId != null) {
                     if (lessonEntity.getChapter().getId().equals(chapterId)) {
                         LessonDto lessonDto = convertEntityToDto(lessonEntity);
@@ -179,8 +178,12 @@ public class LessonServiceImpl implements ILessonService {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         LessonEntity entity = optional.get();
-        entity.setDeleted(true);
-        lessonRepository.save(entity);
+        delete(entity);
+    }
+    
+    @Override
+    public void delete(LessonEntity lessonEntity) {
+        lessonRepository.delete(lessonEntity);
     }
     
     @Override

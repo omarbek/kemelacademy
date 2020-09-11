@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.services.impl;
 
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.*;
+import kz.academy.kemelacademy.services.IChapterService;
 import kz.academy.kemelacademy.services.ICourseService;
 import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
@@ -66,6 +67,9 @@ public class CourseServiceImpl implements ICourseService {
     
     @Autowired
     private IFileTypeRepository fileTypeRepository;
+    
+    @Autowired
+    private IChapterService chapterService;
     
     @Override
     public CourseDto createCourse(CourseDto courseDto) throws Exception {
@@ -261,7 +265,19 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public void deleteCourse(long id) throws Exception {
         CourseEntity courseEntity = getCourseEntity(id);
+        delete(courseEntity);
+    }
+    
+    @Override
+    public void delete(CourseEntity courseEntity) throws Exception {
         courseEntity.setDeleted(true);
+        
+        Iterator<ChapterEntity> chapters = courseEntity.getChapters().iterator();
+        while (chapters.hasNext()) {
+            ChapterEntity chapterEntity = chapters.next();
+            chapterService.delete(chapterEntity);
+        }
+        courseEntity.setChapters(new HashSet<>());
         courseEntity.setUsers(new HashSet<>());
         
         courseRepository.save(courseEntity);

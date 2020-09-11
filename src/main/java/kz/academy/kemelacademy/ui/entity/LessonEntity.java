@@ -42,15 +42,13 @@ public class LessonEntity {
     
     private Integer duration;
     
-    private boolean deleted = false;
-    
-    @OneToOne(mappedBy = "lesson")
+    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
     private VideoEntity video;
     
-    @OneToOne(mappedBy = "lesson")
+    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
     private FileEntity file;
     
-    @OneToOne(mappedBy = "lesson")
+    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
     private TestEntity test;
     
     @Override
@@ -63,8 +61,7 @@ public class LessonEntity {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
         LessonEntity that = (LessonEntity) o;
-        return deleted == that.deleted &&
-                Objects.equals(id, that.id) &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(lessonType, that.lessonType) &&
                 Objects.equals(chapter, that.chapter) &&
@@ -77,7 +74,7 @@ public class LessonEntity {
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lessonNo, duration, deleted);
+        return Objects.hash(id, name, lessonNo, duration);
     }
     
 }

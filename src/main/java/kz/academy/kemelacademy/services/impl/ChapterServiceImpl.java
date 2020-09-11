@@ -4,6 +4,7 @@ import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.IChapterRepository;
 import kz.academy.kemelacademy.repositories.ICourseRepository;
 import kz.academy.kemelacademy.services.IChapterService;
+import kz.academy.kemelacademy.services.ILessonService;
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.entity.ChapterEntity;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +36,9 @@ public class ChapterServiceImpl implements IChapterService {
     
     @Autowired
     private ICourseRepository courseRepository;
+    
+    @Autowired
+    private ILessonService lessonService;
     
     @Override
     public ChapterDto createChapter(ChapterDto chapterDto) throws Exception {
@@ -107,8 +112,21 @@ public class ChapterServiceImpl implements IChapterService {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         ChapterEntity entity = optional.get();
-        entity.setDeleted(true);
-        chapterRepository.save(entity);
+        delete(entity);
+    }
+    
+    @Override
+    public void delete(ChapterEntity chapterEntity) throws Exception {
+        chapterEntity.setDeleted(true);
+        
+        Iterator<LessonEntity> lessons = chapterEntity.getLessons().iterator();
+        while (lessons.hasNext()) {
+            LessonEntity lessonEntity = lessons.next();
+            lessonService.delete(lessonEntity);
+        }
+        chapterEntity.setLessons(new ArrayList<>());
+        
+        chapterRepository.save(chapterEntity);
     }
     
     private ChapterDto convertEntityToDto(ChapterEntity savedChapter) {

@@ -3,6 +3,7 @@ package kz.academy.kemelacademy.services.impl;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.ICategoryRepository;
 import kz.academy.kemelacademy.services.ICategoryService;
+import kz.academy.kemelacademy.services.ICourseService;
 import kz.academy.kemelacademy.ui.dto.CategoryDto;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.entity.CategoryEntity;
@@ -27,6 +28,9 @@ public class CategoryServiceImpl implements ICategoryService {
     
     @Autowired
     private ICategoryRepository categoryRepository;
+    
+    @Autowired
+    private ICourseService courseService;
     
     @Override
     public List<CategoryDto> getCategories(int page, int limit) throws Exception {
@@ -123,9 +127,9 @@ public class CategoryServiceImpl implements ICategoryService {
         }
         CategoryEntity categoryEntity = optional.get();
         Iterator<CourseEntity> courses = categoryEntity.getCourses().iterator();
-        for (categoryEntity.getCourses().iterator(); courses.hasNext(); ) {
+        while (courses.hasNext()) {
             CourseEntity courseEntity = courses.next();
-            courseEntity.setDeleted(true);
+            courseService.delete(courseEntity);
             courseEntity.setCategory(null);
         }
         categoryEntity.setCourses(new HashSet<>());
