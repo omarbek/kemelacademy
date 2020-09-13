@@ -226,11 +226,11 @@ public class CourseController {
             )
     })
     @Transactional
-    @GetMapping(path = "/{id}")
-    public CourseRest getCourse(@PathVariable("id") long id) {
+    @GetMapping(path = "/{courseId}")
+    public CourseRest getCourse(@PathVariable("courseId") long courseId) {
         CourseDto courseDto;
         try {
-            courseDto = courseService.getCourseById(id);
+            courseDto = courseService.getCourseById(courseId);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
@@ -252,8 +252,8 @@ public class CourseController {
             )
     })
     @Transactional
-    @PutMapping(path = "/{id}")
-    public CourseRest updateCourse(@PathVariable("id") long id,
+    @PutMapping(path = "/{courseId}")
+    public CourseRest updateCourse(@PathVariable("courseId") long courseId,
                                    @RequestBody CourseRequestModel courseRequestModel) {
         CourseRest returnValue;
         
@@ -261,7 +261,7 @@ public class CourseController {
         
         CourseDto updatedCourse;
         try {
-            updatedCourse = courseService.updateCourse(id, courseDto);
+            updatedCourse = courseService.updateCourse(courseId, courseDto);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
@@ -284,13 +284,13 @@ public class CourseController {
             )
     })
     @Transactional
-    @DeleteMapping(path = "/{id}")
-    public OperationStatusModel deleteCourse(@PathVariable("id") long id) {
+    @DeleteMapping(path = "/{courseId}")
+    public OperationStatusModel deleteCourse(@PathVariable("courseId") long courseId) {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
         operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
         
         try {
-            courseService.deleteCourse(id);
+            courseService.deleteCourse(courseId);
             operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);
@@ -307,9 +307,9 @@ public class CourseController {
                     paramType = "header")
     })
     @Transactional
-    @PostMapping(path = "uploadFile/{id}")
+    @PostMapping(path = "uploadFile/{courseId}")
     public CourseRest uploadFile(@RequestParam("file") MultipartFile file,
-                                 @PathVariable("id") Long courseId) {
+                                 @PathVariable("courseId") Long courseId) {
         CourseRest returnValue;
         
         if (file == null || file.isEmpty()) {
@@ -376,6 +376,36 @@ public class CourseController {
         }
         
         return operationStatusModel;
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @Transactional
+    @GetMapping(path = "myCourses")
+    public List<CourseRest> getMyCourses() {
+        List<CourseRest> returnVal = new ArrayList<>();
+        
+        List<CourseDto> courses;
+        try {
+            courses = courseService.getMyCourses();
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        for (CourseDto courseDto: courses) {
+            CourseRest courseRest = convertDtoToModel(courseDto);
+            returnVal.add(courseRest);
+        }
+        
+        return returnVal;
     }
     
 }

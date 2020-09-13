@@ -114,7 +114,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         map.put("expirationDate", expirationDate);
         String resp = new ObjectMapper().writeValueAsString(map);
         response.setStatus(HttpServletResponse.SC_OK);
-        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.getWriter().print(resp);
         response.getWriter().flush();
         //        response.getWriter().close();

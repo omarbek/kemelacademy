@@ -342,5 +342,23 @@ public class CourseServiceImpl implements ICourseService {
         userCourseRepository.save(userCourseEntity);
     }
     
+    @Override
+    public List<CourseDto> getMyCourses() {
+        List<CourseDto> returnValue = new ArrayList<>();
+        
+        List<CourseEntity> courses = new ArrayList<>();
+        Set<UserCourseEntity> pupils = userUtils.getCurrentUserEntity().getPupils();
+        for (UserCourseEntity userCourseEntity: pupils) {
+            courses.add(userCourseEntity.getCourse());
+        }
+        
+        for (CourseEntity courseEntity: courses) {
+            CourseDto courseDto = convertEntityToDto(courseEntity);
+            returnValue.add(courseDto);
+        }
+        
+        return returnValue;
+    }
+    
     
 }

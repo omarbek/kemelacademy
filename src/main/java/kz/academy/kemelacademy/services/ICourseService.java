@@ -31,4 +31,6 @@ public interface ICourseService {
     
     void setRating(Long courseId, Double rating);
     
+    List<CourseDto> getMyCourses();
+    
 }
