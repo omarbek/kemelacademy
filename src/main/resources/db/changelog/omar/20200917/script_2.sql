@@ -1,0 +1,1 @@
+ALTER TABLE home_work_tests RENAME TO user_home_works;
