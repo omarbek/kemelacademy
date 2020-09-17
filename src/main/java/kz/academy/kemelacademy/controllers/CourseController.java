@@ -76,8 +76,7 @@ public class CourseController {
                 courseRequestModel.getDescription(),
                 courseRequestModel.getRequirements(),
                 courseRequestModel.getLearns(),
-                courseRequestModel.getCourseStatusId(),
-                courseRequestModel.getPupils()
+                courseRequestModel.getCourseStatusId()
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
