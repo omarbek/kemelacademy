@@ -19,4 +19,8 @@ public class AppProperties {
         return environment.getProperty("tokenSecret");
     }
     
+    String getRefreshTokenSecret() {
+        return environment.getProperty("refreshTokenSecret");
+    }
+    
 }

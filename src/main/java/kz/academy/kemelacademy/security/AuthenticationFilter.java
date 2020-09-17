@@ -3,7 +3,6 @@ package kz.academy.kemelacademy.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import kz.academy.kemelacademy.SpringApplicationContext;
 import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.ui.dto.RoleDto;
 import kz.academy.kemelacademy.ui.dto.UserDto;
@@ -103,15 +102,17 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
         
-        IUserService userService = (IUserService) SpringApplicationContext.getBean("userServiceImpl");
-        UserDto userDto = userService.getUser(username);
+        Date refreshTokenExpirationDate = new Date(System.currentTimeMillis() + (expirationTime * 4));
+        String refreshToken = Jwts.builder().setSubject(username)
+                .setExpiration(refreshTokenExpirationDate)
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getRefreshTokenSecret()).compact();
         
-        //        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-        //                response.addHeader("UserId", userDto.getUserId());
         
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
+        map.put("refreshToken", refreshToken);
         map.put("expirationDate", expirationDate);
+        map.put("refreshTokenExpirationDate", refreshTokenExpirationDate);
         String resp = new ObjectMapper().writeValueAsString(map);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);

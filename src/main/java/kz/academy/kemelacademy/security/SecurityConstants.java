@@ -34,10 +34,16 @@ public class SecurityConstants {
     static final String ROLES_URL = "/roles/**";
     static final String TEST_STATUSES_URL = "/test_statuses/**";
     static final String COURSE_STATUSES_URL = "/course_statuses/**";
+    static final String REFRESH_TOKEN_URL = "/refresh-token";
     
     public static String getTokenSecret() {
         AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("AppProperties");
         return appProperties.getTokenSecret();
+    }
+    
+    public static String getRefreshTokenSecret() {
+        AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("AppProperties");
+        return appProperties.getRefreshTokenSecret();
     }
     
 }
