@@ -104,15 +104,19 @@ public class LessonServiceImpl implements ILessonService {
     public LessonDto uploadFile(Long lessonId, MultipartFile file) throws Exception {
         String pathFolder = systemParameterUtils.getPathFolder() + userUtils.getCurrentUserEntity().getUserId() + "/"
                 + "lesssons/" + lessonId + "/";
-        File directory = new File(pathFolder);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
         String filename = pathFolder + new Date().getTime() + "_" + file.getOriginalFilename();
         
         byte[] bytes = file.getBytes();
         Path path = Paths.get(filename);
-        Files.write(path, bytes);
+        Path parentDir = path.getParent();
+        if (!Files.exists(parentDir)) {
+            Files.createDirectories(parentDir);
+        }
+        try {
+            Files.write(path, bytes);
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
         
         LessonEntity lessonEntity = getLessonEntityById(lessonId);
         if (LessonTypeEntity.FILE.equals(lessonEntity.getLessonType().getId())) {
