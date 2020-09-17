@@ -13,6 +13,7 @@ import java.util.Set;
 @Data
 public class UserRest {
     
+    private Long id;
     private String userId;
     private String email;
     private String firstName;

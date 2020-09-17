@@ -197,11 +197,12 @@ public class UserController {
                     paramType = "header"
             )
     })
-    //    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    //    @PreAuthorize("hasRole('ROLE_MODERATOR')") // another method for checking role, but this doesn't work
     @GetMapping
     @Transactional
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit) {
+        // another method for checking role
         //        UserDetails details = userService.loadUserByUsername(userUtils.getCurrentUserEmail());
         //        if (details == null || details.getAuthorities().stream()
         //                .noneMatch(a -> a.getAuthority().equals("Moderator"))) {
