@@ -4,9 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -18,8 +16,8 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_tests")
-public class UserTestEntity implements Serializable {
+@Table(name = "user_home_works")
+public class UserHomeWorkEntity implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,26 +28,22 @@ public class UserTestEntity implements Serializable {
     private UserEntity user;
     
     @ManyToOne
-    @JoinColumn(name = "test_id")
-    private TestEntity test;
+    @JoinColumn(name = "home_work_id")
+    private HomeWorkEntity homeWork;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private TestStatusEntity testStatus = new TestStatusEntity();
+    private HomeWorkStatusEntity homeWorkStatus = new HomeWorkStatusEntity();
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    private FileEntity file = new FileEntity();
     
     private Integer grade;
     
     private String comment;
-    
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "test_files",
-            joinColumns = {@JoinColumn(name = "user_test_id")},
-            inverseJoinColumns = {@JoinColumn(name = "file_id")}
-    )
-    private Set<FileEntity> files = new HashSet<>();
     
     @Override
     public String toString() {
@@ -60,14 +54,13 @@ public class UserTestEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
-        UserTestEntity that = (UserTestEntity) o;
+        UserHomeWorkEntity that = (UserHomeWorkEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(user, that.user) &&
-                Objects.equals(test, that.test) &&
-                Objects.equals(testStatus, that.testStatus) &&
+                Objects.equals(homeWork, that.homeWork) &&
+                Objects.equals(homeWorkStatus, that.homeWorkStatus) &&
                 Objects.equals(grade, that.grade) &&
-                Objects.equals(comment, that.comment) &&
-                Objects.equals(files, that.files);
+                Objects.equals(comment, that.comment);
     }
     
     @Override

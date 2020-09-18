@@ -121,7 +121,7 @@ public class LessonServiceImpl implements ILessonService {
         LessonEntity lessonEntity = getLessonEntityById(lessonId);
         if (LessonTypeEntity.FILE.equals(lessonEntity.getLessonType().getId())) {
             lessonEntity.getFile().setName(filename);
-        } else if (LessonTypeEntity.TEST.equals(lessonEntity.getLessonType().getId())) {
+        } else if (LessonTypeEntity.HOME_WORK.equals(lessonEntity.getLessonType().getId())) {
             lessonEntity.getTest().getFile().setName(filename);
         }
         LessonEntity uploadedFileLessonEntity = lessonRepository.save(lessonEntity);
@@ -192,22 +192,22 @@ public class LessonServiceImpl implements ILessonService {
     
     @Override
     public UserTestDto uploadTest(Long testId) throws Exception {
-        UserTestEntity entity = new UserTestEntity();
+        UserHomeWorkEntity entity = new UserHomeWorkEntity();
         entity.setUser(userUtils.getCurrentUserEntity());
         
-        Optional<TestEntity> optional = testRepository.findById(testId);
+        Optional<HomeWorkEntity> optional = testRepository.findById(testId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        TestEntity testEntity = optional.get();
-        entity.setTest(testEntity);
+        HomeWorkEntity homeWorkEntity = optional.get();
+        entity.setTest(homeWorkEntity);
         
-        Optional<TestStatusEntity> testEntityOptional = testStatusRepository.findById(TestStatusEntity.NOT_OPEN);
+        Optional<HomeWorkStatusEntity> testEntityOptional = testStatusRepository.findById(HomeWorkStatusEntity.NOT_OPEN);
         if (!testEntityOptional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        TestStatusEntity testStatusEntity = testEntityOptional.get();
-        entity.setTestStatus(testStatusEntity);
+        HomeWorkStatusEntity homeWorkStatusEntity = testEntityOptional.get();
+        entity.setTestStatus(homeWorkStatusEntity);
         
         userTestRepository.save(entity);
         
@@ -234,11 +234,11 @@ public class LessonServiceImpl implements ILessonService {
         Path path = Paths.get(filename);
         Files.write(path, bytes);
         
-        Optional<UserTestEntity> optional = userTestRepository.findById(userTestId);
+        Optional<UserHomeWorkEntity> optional = userTestRepository.findById(userTestId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        UserTestEntity entity = optional.get();
+        UserHomeWorkEntity entity = optional.get();
         
         FileEntity fileEntity = new FileEntity();
         
@@ -273,32 +273,32 @@ public class LessonServiceImpl implements ILessonService {
     
     @Override
     public void changeStatus(Long userTestId, Long statusId) throws Exception {
-        Optional<UserTestEntity> entityOptional = userTestRepository.findById(userTestId);
+        Optional<UserHomeWorkEntity> entityOptional = userTestRepository.findById(userTestId);
         if (!entityOptional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        UserTestEntity userTestEntity = entityOptional.get();
+        UserHomeWorkEntity userHomeWorkEntity = entityOptional.get();
         
-        Optional<TestStatusEntity> optional = testStatusRepository.findById(statusId);
+        Optional<HomeWorkStatusEntity> optional = testStatusRepository.findById(statusId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        TestStatusEntity testStatusEntity = optional.get();
-        userTestEntity.setTestStatus(testStatusEntity);
+        HomeWorkStatusEntity homeWorkStatusEntity = optional.get();
+        userHomeWorkEntity.setTestStatus(homeWorkStatusEntity);
         
-        userTestRepository.save(userTestEntity);
+        userTestRepository.save(userHomeWorkEntity);
     }
     
     @Override
     public void setGrade(Long userTestId, Integer grade, String comment) throws Exception {
-        Optional<UserTestEntity> entityOptional = userTestRepository.findById(userTestId);
+        Optional<UserHomeWorkEntity> entityOptional = userTestRepository.findById(userTestId);
         if (!entityOptional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        UserTestEntity userTestEntity = entityOptional.get();
-        userTestEntity.setGrade(grade);
-        userTestEntity.setComment(comment);
-        userTestRepository.save(userTestEntity);
+        UserHomeWorkEntity userHomeWorkEntity = entityOptional.get();
+        userHomeWorkEntity.setGrade(grade);
+        userHomeWorkEntity.setComment(comment);
+        userTestRepository.save(userHomeWorkEntity);
     }
     
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
@@ -356,8 +356,8 @@ public class LessonServiceImpl implements ILessonService {
                 
                 lessonEntity.setFile(fileEntity);
             } else {//test
-                TestEntity testEntity = new TestEntity();
-                testEntity.setLesson(lessonEntity);
+                HomeWorkEntity homeWorkEntity = new HomeWorkEntity();
+                homeWorkEntity.setLesson(lessonEntity);
                 
                 FileEntity fileEntity = new FileEntity();
                 FileTypeDto fileTypeById;
@@ -372,12 +372,12 @@ public class LessonServiceImpl implements ILessonService {
                 fileEntity.setName(lessonDto.getTestFileName());
                 fileEntity.setLesson(null);
                 
-                testEntity.setFile(fileEntity);
-                testEntity.setDescription(lessonDto.getDescription());
+                homeWorkEntity.setFile(fileEntity);
+                homeWorkEntity.setDescription(lessonDto.getDescription());
                 
-                testRepository.save(testEntity);
+                testRepository.save(homeWorkEntity);
                 
-                lessonEntity.setTest(testEntity);
+                lessonEntity.setTest(homeWorkEntity);
             }
         } else {
             Long chapterId = lessonDto.getChapterDto().getId();

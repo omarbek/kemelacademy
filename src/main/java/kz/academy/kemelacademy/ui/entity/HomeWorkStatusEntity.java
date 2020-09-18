@@ -12,18 +12,18 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "test_statuses")
+@Table(name = "home_work_statuses")
 @EqualsAndHashCode(callSuper = true)
-public class TestStatusEntity extends AbstractNameEntity {
+public class HomeWorkStatusEntity extends AbstractNameEntity {
     
     public static final Long NOT_OPEN = 1L;
     public static final Long DOWNLOADED = 2L;
     public static final Long COMPLETE = 3L;
     
     @OneToMany(
-            mappedBy = "testStatus",
+            mappedBy = "homeWorkStatus",
             cascade = CascadeType.ALL
     )
-    private Set<UserTestEntity> userTests = new HashSet<>();
+    private Set<UserHomeWorkEntity> userHomeWorks = new HashSet<>();
     
 }

@@ -49,7 +49,7 @@ public class LessonEntity {
     private FileEntity file;
     
     @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
-    private TestEntity test;
+    private HomeWorkEntity homeWork;
     
     @Override
     public String toString() {
@@ -69,7 +69,7 @@ public class LessonEntity {
                 Objects.equals(duration, that.duration) &&
                 Objects.equals(video, that.video) &&
                 Objects.equals(file, that.file) &&
-                Objects.equals(test, that.test);
+                Objects.equals(homeWork, that.homeWork);
     }
     
     @Override

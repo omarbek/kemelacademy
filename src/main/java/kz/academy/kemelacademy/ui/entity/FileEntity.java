@@ -3,9 +3,7 @@ package kz.academy.kemelacademy.ui.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -36,16 +34,11 @@ public class FileEntity {
     
     private String name;
     
-    @OneToOne(mappedBy = "file")
-    private TestEntity test;
-    
-    @ManyToMany(mappedBy = "files")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Set<UserTestEntity> userTests = new HashSet<>();
-    
     @OneToOne(mappedBy = "certificate")
     private CourseEntity course;
+    
+    @OneToOne(mappedBy = "file")
+    private UserHomeWorkEntity userHomeWork;
     
     @Override
     public String toString() {
@@ -61,8 +54,6 @@ public class FileEntity {
                 Objects.equals(lesson, that.lesson) &&
                 Objects.equals(fileType, that.fileType) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(test, that.test) &&
-                Objects.equals(userTests, that.userTests) &&
                 Objects.equals(course, that.course);
     }
     

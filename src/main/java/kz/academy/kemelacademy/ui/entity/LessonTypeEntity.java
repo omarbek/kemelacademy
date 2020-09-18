@@ -20,7 +20,7 @@ public class LessonTypeEntity extends AbstractNameEntity {
     
     public static final Long VIDEO = 1L;
     public static final Long FILE = 2L;
-    public static final Long TEST = 3L;
+    public static final Long HOME_WORK = 3L;
     
     @OneToMany(
             mappedBy = "lessonType",

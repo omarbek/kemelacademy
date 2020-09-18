@@ -66,7 +66,7 @@ public class UserEntity implements Serializable {
     private Set<CourseEntity> courses = new HashSet<>();
     
     @OneToMany(mappedBy = "user")
-    private Set<UserTestEntity> userTests = new HashSet<>();
+    private Set<UserHomeWorkEntity> userHomeWorks = new HashSet<>();
     
     @OneToMany(mappedBy = "user")
     private Set<UserCourseEntity> pupils = new HashSet<>();
@@ -101,7 +101,7 @@ public class UserEntity implements Serializable {
                 Objects.equals(userId, that.userId) &&
                 Objects.equals(roles, that.roles) &&
                 Objects.equals(courses, that.courses) &&
-                Objects.equals(userTests, that.userTests) &&
+                Objects.equals(userHomeWorks, that.userHomeWorks) &&
                 Objects.equals(pupils, that.pupils);
     }
     

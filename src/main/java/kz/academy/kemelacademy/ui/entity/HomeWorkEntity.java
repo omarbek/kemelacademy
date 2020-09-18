@@ -17,8 +17,8 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tests")
-public class TestEntity {
+@Table(name = "home_works")
+public class HomeWorkEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +30,10 @@ public class TestEntity {
     @EqualsAndHashCode.Exclude
     private LessonEntity lesson = new LessonEntity();
     
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "file_id", referencedColumnName = "id")
-    private FileEntity file = new FileEntity();
-    
     private String description;
     
-    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
-    private Set<UserTestEntity> userTests = new HashSet<>();
+    @OneToMany(mappedBy = "homeWork", cascade = CascadeType.ALL)
+    private Set<UserHomeWorkEntity> userHomeWorks = new HashSet<>();
     
     @Override
     public String toString() {
@@ -48,12 +44,11 @@ public class TestEntity {
     public boolean equals(Object o) {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
-        TestEntity that = (TestEntity) o;
+        HomeWorkEntity that = (HomeWorkEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(lesson, that.lesson) &&
-                Objects.equals(file, that.file) &&
                 Objects.equals(description, that.description) &&
-                Objects.equals(userTests, that.userTests);
+                Objects.equals(userHomeWorks, that.userHomeWorks);
     }
     
     @Override

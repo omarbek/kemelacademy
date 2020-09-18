@@ -1,6 +1,6 @@
 package kz.academy.kemelacademy.repositories;
 
-import kz.academy.kemelacademy.ui.entity.TestEntity;
+import kz.academy.kemelacademy.ui.entity.HomeWorkEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * on 2020-08-20
  * @project kemelacademy
  */
-public interface ITestRepository extends JpaRepository<TestEntity, Long> {
+public interface ITestRepository extends JpaRepository<HomeWorkEntity, Long> {
 }
