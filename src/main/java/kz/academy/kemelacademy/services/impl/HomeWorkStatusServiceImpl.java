@@ -2,7 +2,7 @@ package kz.academy.kemelacademy.services.impl;
 
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.repositories.IHomeWorkStatusRepository;
-import kz.academy.kemelacademy.services.ITestStatusService;
+import kz.academy.kemelacademy.services.IHomeWorkStatusService;
 import kz.academy.kemelacademy.ui.dto.TestStatusDto;
 import kz.academy.kemelacademy.ui.entity.HomeWorkStatusEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TestStatusServiceImpl implements ITestStatusService {
+public class HomeWorkStatusServiceImpl implements IHomeWorkStatusService {
     
     @Autowired
     IHomeWorkStatusRepository testStatusRepository;
