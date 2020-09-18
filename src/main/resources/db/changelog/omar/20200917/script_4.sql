@@ -1,0 +1,1 @@
+drop table home_work_files;
