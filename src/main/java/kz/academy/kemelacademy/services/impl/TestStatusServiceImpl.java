@@ -1,7 +1,7 @@
 package kz.academy.kemelacademy.services.impl;
 
 import kz.academy.kemelacademy.exceptions.ServiceException;
-import kz.academy.kemelacademy.repositories.ITestStatusRepository;
+import kz.academy.kemelacademy.repositories.IHomeWorkStatusRepository;
 import kz.academy.kemelacademy.services.ITestStatusService;
 import kz.academy.kemelacademy.ui.dto.TestStatusDto;
 import kz.academy.kemelacademy.ui.entity.HomeWorkStatusEntity;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class TestStatusServiceImpl implements ITestStatusService {
     
     @Autowired
-    ITestStatusRepository testStatusRepository;
+    IHomeWorkStatusRepository testStatusRepository;
     
     @Override
     public TestStatusDto createStatusDto(TestStatusDto statusDto) throws Exception {

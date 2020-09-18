@@ -50,16 +50,16 @@ public class LessonServiceImpl implements ILessonService {
     private IFileRepository fileRepository;
     
     @Autowired
-    private ITestRepository testRepository;
+    private IHomeWorkRepository testRepository;
     
     @Autowired
     private IChapterRepository chapterRepository;
     
     @Autowired
-    private ITestStatusRepository testStatusRepository;
+    private IHomeWorkStatusRepository testStatusRepository;
     
     @Autowired
-    private IUserTestRepository userTestRepository;
+    private IUserHomeWorkRepository userTestRepository;
     
     @Autowired
     private IFileTypeRepository fileTypeRepository;
