@@ -7,7 +7,7 @@ import kz.academy.kemelacademy.services.ILessonService;
 import kz.academy.kemelacademy.ui.dto.FileDto;
 import kz.academy.kemelacademy.ui.dto.FileTypeDto;
 import kz.academy.kemelacademy.ui.dto.LessonDto;
-import kz.academy.kemelacademy.ui.dto.UserTestDto;
+import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.utils.SystemParameterUtils;
@@ -50,7 +50,7 @@ public class LessonServiceImpl implements ILessonService {
     private IFileRepository fileRepository;
     
     @Autowired
-    private IHomeWorkRepository testRepository;
+    private IHomeWorkRepository homeWorkRepository;
     
     @Autowired
     private IChapterRepository chapterRepository;
@@ -59,7 +59,7 @@ public class LessonServiceImpl implements ILessonService {
     private IHomeWorkStatusRepository testStatusRepository;
     
     @Autowired
-    private IUserHomeWorkRepository userTestRepository;
+    private IUserHomeWorkRepository userHomeWorkRepository;
     
     @Autowired
     private IFileTypeRepository fileTypeRepository;
@@ -119,11 +119,7 @@ public class LessonServiceImpl implements ILessonService {
         }
         
         LessonEntity lessonEntity = getLessonEntityById(lessonId);
-        if (LessonTypeEntity.FILE.equals(lessonEntity.getLessonType().getId())) {
-            lessonEntity.getFile().setName(filename);
-        } else if (LessonTypeEntity.HOME_WORK.equals(lessonEntity.getLessonType().getId())) {
-            lessonEntity.getTest().getFile().setName(filename);
-        }
+        lessonEntity.getFile().setName(filename);
         LessonEntity uploadedFileLessonEntity = lessonRepository.save(lessonEntity);
         
         return convertEntityToDto(uploadedFileLessonEntity);
@@ -191,39 +187,40 @@ public class LessonServiceImpl implements ILessonService {
     }
     
     @Override
-    public UserTestDto uploadTest(Long testId) throws Exception {
-        UserHomeWorkEntity entity = new UserHomeWorkEntity();
-        entity.setUser(userUtils.getCurrentUserEntity());
-        
-        Optional<HomeWorkEntity> optional = testRepository.findById(testId);
+    public UserHomeWorkDto createHomeWork(Long lessonId) throws Exception {
+        Optional<LessonEntity> optional = lessonRepository.findById(lessonId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        HomeWorkEntity homeWorkEntity = optional.get();
-        entity.setTest(homeWorkEntity);
+        LessonEntity lessonEntity = optional.get();
         
-        Optional<HomeWorkStatusEntity> testEntityOptional = testStatusRepository.findById(HomeWorkStatusEntity.NOT_OPEN);
-        if (!testEntityOptional.isPresent()) {
+        UserHomeWorkEntity userHomeWork = new UserHomeWorkEntity();
+        userHomeWork.setUser(userUtils.getCurrentUserEntity());
+        userHomeWork.setHomeWork(lessonEntity.getHomeWork());
+        userHomeWork.setFile(null);
+        
+        Optional<HomeWorkStatusEntity> statusOptional = testStatusRepository.findById(HomeWorkStatusEntity.NOT_OPEN);
+        if (!statusOptional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        HomeWorkStatusEntity homeWorkStatusEntity = testEntityOptional.get();
-        entity.setTestStatus(homeWorkStatusEntity);
+        HomeWorkStatusEntity homeWorkStatusEntity = statusOptional.get();
+        userHomeWork.setHomeWorkStatus(homeWorkStatusEntity);
         
-        userTestRepository.save(entity);
+        userHomeWorkRepository.save(userHomeWork);
         
-        UserTestDto ret = new UserTestDto();
-        BeanUtils.copyProperties(entity.getUser(), ret.getUser());
-        BeanUtils.copyProperties(entity.getTestStatus(), ret.getTestStatus());
-        BeanUtils.copyProperties(entity.getTest().getLesson(), ret.getTest());
-        BeanUtils.copyProperties(entity, ret);
+        UserHomeWorkDto ret = new UserHomeWorkDto();
+        BeanUtils.copyProperties(userHomeWork.getUser(), ret.getUser());
+        BeanUtils.copyProperties(userHomeWork.getHomeWorkStatus(), ret.getHomeWorkStatus());
+        BeanUtils.copyProperties(userHomeWork.getHomeWork().getLesson(), ret.getHomeWork());
+        BeanUtils.copyProperties(userHomeWork, ret);
         
         return ret;
     }
     
     @Override
-    public UserTestDto uploadHomeWork(Long userTestId, MultipartFile file) throws Exception {
+    public UserHomeWorkDto uploadHomeWork(Long userHomeWorkId, MultipartFile file) throws Exception {
         String pathFolder = systemParameterUtils.getPathFolder() + userUtils.getCurrentUserEntity().getUserId() + "/"
-                + "homework/" + userTestId + "/";
+                + "homework/" + userHomeWorkId + "/";
         File directory = new File(pathFolder);
         if (!directory.exists()) {
             directory.mkdirs();
@@ -234,37 +231,36 @@ public class LessonServiceImpl implements ILessonService {
         Path path = Paths.get(filename);
         Files.write(path, bytes);
         
-        Optional<UserHomeWorkEntity> optional = userTestRepository.findById(userTestId);
+        Optional<UserHomeWorkEntity> optional = userHomeWorkRepository.findById(userHomeWorkId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         UserHomeWorkEntity entity = optional.get();
         
         FileEntity fileEntity = new FileEntity();
+        fileEntity.setName(filename);
+        fileEntity.setLesson(null);
         
-        Optional<FileTypeEntity> entityOptional = fileTypeRepository.findById(FileTypeEntity.FOR_UPLOAD_TESTS);
+        Optional<FileTypeEntity> entityOptional = fileTypeRepository.findById(FileTypeEntity.FOR_SEND_HOMEWORK);
         if (!entityOptional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         FileTypeEntity fileTypeEntity = entityOptional.get();
         fileEntity.setFileType(fileTypeEntity);
-        fileEntity.setName(filename);
-        fileEntity.setLesson(null);
+        
         fileRepository.save(fileEntity);
         
-        entity.getFiles().add(fileEntity);
-        userTestRepository.save(entity);
+        entity.setFile(fileEntity);
+        userHomeWorkRepository.save(entity);
         
-        UserTestDto ret = new UserTestDto();
+        UserHomeWorkDto ret = new UserHomeWorkDto();
         BeanUtils.copyProperties(entity.getUser(), ret.getUser());
-        BeanUtils.copyProperties(entity.getTestStatus(), ret.getTestStatus());
-        BeanUtils.copyProperties(entity.getTest().getLesson(), ret.getTest());
+        BeanUtils.copyProperties(entity.getHomeWorkStatus(), ret.getHomeWorkStatus());
+        BeanUtils.copyProperties(entity.getHomeWork().getLesson(), ret.getHomeWork());
         
-        for (FileEntity val: entity.getFiles()) {
-            FileDto fileDto = new FileDto();
-            fileDto.setName(val.getName());
-            ret.getFiles().add(fileDto);
-        }
+        FileDto fileDto = new FileDto();
+        fileDto.setName(entity.getFile().getName());
+        ret.setFile(fileDto);
         
         BeanUtils.copyProperties(entity, ret);
         
@@ -272,8 +268,8 @@ public class LessonServiceImpl implements ILessonService {
     }
     
     @Override
-    public void changeStatus(Long userTestId, Long statusId) throws Exception {
-        Optional<UserHomeWorkEntity> entityOptional = userTestRepository.findById(userTestId);
+    public void changeStatus(Long userHomeWorkId, Long statusId) throws Exception {
+        Optional<UserHomeWorkEntity> entityOptional = userHomeWorkRepository.findById(userHomeWorkId);
         if (!entityOptional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
@@ -284,21 +280,21 @@ public class LessonServiceImpl implements ILessonService {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         HomeWorkStatusEntity homeWorkStatusEntity = optional.get();
-        userHomeWorkEntity.setTestStatus(homeWorkStatusEntity);
+        userHomeWorkEntity.setHomeWorkStatus(homeWorkStatusEntity);
         
-        userTestRepository.save(userHomeWorkEntity);
+        userHomeWorkRepository.save(userHomeWorkEntity);
     }
     
     @Override
     public void setGrade(Long userTestId, Integer grade, String comment) throws Exception {
-        Optional<UserHomeWorkEntity> entityOptional = userTestRepository.findById(userTestId);
+        Optional<UserHomeWorkEntity> entityOptional = userHomeWorkRepository.findById(userTestId);
         if (!entityOptional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         UserHomeWorkEntity userHomeWorkEntity = entityOptional.get();
         userHomeWorkEntity.setGrade(grade);
         userHomeWorkEntity.setComment(comment);
-        userTestRepository.save(userHomeWorkEntity);
+        userHomeWorkRepository.save(userHomeWorkEntity);
     }
     
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
@@ -315,16 +311,15 @@ public class LessonServiceImpl implements ILessonService {
         
         ret.setFileName(savedLesson.getFile() != null ? savedLesson.getFile().getName() : null);
         
-        if (savedLesson.getTest() != null) {
-            ret.setTestFileName(savedLesson.getTest().getFile().getName());
-            ret.setDescription(savedLesson.getTest().getDescription());
+        if (savedLesson.getHomeWork() != null) {
+            ret.setDescription(savedLesson.getHomeWork().getDescription());
         }
         
         return ret;
     }
     
     private void convertDtoToEntity(LessonDto lessonDto, LessonEntity lessonEntity, boolean update) {
-        if (!update) {
+        if (!update) {//create
             BeanUtils.copyProperties(lessonDto.getLessonTypeDto(), lessonEntity.getLessonType());
             BeanUtils.copyProperties(lessonDto.getChapterDto(), lessonEntity.getChapter());
             BeanUtils.copyProperties(lessonDto, lessonEntity);
@@ -355,31 +350,16 @@ public class LessonServiceImpl implements ILessonService {
                 fileRepository.save(fileEntity);
                 
                 lessonEntity.setFile(fileEntity);
-            } else {//test
+            } else {//home work
                 HomeWorkEntity homeWorkEntity = new HomeWorkEntity();
                 homeWorkEntity.setLesson(lessonEntity);
-                
-                FileEntity fileEntity = new FileEntity();
-                FileTypeDto fileTypeById;
-                try {
-                    fileTypeById = fileTypeService.getFileTypeById(FileTypeEntity.FOR_SEND_TESTS);
-                } catch (ServiceException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
-                }
-                BeanUtils.copyProperties(fileTypeById, fileEntity.getFileType());
-                fileEntity.setName(lessonDto.getTestFileName());
-                fileEntity.setLesson(null);
-                
-                homeWorkEntity.setFile(fileEntity);
                 homeWorkEntity.setDescription(lessonDto.getDescription());
                 
-                testRepository.save(homeWorkEntity);
+                homeWorkRepository.save(homeWorkEntity);
                 
-                lessonEntity.setTest(homeWorkEntity);
+                lessonEntity.setHomeWork(homeWorkEntity);
             }
-        } else {
+        } else {//update
             Long chapterId = lessonDto.getChapterDto().getId();
             if (chapterId != null) {
                 if (!chapterId.equals(lessonEntity.getChapter().getId())) {
@@ -407,12 +387,9 @@ public class LessonServiceImpl implements ILessonService {
                 if (lessonDto.getFileName() != null) {
                     lessonEntity.getFile().setName(lessonDto.getFileName());
                 }
-            } else {//test
-                if (lessonDto.getTestFileName() != null) {
-                    lessonEntity.getTest().getFile().setName(lessonDto.getTestFileName());
-                }
+            } else {//home work
                 if (lessonDto.getDescription() != null) {
-                    lessonEntity.getTest().setDescription(lessonDto.getDescription());
+                    lessonEntity.getHomeWork().setDescription(lessonDto.getDescription());
                 }
             }
         }

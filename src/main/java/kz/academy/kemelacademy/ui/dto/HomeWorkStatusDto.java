@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class TestStatusDto implements Serializable {
+public class HomeWorkStatusDto implements Serializable {
     
     private long id;
     private String nameKz;

@@ -1,15 +1,15 @@
 package kz.academy.kemelacademy.services;
 
-import kz.academy.kemelacademy.ui.dto.TestStatusDto;
+import kz.academy.kemelacademy.ui.dto.HomeWorkStatusDto;
 
 import java.util.List;
 
 public interface IHomeWorkStatusService {
     
-    TestStatusDto createStatusDto(TestStatusDto statusDto) throws Exception;
+    HomeWorkStatusDto createStatusDto(HomeWorkStatusDto statusDto) throws Exception;
     
-    TestStatusDto getStatusById(long id) throws Exception;
+    HomeWorkStatusDto getStatusById(long id) throws Exception;
     
-    List<TestStatusDto> getStatusDtos(int page, int limit) throws Exception;
+    List<HomeWorkStatusDto> getStatusDtos(int page, int limit) throws Exception;
     
 }

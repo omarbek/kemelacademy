@@ -24,7 +24,6 @@ public class LessonDto implements Serializable {
     
     private String fileName;
     
-    private String testFileName;
     private String description;
     
     @Override

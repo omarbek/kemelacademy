@@ -22,7 +22,6 @@ public class LessonRest {
     
     private String fileName;
     
-    private String testFileName;
     private String description;
     
 }

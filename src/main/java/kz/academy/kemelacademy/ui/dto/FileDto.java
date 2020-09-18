@@ -19,6 +19,6 @@ public class FileDto implements Serializable {
     private FileTypeDto fileType = new FileTypeDto();
     private String name;
     private LessonDto test = new LessonDto();
-    private Set<UserTestDto> userTests = new HashSet<>();
+    private Set<UserHomeWorkDto> userTests = new HashSet<>();
     
 }

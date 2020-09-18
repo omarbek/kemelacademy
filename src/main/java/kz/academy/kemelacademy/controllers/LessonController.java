@@ -6,14 +6,17 @@ import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IChapterService;
 import kz.academy.kemelacademy.services.ILessonService;
 import kz.academy.kemelacademy.services.ILessonTypeService;
-import kz.academy.kemelacademy.ui.dto.*;
+import kz.academy.kemelacademy.ui.dto.ChapterDto;
+import kz.academy.kemelacademy.ui.dto.LessonDto;
+import kz.academy.kemelacademy.ui.dto.LessonTypeDto;
+import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
 import kz.academy.kemelacademy.ui.model.request.LessonRequestModel;
 import kz.academy.kemelacademy.ui.model.response.LessonRest;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
-import kz.academy.kemelacademy.ui.model.response.UserTestRest;
+import kz.academy.kemelacademy.ui.model.response.UserHomeWorkRest;
 import kz.academy.kemelacademy.utils.ThrowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -289,20 +292,20 @@ public class LessonController {
             )
     })
     @Transactional
-    @PostMapping(path = "sendTestWork/{testId}")
-    public UserTestRest sendTestWork(@PathVariable("testId") Long testId) {
-        UserTestDto dto;
+    @PostMapping(path = "createHomeWork/{lessonId}")
+    public UserHomeWorkRest createHomeWork(@PathVariable("lessonId") Long lessonId) {
+        UserHomeWorkDto dto;
         try {
-            dto = lessonService.uploadTest(testId);
+            dto = lessonService.createHomeWork(lessonId);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        UserTestRest ret = new UserTestRest();
-        ret.setTest(dto.getTest().toString());
-        ret.setStatus(dto.getTestStatus().toString());
+        UserHomeWorkRest ret = new UserHomeWorkRest();
+        ret.setHomeWorkName(dto.getHomeWork().toString());
+        ret.setStatus(dto.getHomeWorkStatus().toString());
         BeanUtils.copyProperties(dto, ret);
         
         return ret;
@@ -320,28 +323,26 @@ public class LessonController {
             )
     })
     @Transactional
-    @PostMapping(path = "uploadHomeWork/{id}")
-    public UserTestRest uploadHomeWork(@RequestParam("file") MultipartFile file,
-                                       @PathVariable("id") Long userTestId) {
+    @PostMapping(path = "uploadHomeWork/{userHomeWorkId}")
+    public UserHomeWorkRest uploadHomeWork(@RequestParam("file") MultipartFile file,
+                                           @PathVariable("userHomeWorkId") Long userHomeWorkId) {
         if (file == null || file.isEmpty()) {
             throw new ServiceException(ErrorMessages.PLEASE_SELECT_FILE.getErrorMessage());
         }
         
-        UserTestDto uploadedFileDto;
+        UserHomeWorkDto uploadedFileDto;
         try {
-            uploadedFileDto = lessonService.uploadHomeWork(userTestId, file);
+            uploadedFileDto = lessonService.uploadHomeWork(userHomeWorkId, file);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        UserTestRest ret = new UserTestRest();
-        ret.setTest(uploadedFileDto.getTest().toString());
-        ret.setStatus(uploadedFileDto.getTestStatus().toString());
-        for (FileDto fileDto: uploadedFileDto.getFiles()) {
-            ret.getFileNames().add(fileDto.getName());
-        }
+        UserHomeWorkRest ret = new UserHomeWorkRest();
+        ret.setHomeWorkName(uploadedFileDto.getHomeWork().toString());
+        ret.setStatus(uploadedFileDto.getHomeWorkStatus().toString());
+        ret.setFileName(uploadedFileDto.getFile().getName());
         BeanUtils.copyProperties(uploadedFileDto, ret);
         
         return ret;
@@ -359,14 +360,14 @@ public class LessonController {
             )
     })
     @Transactional
-    @PostMapping(path = "changeStatus/{userTestId}/{statusId}")
-    public OperationStatusModel changeStatus(@PathVariable("userTestId") Long userTestId,
+    @PostMapping(path = "changeStatus/{userHomeWorkId}/{statusId}")
+    public OperationStatusModel changeStatus(@PathVariable("userHomeWorkId") Long userHomeWorkId,
                                              @PathVariable("statusId") Long statusId) {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
         operationStatusModel.setOperationName(RequestOperationName.CHANGE_STATUS.name());
         
         try {
-            lessonService.changeStatus(userTestId, statusId);
+            lessonService.changeStatus(userHomeWorkId, statusId);
             operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);
@@ -388,16 +389,16 @@ public class LessonController {
             )
     })
     @Transactional
-    @PostMapping(path = "setGrade/{userTestId}/{grade}/{comment}")
-    public OperationStatusModel setGrade(@PathVariable("userTestId") Long userTestId,
+    @PostMapping(path = "setGrade/{userHomeWorkId}/{grade}/{comment}")
+    public OperationStatusModel setGrade(@PathVariable("userHomeWorkId") Long userHomeWorkId,
                                          @PathVariable("grade") Integer grade,
                                          @PathVariable(value = "comment", required = false) String comment) {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
         operationStatusModel.setOperationName(RequestOperationName.SET_GRADE.name());
         
         try {
-            lessonService.setGrade(userTestId, grade, comment);
-            lessonService.changeStatus(userTestId, 3L);
+            lessonService.setGrade(userHomeWorkId, grade, comment);
+            lessonService.changeStatus(userHomeWorkId, 3L);
             operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);

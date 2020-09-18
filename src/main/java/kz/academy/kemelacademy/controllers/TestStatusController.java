@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.IHomeWorkStatusService;
-import kz.academy.kemelacademy.ui.dto.TestStatusDto;
+import kz.academy.kemelacademy.ui.dto.HomeWorkStatusDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.Locales;
 import kz.academy.kemelacademy.ui.model.request.TestStatusRequestModel;
@@ -39,32 +39,32 @@ public class TestStatusController {
                                               @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<TestStatusRest> returnVal = new ArrayList<>();
         
-        List<TestStatusDto> testStatusDtos;
+        List<HomeWorkStatusDto> homeWorkStatusDtos;
         try {
-            testStatusDtos = testStatusService.getStatusDtos(page, limit);
+            homeWorkStatusDtos = testStatusService.getStatusDtos(page, limit);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
         }
-        for (TestStatusDto testStatusDto: testStatusDtos) {
-            TestStatusRest testStatusRest = getTestStatusRest(testStatusDto);
+        for (HomeWorkStatusDto homeWorkStatusDto: homeWorkStatusDtos) {
+            TestStatusRest testStatusRest = getTestStatusRest(homeWorkStatusDto);
             returnVal.add(testStatusRest);
         }
         
         return returnVal;
     }
     
-    private TestStatusRest getTestStatusRest(TestStatusDto testStatusDto) {
+    private TestStatusRest getTestStatusRest(HomeWorkStatusDto homeWorkStatusDto) {
         TestStatusRest testStatusRest = new TestStatusRest();
         String name;
         if (LocaleUtils.checkLocale(Locales.KZ.getLocale())) {
-            name = testStatusDto.getNameKz();
+            name = homeWorkStatusDto.getNameKz();
         } else if (LocaleUtils.checkLocale(Locales.RU.getLocale())) {
-            name = testStatusDto.getNameRu();
+            name = homeWorkStatusDto.getNameRu();
         } else {
-            name = testStatusDto.getNameEn();
+            name = homeWorkStatusDto.getNameEn();
         }
         testStatusRest.setName(name);
-        testStatusRest.setId(testStatusDto.getId());
+        testStatusRest.setId(homeWorkStatusDto.getId());
         return testStatusRest;
     }
     
@@ -87,12 +87,12 @@ public class TestStatusController {
                 testStatusRequestModel.getNameEn()};
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
-        TestStatusDto testStatusDto = new TestStatusDto();
-        BeanUtils.copyProperties(testStatusRequestModel, testStatusDto);
+        HomeWorkStatusDto homeWorkStatusDto = new HomeWorkStatusDto();
+        BeanUtils.copyProperties(testStatusRequestModel, homeWorkStatusDto);
         
-        TestStatusDto createdTestStatus;
+        HomeWorkStatusDto createdTestStatus;
         try {
-            createdTestStatus = testStatusService.createStatusDto(testStatusDto);
+            createdTestStatus = testStatusService.createStatusDto(homeWorkStatusDto);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
         }
@@ -110,16 +110,16 @@ public class TestStatusController {
     })
     @GetMapping(path = "/{id}")
     public TestStatusRest getStatusType(@PathVariable("id") long id) {
-        TestStatusDto testStatusDto;
+        HomeWorkStatusDto homeWorkStatusDto;
         try {
-            testStatusDto = testStatusService.getStatusById(id);
+            homeWorkStatusDto = testStatusService.getStatusById(id);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
         }
         
-        return getTestStatusRest(testStatusDto);
+        return getTestStatusRest(homeWorkStatusDto);
     }
     
 }

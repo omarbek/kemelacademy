@@ -1,7 +1,7 @@
 package kz.academy.kemelacademy.services;
 
 import kz.academy.kemelacademy.ui.dto.LessonDto;
-import kz.academy.kemelacademy.ui.dto.UserTestDto;
+import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.entity.LessonEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,12 +28,12 @@ public interface ILessonService {
     
     void delete(LessonEntity entity) throws Exception;
     
-    UserTestDto uploadTest(Long testId) throws Exception;
+    UserHomeWorkDto createHomeWork(Long testId) throws Exception;
     
-    UserTestDto uploadHomeWork(Long userTestId, MultipartFile file) throws Exception;
+    UserHomeWorkDto uploadHomeWork(Long userHomeWorkId, MultipartFile file) throws Exception;
     
-    void changeStatus(Long userTestId, Long statusId) throws Exception;
+    void changeStatus(Long userHomeWorkId, Long statusId) throws Exception;
     
-    void setGrade(Long userTestId, Integer grade, String comment) throws Exception;
+    void setGrade(Long userHomeWorkId, Integer grade, String comment) throws Exception;
     
 }
