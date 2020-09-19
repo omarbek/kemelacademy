@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author Omarbek.Dinassil
  * on 2020-07-20
@@ -19,5 +21,8 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByUserId(String userId);
     
     UserEntity findUserByEmailVerificationToken(String token);
+    
+    @Query("select u from UserEntity u")
+    List<UserEntity> findByName(String name);
     
 }

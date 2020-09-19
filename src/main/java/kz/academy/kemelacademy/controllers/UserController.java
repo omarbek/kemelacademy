@@ -201,7 +201,8 @@ public class UserController {
     @GetMapping
     @Transactional
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
-                                   @RequestParam(value = "limit", defaultValue = "25") int limit) {
+                                   @RequestParam(value = "limit", defaultValue = "25") int limit,
+                                   @RequestParam(value = "name", required = false) String name) {
         // another method for checking role
         //        UserDetails details = userService.loadUserByUsername(userUtils.getCurrentUserEmail());
         //        if (details == null || details.getAuthorities().stream()
@@ -218,7 +219,7 @@ public class UserController {
         
         List<UserDto> users;
         try {
-            users = userService.getUsers(page, limit);
+            users = userService.getUsers(page, limit, name);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.name(), e);
         }

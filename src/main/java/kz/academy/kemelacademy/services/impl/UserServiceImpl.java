@@ -186,7 +186,7 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public List<UserDto> getUsers(int page, int limit) throws Exception {
+    public List<UserDto> getUsers(int page, int limit, String name) throws Exception {
         List<UserDto> returnValue = new ArrayList<>();
         
         if (page > 0) {
@@ -195,7 +195,13 @@ public class UserServiceImpl implements IUserService {
         
         Pageable pageable = PageRequest.of(page, limit);
         Page<UserEntity> usersPage = userRepository.findAll(pageable);
-        List<UserEntity> users = usersPage.getContent();
+        List<UserEntity> users;
+        if (name != null) {
+            users = userRepository.findByName(name);
+        } else {
+            users = usersPage.getContent();
+        }
+        
         
         for (UserEntity userEntity: users) {
             UserDto userDto = new UserDto();
