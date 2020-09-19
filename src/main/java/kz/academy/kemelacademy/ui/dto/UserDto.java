@@ -20,24 +20,14 @@ public class UserDto implements Serializable {
     private String emailVerificationToken;
     private String encryptedPassword;
     private String password;
-    private String firstName;
-    private String lastName;
-    private String patronymic;
+    private String fullName;
     private String userId;
     private Set<RoleDto> roles = new HashSet<>();
     private Set<CourseDto> courses = new HashSet<>();
     
     @Override
     public String toString() {
-        StringBuilder fullNameSB = new StringBuilder();
-        fullNameSB.append(lastName);
-        fullNameSB.append(" ");
-        fullNameSB.append(firstName);
-        if (patronymic != null) {
-            fullNameSB.append(" ");
-            fullNameSB.append(patronymic);
-        }
-        
-        return fullNameSB.toString();
+        return fullName;
     }
+    
 }

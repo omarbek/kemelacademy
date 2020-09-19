@@ -16,9 +16,7 @@ public class UserRest {
     private Long id;
     private String userId;
     private String email;
-    private String firstName;
-    private String lastName;
-    private String patronymic;
+    private String fullName;
     private Set<String> roles = new HashSet<>();
     private Set<String> courses = new HashSet<>();
     

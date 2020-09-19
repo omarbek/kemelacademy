@@ -142,14 +142,8 @@ public class UserServiceImpl implements IUserService {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         
-        if (userDto.getFirstName() != null) {
-            userEntity.setFirstName(userDto.getFirstName());
-        }
-        if (userDto.getLastName() != null) {
-            userEntity.setLastName(userDto.getLastName());
-        }
-        if (userDto.getPatronymic() != null) {
-            userEntity.setPatronymic(userDto.getPatronymic());
+        if (userDto.getFullName() != null) {
+            userEntity.setFullName(userDto.getFullName());
         }
         if (userDto.getPassword() != null) {
             String encodedPassword = bCryptPasswordEncoder.encode(userDto.getPassword());
@@ -201,7 +195,6 @@ public class UserServiceImpl implements IUserService {
         } else {
             users = usersPage.getContent();
         }
-        
         
         for (UserEntity userEntity: users) {
             UserDto userDto = new UserDto();

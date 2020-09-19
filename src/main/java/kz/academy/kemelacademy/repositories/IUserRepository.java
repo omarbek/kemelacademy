@@ -22,7 +22,7 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
     
     UserEntity findUserByEmailVerificationToken(String token);
     
-    @Query("select u from UserEntity u")
+    @Query("SELECT u FROM UserEntity u WHERE u.fullName LIKE CONCAT('%',:name,'%')")
     List<UserEntity> findByName(String name);
     
 }
