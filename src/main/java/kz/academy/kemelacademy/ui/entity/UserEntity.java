@@ -39,14 +39,8 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     private String encryptedPassword;
     
-    @Column(nullable = false, length = 120)
-    private String firstName;
-    
-    @Column(nullable = false, length = 120)
-    private String lastName;
-    
-    @Column(length = 120)
-    private String patronymic;
+    @Column(nullable = false)
+    private String fullName;
     
     @Column(nullable = false)
     private String userId;
@@ -73,16 +67,7 @@ public class UserEntity implements Serializable {
     
     @Override
     public String toString() {
-        StringBuilder fullNameSB = new StringBuilder();
-        fullNameSB.append(lastName);
-        fullNameSB.append(" ");
-        fullNameSB.append(firstName);
-        if (patronymic != null) {
-            fullNameSB.append(" ");
-            fullNameSB.append(patronymic);
-        }
-        
-        return fullNameSB.toString();
+        return fullName;
     }
     
     @Override
@@ -90,14 +75,12 @@ public class UserEntity implements Serializable {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
         UserEntity that = (UserEntity) o;
-        return id == that.id &&
+        return id.equals(that.id) &&
                 Objects.equals(email, that.email) &&
                 Objects.equals(emailVerificationStatus, that.emailVerificationStatus) &&
                 Objects.equals(emailVerificationToken, that.emailVerificationToken) &&
                 Objects.equals(encryptedPassword, that.encryptedPassword) &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(lastName, that.lastName) &&
-                Objects.equals(patronymic, that.patronymic) &&
+                Objects.equals(fullName, that.fullName) &&
                 Objects.equals(userId, that.userId) &&
                 Objects.equals(roles, that.roles) &&
                 Objects.equals(courses, that.courses) &&
@@ -107,7 +90,8 @@ public class UserEntity implements Serializable {
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, emailVerificationStatus, emailVerificationToken, encryptedPassword, firstName,
-                lastName, patronymic, userId);
+        return Objects.hash(id, email, emailVerificationStatus, emailVerificationToken, encryptedPassword, fullName,
+                userId);
     }
+    
 }
