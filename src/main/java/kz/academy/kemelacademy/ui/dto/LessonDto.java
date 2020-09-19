@@ -13,18 +13,9 @@ import java.io.Serializable;
 public class LessonDto implements Serializable {
     
     private Long id;
-    private LessonTypeDto lessonTypeDto = new LessonTypeDto();
     private ChapterDto chapterDto = new ChapterDto();
     private Integer lessonNo;
-    private Integer duration;
     private String name;
-    
-    private String url;
-    private boolean alwaysOpen;
-    
-    private String fileName;
-    
-    private String description;
     
     @Override
     public String toString() {

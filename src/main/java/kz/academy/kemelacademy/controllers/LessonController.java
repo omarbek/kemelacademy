@@ -8,7 +8,6 @@ import kz.academy.kemelacademy.services.ILessonService;
 import kz.academy.kemelacademy.services.ILessonTypeService;
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.dto.LessonDto;
-import kz.academy.kemelacademy.ui.dto.LessonTypeDto;
 import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
@@ -64,13 +63,13 @@ public class LessonController {
         LessonRest returnValue;
         
         Object[] fields = {
-                requestModel.getLessonTypeId(),
                 requestModel.getChapterId(),
-                requestModel.getLessonNo()
+                requestModel.getLessonNo(),
+                requestModel.getName()
         };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
-        LessonDto dto = convertModelToDto(requestModel, false);
+        LessonDto dto = convertModelToDto(requestModel);
         
         LessonDto createdDto;
         try {
@@ -180,29 +179,15 @@ public class LessonController {
     private LessonRest convertDtoToModel(LessonDto createdDto) {
         LessonRest ret = new LessonRest();
         
-        ret.setLessonType(createdDto.getLessonTypeDto().toString());
         ret.setChapter(createdDto.getChapterDto().toString());
         BeanUtils.copyProperties(createdDto, ret);
         
         return ret;
     }
     
-    private LessonDto convertModelToDto(LessonRequestModel requestModel, boolean update) {
+    private LessonDto convertModelToDto(LessonRequestModel requestModel) {
         LessonDto ret = new LessonDto();
         
-        if (!update) {
-            if (requestModel.getLessonTypeId() != null) {
-                LessonTypeDto lessonTypeDto;
-                try {
-                    lessonTypeDto = lessonTypeService.getLessonTypeById(requestModel.getLessonTypeId());
-                } catch (ServiceException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
-                }
-                ret.setLessonTypeDto(lessonTypeDto);
-            }
-        }
         if (requestModel.getChapterId() != null) {
             ChapterDto chapterDto;
             try {
@@ -237,7 +222,7 @@ public class LessonController {
                              @RequestBody LessonRequestModel requestModel) {
         LessonRest returnValue;
         
-        LessonDto dto = convertModelToDto(requestModel, true);
+        LessonDto dto = convertModelToDto(requestModel);
         
         LessonDto updatedDto;
         try {

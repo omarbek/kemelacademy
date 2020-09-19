@@ -10,18 +10,8 @@ import lombok.Data;
 @Data
 public class LessonRequestModel {
     
-    private Long lessonTypeId;
     private Long chapterId;
     private Integer lessonNo;
-    private Integer duration;
     private String name;
-    
-    private String url;
-    private boolean alwaysOpen;
-    
-    private String fileName;
-    
-    private String testFileName;
-    private String description;
     
 }

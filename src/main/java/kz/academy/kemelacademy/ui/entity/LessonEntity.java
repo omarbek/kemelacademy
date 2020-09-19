@@ -26,12 +26,6 @@ public class LessonEntity {
     private String name;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_type_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private LessonTypeEntity lessonType = new LessonTypeEntity();
-    
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chapter_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -39,8 +33,6 @@ public class LessonEntity {
     
     @Column(name = "lesson_no")
     private Integer lessonNo;
-    
-    private Integer duration;
     
     @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
     private VideoEntity video;
@@ -63,10 +55,8 @@ public class LessonEntity {
         LessonEntity that = (LessonEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(lessonType, that.lessonType) &&
                 Objects.equals(chapter, that.chapter) &&
                 Objects.equals(lessonNo, that.lessonNo) &&
-                Objects.equals(duration, that.duration) &&
                 Objects.equals(video, that.video) &&
                 Objects.equals(file, that.file) &&
                 Objects.equals(homeWork, that.homeWork);
@@ -74,7 +64,7 @@ public class LessonEntity {
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lessonNo, duration);
+        return Objects.hash(id, name, lessonNo);
     }
     
 }

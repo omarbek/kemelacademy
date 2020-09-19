@@ -5,7 +5,6 @@ import kz.academy.kemelacademy.repositories.*;
 import kz.academy.kemelacademy.services.IFileTypeService;
 import kz.academy.kemelacademy.services.ILessonService;
 import kz.academy.kemelacademy.ui.dto.FileDto;
-import kz.academy.kemelacademy.ui.dto.FileTypeDto;
 import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.entity.*;
@@ -300,65 +299,16 @@ public class LessonServiceImpl implements ILessonService {
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
         LessonDto ret = new LessonDto();
         
-        BeanUtils.copyProperties(savedLesson.getLessonType(), ret.getLessonTypeDto());
         BeanUtils.copyProperties(savedLesson.getChapter(), ret.getChapterDto());
         BeanUtils.copyProperties(savedLesson, ret);
-        
-        if (savedLesson.getVideo() != null) {
-            ret.setUrl(savedLesson.getVideo().getUrl());
-            ret.setAlwaysOpen(savedLesson.getVideo().isAlwaysOpen());
-        }
-        
-        ret.setFileName(savedLesson.getFile() != null ? savedLesson.getFile().getName() : null);
-        
-        if (savedLesson.getHomeWork() != null) {
-            ret.setDescription(savedLesson.getHomeWork().getDescription());
-        }
         
         return ret;
     }
     
     private void convertDtoToEntity(LessonDto lessonDto, LessonEntity lessonEntity, boolean update) {
         if (!update) {//create
-            BeanUtils.copyProperties(lessonDto.getLessonTypeDto(), lessonEntity.getLessonType());
             BeanUtils.copyProperties(lessonDto.getChapterDto(), lessonEntity.getChapter());
             BeanUtils.copyProperties(lessonDto, lessonEntity);
-            
-            if (LessonTypeEntity.VIDEO.equals(lessonEntity.getLessonType().getId())) {
-                VideoEntity videoEntity = new VideoEntity();
-                videoEntity.setLesson(lessonEntity);
-                videoEntity.setUrl(lessonDto.getUrl());
-                videoEntity.setAlwaysOpen(lessonDto.isAlwaysOpen());
-                
-                videoRepository.save(videoEntity);
-                
-                lessonEntity.setVideo(videoEntity);
-            } else if (LessonTypeEntity.FILE.equals(lessonEntity.getLessonType().getId())) {
-                FileEntity fileEntity = new FileEntity();
-                fileEntity.setLesson(lessonEntity);
-                FileTypeDto fileTypeById;
-                try {
-                    fileTypeById = fileTypeService.getFileTypeById(FileTypeEntity.FOR_DOWNLOAD);
-                } catch (ServiceException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
-                }
-                BeanUtils.copyProperties(fileTypeById, fileEntity.getFileType());
-                fileEntity.setName(null);
-                
-                fileRepository.save(fileEntity);
-                
-                lessonEntity.setFile(fileEntity);
-            } else {//home work
-                HomeWorkEntity homeWorkEntity = new HomeWorkEntity();
-                homeWorkEntity.setLesson(lessonEntity);
-                homeWorkEntity.setDescription(lessonDto.getDescription());
-                
-                homeWorkRepository.save(homeWorkEntity);
-                
-                lessonEntity.setHomeWork(homeWorkEntity);
-            }
         } else {//update
             Long chapterId = lessonDto.getChapterDto().getId();
             if (chapterId != null) {
@@ -371,26 +321,8 @@ public class LessonServiceImpl implements ILessonService {
             if (lessonDto.getLessonNo() != null) {
                 lessonEntity.setLessonNo(lessonDto.getLessonNo());
             }
-            if (lessonDto.getDuration() != null) {
-                lessonEntity.setDuration(lessonDto.getDuration());
-            }
             if (lessonDto.getName() != null) {
                 lessonEntity.setName(lessonDto.getName());
-            }
-            
-            if (LessonTypeEntity.VIDEO.equals(lessonEntity.getLessonType().getId())) {
-                if (lessonDto.getUrl() != null) {
-                    lessonEntity.getVideo().setUrl(lessonDto.getUrl());
-                }
-                lessonEntity.getVideo().setAlwaysOpen(lessonDto.isAlwaysOpen());
-            } else if (LessonTypeEntity.FILE.equals(lessonEntity.getLessonType().getId())) {
-                if (lessonDto.getFileName() != null) {
-                    lessonEntity.getFile().setName(lessonDto.getFileName());
-                }
-            } else {//home work
-                if (lessonDto.getDescription() != null) {
-                    lessonEntity.getHomeWork().setDescription(lessonDto.getDescription());
-                }
             }
         }
     }

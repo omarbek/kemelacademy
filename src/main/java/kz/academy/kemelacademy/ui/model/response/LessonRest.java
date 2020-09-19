@@ -11,17 +11,8 @@ import lombok.Data;
 public class LessonRest {
     
     private Long id;
-    private String lessonType;
     private String chapter;
     private Integer lessonNo;
-    private Integer duration;
     private String name;
-    
-    private String url;
-    private boolean alwaysOpen;
-    
-    private String fileName;
-    
-    private String description;
     
 }

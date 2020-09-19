@@ -81,7 +81,7 @@ public class ChapterController {
         ret.setCourse(createdChapter.getCourseDto().toString());
         Integer duration = 0;
         for (LessonDto lessonDto: createdChapter.getLessons()) {
-            duration += lessonDto.getDuration();
+            //            duration += lessonDto.getDuration();//todo
         }
         ret.setDuration(duration);
         ret.setLessonCount(createdChapter.getLessons().size());
