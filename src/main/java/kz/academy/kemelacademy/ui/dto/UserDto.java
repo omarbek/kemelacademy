@@ -23,7 +23,8 @@ public class UserDto implements Serializable {
     private String fullName;
     private String userId;
     private Set<RoleDto> roles = new HashSet<>();
-    private Set<CourseDto> courses = new HashSet<>();
+    private Set<CourseDto> coursesAsAuthor = new HashSet<>();
+    private Set<CourseDto> coursesAsPupil = new HashSet<>();
     
     @Override
     public String toString() {

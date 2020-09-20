@@ -95,8 +95,11 @@ public class UserController {
         for (RoleDto roleDto: createdUser.getRoles()) {
             returnValue.getRoles().add(roleDto.toString());
         }
-        for (CourseDto courseDto: createdUser.getCourses()) {
-            returnValue.getCourses().add(courseDto.toString());
+        for (CourseDto courseDto: createdUser.getCoursesAsAuthor()) {
+            returnValue.getCoursesAsAuthor().add(courseDto.toString());
+        }
+        for (CourseDto courseDto: createdUser.getCoursesAsPupil()) {
+            returnValue.getCoursesAsPupil().add(courseDto.toString());
         }
     }
     
@@ -118,6 +121,27 @@ public class UserController {
         UserRest returnValue = new UserRest();
         
         UserDto userDto = userService.getUserByUserId(userId);
+        convertDtoToRest(userDto, returnValue);
+        
+        return returnValue;
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @GetMapping(path = "/myProfile")
+    public UserRest getMyProfile() {
+        UserRest returnValue = new UserRest();
+        
+        UserDto userDto = userUtils.getCurrentUserDto();
         convertDtoToRest(userDto, returnValue);
         
         return returnValue;

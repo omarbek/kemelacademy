@@ -9,10 +9,7 @@ import kz.academy.kemelacademy.services.IUserService;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.dto.RoleDto;
 import kz.academy.kemelacademy.ui.dto.UserDto;
-import kz.academy.kemelacademy.ui.entity.CourseEntity;
-import kz.academy.kemelacademy.ui.entity.PasswordResetTokenEntity;
-import kz.academy.kemelacademy.ui.entity.RoleEntity;
-import kz.academy.kemelacademy.ui.entity.UserEntity;
+import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.utils.GeneratorUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -100,7 +97,14 @@ public class UserServiceImpl implements IUserService {
             if (!courseEntity.getDeleted()) {
                 CourseDto courseDto = new CourseDto();
                 BeanUtils.copyProperties(courseEntity, courseDto);
-                returnVal.getCourses().add(courseDto);
+                returnVal.getCoursesAsAuthor().add(courseDto);
+            }
+        }
+        for (UserCourseEntity userCourseEntity: storedUserDetails.getPupils()) {
+            if (!userCourseEntity.getCourse().getDeleted()) {
+                CourseDto courseDto = new CourseDto();
+                BeanUtils.copyProperties(userCourseEntity.getCourse(), courseDto);
+                returnVal.getCoursesAsPupil().add(courseDto);
             }
         }
     }

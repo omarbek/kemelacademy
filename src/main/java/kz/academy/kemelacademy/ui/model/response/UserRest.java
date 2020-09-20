@@ -18,6 +18,7 @@ public class UserRest {
     private String email;
     private String fullName;
     private Set<String> roles = new HashSet<>();
-    private Set<String> courses = new HashSet<>();
+    private Set<String> coursesAsAuthor = new HashSet<>();
+    private Set<String> coursesAsPupil = new HashSet<>();
     
 }

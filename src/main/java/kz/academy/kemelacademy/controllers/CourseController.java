@@ -389,8 +389,8 @@ public class CourseController {
             )
     })
     @Transactional
-    @GetMapping(path = "myCourses")
-    public List<CourseRest> getMyCourses() {
+    @GetMapping(path = "myCoursesAsPupil")
+    public List<CourseRest> myCoursesAsPupil() {
         List<CourseRest> returnVal = new ArrayList<>();
         
         List<CourseDto> courses;
