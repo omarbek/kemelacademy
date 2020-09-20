@@ -316,10 +316,15 @@ public class LessonServiceImpl implements ILessonService {
     
     @Override
     public LessonDto createVideo(VideoRequestModel videoRequestModel) throws Exception {
-        VideoEntity videoEntity = new VideoEntity();
+        VideoEntity videoEntity;
         
         LessonEntity lessonEntity = getLessonEntityById(videoRequestModel.getLessonId());
-        videoEntity.setLesson(lessonEntity);
+        if (lessonEntity.getVideo() != null) {
+            videoEntity = lessonEntity.getVideo();
+        } else {
+            videoEntity = new VideoEntity();
+            videoEntity.setLesson(lessonEntity);
+        }
         
         videoEntity.setAlwaysOpen(videoRequestModel.isAlwaysOpen());
         videoEntity.setUrl(videoRequestModel.getUrl());
