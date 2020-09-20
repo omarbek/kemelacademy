@@ -347,10 +347,14 @@ public class LessonServiceImpl implements ILessonService {
     @Override
     public LessonDto createHomeWorkLesson(Long lessonId, String description) throws Exception {
         LessonEntity lessonEntity = getLessonEntityById(lessonId);
-        
-        HomeWorkEntity homeWorkEntity = new HomeWorkEntity();
+        HomeWorkEntity homeWorkEntity;
+        if (lessonEntity.getHomeWork() != null) {
+            homeWorkEntity = lessonEntity.getHomeWork();
+        } else {
+            homeWorkEntity = new HomeWorkEntity();
+            homeWorkEntity.setLesson(lessonEntity);
+        }
         homeWorkEntity.setDescription(description);
-        homeWorkEntity.setLesson(lessonEntity);
         homeWorkRepository.save(homeWorkEntity);
         lessonEntity.setHomeWork(homeWorkEntity);
         
