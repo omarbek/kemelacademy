@@ -11,6 +11,7 @@ import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.model.request.VideoRequestModel;
+import kz.academy.kemelacademy.ui.model.response.LessonRest;
 import kz.academy.kemelacademy.utils.SystemParameterUtils;
 import kz.academy.kemelacademy.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
@@ -361,6 +362,16 @@ public class LessonServiceImpl implements ILessonService {
         LessonEntity savedLessonEntity = lessonRepository.save(lessonEntity);
         
         return convertEntityToDto(savedLessonEntity);
+    }
+    
+    @Override
+    public LessonRest convertDtoToRest(LessonDto dto) {
+        LessonRest ret = new LessonRest();
+        
+        ret.setChapter(dto.getChapterDto().toString());
+        BeanUtils.copyProperties(dto, ret);
+        
+        return ret;
     }
     
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {

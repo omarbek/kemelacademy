@@ -12,6 +12,7 @@ import kz.academy.kemelacademy.ui.entity.CourseEntity;
 import kz.academy.kemelacademy.ui.entity.LessonEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.model.response.ChapterRest;
+import kz.academy.kemelacademy.ui.model.response.LessonRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -141,6 +142,12 @@ public class ChapterServiceImpl implements IChapterService {
         }
         ret.setDuration(duration);
         ret.setLessonCount(createdChapter.getLessons().size());
+        
+        for (LessonDto dto: createdChapter.getLessons()) {
+            LessonRest lessonRest = lessonService.convertDtoToRest(dto);
+            ret.getLessons().add(lessonRest);
+        }
+        
         BeanUtils.copyProperties(createdChapter, ret);
         
         return ret;
@@ -153,6 +160,17 @@ public class ChapterServiceImpl implements IChapterService {
         for (LessonEntity lessonEntity: savedChapter.getLessons()) {
             LessonDto lessonDto = new LessonDto();
             BeanUtils.copyProperties(lessonEntity, lessonDto);
+            if (lessonEntity.getVideo() != null) {
+                lessonDto.setUrl(lessonEntity.getVideo().getUrl());
+                lessonDto.setDuration(lessonEntity.getVideo().getDuration());
+                lessonDto.setAlwaysOpen(lessonEntity.getVideo().isAlwaysOpen());
+            }
+            if (lessonEntity.getFile() != null) {
+                lessonDto.setFileName(lessonEntity.getFile().getName());
+            }
+            if (lessonEntity.getHomeWork() != null) {
+                lessonDto.setDescription(lessonEntity.getHomeWork().getDescription());
+            }
             ret.getLessons().add(lessonDto);
         }
         BeanUtils.copyProperties(savedChapter, ret);

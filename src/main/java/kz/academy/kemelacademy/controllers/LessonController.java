@@ -78,7 +78,7 @@ public class LessonController {
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        returnValue = convertDtoToRest(createdDto);
+        returnValue = lessonService.convertDtoToRest(createdDto);
         
         return returnValue;
     }
@@ -112,7 +112,7 @@ public class LessonController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        return convertDtoToRest(createdDto);
+        return lessonService.convertDtoToRest(createdDto);
     }
     
     @ApiImplicitParams({
@@ -145,7 +145,7 @@ public class LessonController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        returnValue = convertDtoToRest(uploadedFileDto);
+        returnValue = lessonService.convertDtoToRest(uploadedFileDto);
         
         return returnValue;
     }
@@ -172,7 +172,7 @@ public class LessonController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        return convertDtoToRest(createdDto);
+        return lessonService.convertDtoToRest(createdDto);
     }
     
     @ApiImplicitParams({
@@ -201,7 +201,7 @@ public class LessonController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         for (LessonDto dto: dtoList) {
-            LessonRest rest = convertDtoToRest(dto);
+            LessonRest rest = lessonService.convertDtoToRest(dto);
             returnVal.add(rest);
         }
         
@@ -231,16 +231,7 @@ public class LessonController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        return convertDtoToRest(dto);
-    }
-    
-    private LessonRest convertDtoToRest(LessonDto createdDto) {
-        LessonRest ret = new LessonRest();
-        
-        ret.setChapter(createdDto.getChapterDto().toString());
-        BeanUtils.copyProperties(createdDto, ret);
-        
-        return ret;
+        return lessonService.convertDtoToRest(dto);
     }
     
     private LessonDto convertModelToDto(LessonRequestModel requestModel) {
@@ -290,7 +281,7 @@ public class LessonController {
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        returnValue = convertDtoToRest(updatedDto);
+        returnValue = lessonService.convertDtoToRest(updatedDto);
         
         return returnValue;
     }

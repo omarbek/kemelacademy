@@ -4,6 +4,7 @@ import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.entity.LessonEntity;
 import kz.academy.kemelacademy.ui.model.request.VideoRequestModel;
+import kz.academy.kemelacademy.ui.model.response.LessonRest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -40,5 +41,7 @@ public interface ILessonService {
     LessonDto createVideo(VideoRequestModel videoRequestModel) throws Exception;
     
     LessonDto createHomeWorkLesson(Long lessonId, String description) throws Exception;
+    
+    LessonRest convertDtoToRest(LessonDto dto);
     
 }
