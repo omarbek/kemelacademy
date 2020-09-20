@@ -1,6 +1,9 @@
 package kz.academy.kemelacademy.ui.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -24,10 +27,8 @@ public class HomeWorkEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne/*(cascade = CascadeType.ALL)*/
     @JoinColumn(name = "lesson_id", referencedColumnName = "id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private LessonEntity lesson = new LessonEntity();
     
     private String description;

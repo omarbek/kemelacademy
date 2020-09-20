@@ -25,7 +25,7 @@ public class VideoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne/*(cascade = CascadeType.ALL)*/
     @JoinColumn(name = "lesson_id", referencedColumnName = "id")
     private LessonEntity lesson = new LessonEntity();
     
@@ -33,6 +33,8 @@ public class VideoEntity {
     
     @Column(name = "always_open")
     private boolean alwaysOpen = false;
+    
+    private Integer duration;
     
     @Override
     public String toString() {

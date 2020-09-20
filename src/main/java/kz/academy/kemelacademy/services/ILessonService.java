@@ -3,6 +3,7 @@ package kz.academy.kemelacademy.services;
 import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.entity.LessonEntity;
+import kz.academy.kemelacademy.ui.model.request.VideoRequestModel;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -35,5 +36,9 @@ public interface ILessonService {
     void changeStatus(Long userHomeWorkId, Long statusId) throws Exception;
     
     void setGrade(Long userHomeWorkId, Integer grade, String comment) throws Exception;
+    
+    LessonDto createVideo(VideoRequestModel videoRequestModel) throws Exception;
+    
+    LessonDto createHomeWorkLesson(Long lessonId, String description) throws Exception;
     
 }

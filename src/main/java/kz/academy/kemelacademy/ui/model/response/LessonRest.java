@@ -15,4 +15,12 @@ public class LessonRest {
     private Integer lessonNo;
     private String name;
     
+    private String url;
+    private boolean alwaysOpen;
+    private Integer duration;
+    
+    private String fileName;
+    
+    private String description;
+    
 }

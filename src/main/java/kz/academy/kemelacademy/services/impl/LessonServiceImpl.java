@@ -5,10 +5,12 @@ import kz.academy.kemelacademy.repositories.*;
 import kz.academy.kemelacademy.services.IFileTypeService;
 import kz.academy.kemelacademy.services.ILessonService;
 import kz.academy.kemelacademy.ui.dto.FileDto;
+import kz.academy.kemelacademy.ui.dto.FileTypeDto;
 import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.entity.*;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
+import kz.academy.kemelacademy.ui.model.request.VideoRequestModel;
 import kz.academy.kemelacademy.utils.SystemParameterUtils;
 import kz.academy.kemelacademy.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
@@ -117,8 +119,24 @@ public class LessonServiceImpl implements ILessonService {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
+        FileEntity fileEntity = new FileEntity();
+        
         LessonEntity lessonEntity = getLessonEntityById(lessonId);
-        lessonEntity.getFile().setName(filename);
+        fileEntity.setLesson(lessonEntity);
+        
+        FileTypeDto fileTypeById;
+        try {
+            fileTypeById = fileTypeService.getFileTypeById(FileTypeEntity.FOR_DOWNLOAD);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        BeanUtils.copyProperties(fileTypeById, fileEntity.getFileType());
+        fileEntity.setName(filename);
+        fileRepository.save(fileEntity);
+        
+        lessonEntity.setFile(fileEntity);
         LessonEntity uploadedFileLessonEntity = lessonRepository.save(lessonEntity);
         
         return convertEntityToDto(uploadedFileLessonEntity);
@@ -154,10 +172,10 @@ public class LessonServiceImpl implements ILessonService {
     }
     
     @Override
-    public LessonDto update(long id, LessonDto dto) throws Exception {
+    public LessonDto update(long lessonId, LessonDto dto) throws Exception {
         LessonDto returnValue;
         
-        Optional<LessonEntity> optional = lessonRepository.findById(id);
+        Optional<LessonEntity> optional = lessonRepository.findById(lessonId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
@@ -296,11 +314,57 @@ public class LessonServiceImpl implements ILessonService {
         userHomeWorkRepository.save(userHomeWorkEntity);
     }
     
+    @Override
+    public LessonDto createVideo(VideoRequestModel videoRequestModel) throws Exception {
+        VideoEntity videoEntity = new VideoEntity();
+        
+        LessonEntity lessonEntity = getLessonEntityById(videoRequestModel.getLessonId());
+        videoEntity.setLesson(lessonEntity);
+        
+        videoEntity.setAlwaysOpen(videoRequestModel.isAlwaysOpen());
+        videoEntity.setUrl(videoRequestModel.getUrl());
+        videoEntity.setDuration(videoRequestModel.getDuration());
+        
+        videoRepository.save(videoEntity);
+        
+        lessonEntity.setVideo(videoEntity);
+        
+        LessonEntity savedLessonEntity = lessonRepository.save(lessonEntity);
+        
+        return convertEntityToDto(savedLessonEntity);
+    }
+    
+    @Override
+    public LessonDto createHomeWorkLesson(Long lessonId, String description) throws Exception {
+        LessonEntity lessonEntity = getLessonEntityById(lessonId);
+        
+        HomeWorkEntity homeWorkEntity = new HomeWorkEntity();
+        homeWorkEntity.setDescription(description);
+        homeWorkEntity.setLesson(lessonEntity);
+        homeWorkRepository.save(homeWorkEntity);
+        lessonEntity.setHomeWork(homeWorkEntity);
+        
+        LessonEntity savedLessonEntity = lessonRepository.save(lessonEntity);
+        
+        return convertEntityToDto(savedLessonEntity);
+    }
+    
     private LessonDto convertEntityToDto(LessonEntity savedLesson) {
         LessonDto ret = new LessonDto();
         
         BeanUtils.copyProperties(savedLesson.getChapter(), ret.getChapterDto());
         BeanUtils.copyProperties(savedLesson, ret);
+        if (savedLesson.getVideo() != null) {
+            ret.setAlwaysOpen(savedLesson.getVideo().isAlwaysOpen());
+            ret.setUrl(savedLesson.getVideo().getUrl());
+            ret.setDuration(savedLesson.getVideo().getDuration());
+        }
+        if (savedLesson.getFile() != null) {
+            ret.setFileName(savedLesson.getFile().getName());
+        }
+        if (savedLesson.getHomeWork() != null) {
+            ret.setDescription(savedLesson.getHomeWork().getDescription());
+        }
         
         return ret;
     }

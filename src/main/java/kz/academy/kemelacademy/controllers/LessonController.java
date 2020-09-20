@@ -13,6 +13,7 @@ import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
 import kz.academy.kemelacademy.ui.model.request.LessonRequestModel;
+import kz.academy.kemelacademy.ui.model.request.VideoRequestModel;
 import kz.academy.kemelacademy.ui.model.response.LessonRest;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.ui.model.response.UserHomeWorkRest;
@@ -77,7 +78,74 @@ public class LessonController {
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        returnValue = convertDtoToModel(createdDto);
+        returnValue = convertDtoToRest(createdDto);
+        
+        return returnValue;
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @PostMapping(path = "createVideo")
+    @Transactional
+    public LessonRest createVideo(@RequestBody VideoRequestModel videoRequestModel) {
+        Object[] fields = {
+                videoRequestModel.getLessonId(),
+                videoRequestModel.getDuration(),
+                videoRequestModel.getUrl(),
+                videoRequestModel.isAlwaysOpen()
+        };
+        ThrowUtils.throwMissingRequiredFieldException(fields);
+        
+        LessonDto createdDto;
+        try {
+            createdDto = lessonService.createVideo(videoRequestModel);
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        return convertDtoToRest(createdDto);
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @Transactional
+    @PostMapping(path = "uploadFile/{lessonId}")
+    public LessonRest uploadFile(@RequestParam("file") MultipartFile file,
+                                 @PathVariable("lessonId") Long lessonId) {
+        LessonRest returnValue;
+        
+        if (file == null || file.isEmpty()) {
+            throw new ServiceException(ErrorMessages.PLEASE_SELECT_FILE.getErrorMessage());
+        }
+        
+        LessonDto uploadedFileDto;
+        try {
+            uploadedFileDto = lessonService.uploadFile(lessonId, file);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        returnValue = convertDtoToRest(uploadedFileDto);
         
         return returnValue;
     }
@@ -94,27 +162,17 @@ public class LessonController {
             )
     })
     @Transactional
-    @PostMapping(path = "uploadFile/{id}")
-    public LessonRest uploadFile(@RequestParam("file") MultipartFile file,
-                                 @PathVariable("id") Long lessonId) {
-        LessonRest returnValue;
-        
-        if (file == null || file.isEmpty()) {
-            throw new ServiceException(ErrorMessages.PLEASE_SELECT_FILE.getErrorMessage());
-        }
-        
-        LessonDto uploadedFileDto;
+    @PostMapping(path = "createHomeWorkLesson/{lessonId}")
+    public LessonRest createHomeWorkLesson(@RequestParam("description") String description,
+                                           @PathVariable("lessonId") Long lessonId) {
+        LessonDto createdDto;
         try {
-            uploadedFileDto = lessonService.uploadFile(lessonId, file);
-        } catch (ServiceException e) {
-            throw e;
+            createdDto = lessonService.createHomeWorkLesson(lessonId, description);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        returnValue = convertDtoToModel(uploadedFileDto);
-        
-        return returnValue;
+        return convertDtoToRest(createdDto);
     }
     
     @ApiImplicitParams({
@@ -143,7 +201,7 @@ public class LessonController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         for (LessonDto dto: dtoList) {
-            LessonRest rest = convertDtoToModel(dto);
+            LessonRest rest = convertDtoToRest(dto);
             returnVal.add(rest);
         }
         
@@ -173,10 +231,10 @@ public class LessonController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        return convertDtoToModel(dto);
+        return convertDtoToRest(dto);
     }
     
-    private LessonRest convertDtoToModel(LessonDto createdDto) {
+    private LessonRest convertDtoToRest(LessonDto createdDto) {
         LessonRest ret = new LessonRest();
         
         ret.setChapter(createdDto.getChapterDto().toString());
@@ -232,7 +290,7 @@ public class LessonController {
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        returnValue = convertDtoToModel(updatedDto);
+        returnValue = convertDtoToRest(updatedDto);
         
         return returnValue;
     }
