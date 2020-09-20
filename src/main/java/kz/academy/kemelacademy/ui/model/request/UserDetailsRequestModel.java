@@ -12,8 +12,6 @@ public class UserDetailsRequestModel {
     
     private String email;
     private String password;
-    private String firstName;
-    private String lastName;
-    private String patronymic;
+    private String fullName;
     
 }

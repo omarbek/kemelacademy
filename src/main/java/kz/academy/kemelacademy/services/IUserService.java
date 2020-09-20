@@ -1,6 +1,7 @@
 package kz.academy.kemelacademy.services;
 
 import kz.academy.kemelacademy.ui.dto.UserDto;
+import kz.academy.kemelacademy.ui.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface IUserService extends UserDetailsService {
     
     UserDto getUserByUserId(String userId);
     
-    UserDto updateUser(String userId, UserDto userDto) throws Exception;
+    UserDto updateUser(UserEntity userEntity, UserDto userDto) throws Exception;
     
     void deleteUser(String userId) throws Exception;
     

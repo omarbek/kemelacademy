@@ -138,13 +138,8 @@ public class UserServiceImpl implements IUserService {
     }
     
     @Override
-    public UserDto updateUser(String userId, UserDto userDto) throws Exception {
+    public UserDto updateUser(UserEntity userEntity, UserDto userDto) throws Exception {
         UserDto returnValue = new UserDto();
-        
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        if (userEntity == null) {
-            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
-        }
         
         if (userDto.getFullName() != null) {
             userEntity.setFullName(userDto.getFullName());

@@ -64,8 +64,11 @@ public class UserController {
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
         UserRest returnValue = new UserRest();
         
-        String[] fields = {userDetailsRequestModel.getFirstName(), userDetailsRequestModel.getLastName(),
-                userDetailsRequestModel.getEmail(), userDetailsRequestModel.getPassword()};
+        String[] fields = {
+                userDetailsRequestModel.getFullName(),
+                userDetailsRequestModel.getEmail(),
+                userDetailsRequestModel.getPassword()
+        };
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
         UserDto userDto = new UserDto();
@@ -158,13 +161,11 @@ public class UserController {
                     paramType = "header"
             )
     })
-    @PutMapping(path = "/{id}")
-    public UserRest updateUser(@PathVariable("id") String userId,
-                               @RequestBody UserDetailsRequestModel userDetailsRequestModel) {
-        if (!userUtils.userIdBelongsToCurUser(userId)) {
-            throw new ServiceException(ErrorMessages.THIS_USER_ID_DOES_NOT_BELONG_TO_CUR_USER.getErrorMessage());
+    @PutMapping
+    public UserRest updateUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
+        if (userDetailsRequestModel.getEmail() != null) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
         }
-        
         UserRest returnValue = new UserRest();
         
         UserDto userDto = new UserDto();
@@ -172,7 +173,7 @@ public class UserController {
         
         UserDto updatedUser;
         try {
-            updatedUser = userService.updateUser(userId, userDto);
+            updatedUser = userService.updateUser(userUtils.getCurrentUserEntity(), userDto);
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
