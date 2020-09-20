@@ -119,20 +119,25 @@ public class LessonServiceImpl implements ILessonService {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        FileEntity fileEntity = new FileEntity();
+        FileEntity fileEntity;
         
         LessonEntity lessonEntity = getLessonEntityById(lessonId);
-        fileEntity.setLesson(lessonEntity);
-        
-        FileTypeDto fileTypeById;
-        try {
-            fileTypeById = fileTypeService.getFileTypeById(FileTypeEntity.FOR_DOWNLOAD);
-        } catch (ServiceException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        if (lessonEntity.getFile() != null) {
+            fileEntity = lessonEntity.getFile();
+        } else {
+            fileEntity = new FileEntity();
+            fileEntity.setLesson(lessonEntity);
+            FileTypeDto fileTypeById;
+            try {
+                fileTypeById = fileTypeService.getFileTypeById(FileTypeEntity.FOR_DOWNLOAD);
+            } catch (ServiceException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+            }
+            BeanUtils.copyProperties(fileTypeById, fileEntity.getFileType());
         }
-        BeanUtils.copyProperties(fileTypeById, fileEntity.getFileType());
+        
         fileEntity.setName(filename);
         fileRepository.save(fileEntity);
         
