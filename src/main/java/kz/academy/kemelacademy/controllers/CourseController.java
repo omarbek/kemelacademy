@@ -9,6 +9,7 @@ import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
 import kz.academy.kemelacademy.ui.model.request.CourseRequestModel;
+import kz.academy.kemelacademy.ui.model.response.ChapterRest;
 import kz.academy.kemelacademy.ui.model.response.CourseRest;
 import kz.academy.kemelacademy.ui.model.response.OperationStatusModel;
 import kz.academy.kemelacademy.utils.ThrowUtils;
@@ -50,6 +51,9 @@ public class CourseController {
     
     @Autowired
     private ICourseStatusService courseStatusService;
+    
+    @Autowired
+    private IChapterService chapterService;
     
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -115,6 +119,12 @@ public class CourseController {
         courseRest.setDuration(duration);
         courseRest.setChapterCount(createdCourse.getChapters().size());
         courseRest.setLessonCount(lessonCount);
+        
+        for (ChapterDto dto: createdCourse.getChapters()) {
+            ChapterRest chapterRest = chapterService.convertDtoToRest(dto);
+            courseRest.getChapters().add(chapterRest);
+        }
+        
         BeanUtils.copyProperties(createdCourse, courseRest);
         
         return courseRest;

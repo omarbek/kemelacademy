@@ -7,7 +7,6 @@ import kz.academy.kemelacademy.services.IChapterService;
 import kz.academy.kemelacademy.services.ICourseService;
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.dto.CourseDto;
-import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
@@ -70,24 +69,9 @@ public class ChapterController {
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        returnValue = convertDtoToModel(createdChapter);
+        returnValue = chapterService.convertDtoToRest(createdChapter);
         
         return returnValue;
-    }
-    
-    private ChapterRest convertDtoToModel(ChapterDto createdChapter) {
-        ChapterRest ret = new ChapterRest();
-        
-        ret.setCourse(createdChapter.getCourseDto().toString());
-        Integer duration = 0;
-        for (LessonDto lessonDto: createdChapter.getLessons()) {
-            //            duration += lessonDto.getDuration();//todo
-        }
-        ret.setDuration(duration);
-        ret.setLessonCount(createdChapter.getLessons().size());
-        BeanUtils.copyProperties(createdChapter, ret);
-        
-        return ret;
     }
     
     private ChapterDto convertModelToDto(ChapterRequestModel chapterRequestModel) {
@@ -132,7 +116,7 @@ public class ChapterController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         for (ChapterDto chapterDto: chapters) {
-            ChapterRest chapterRest = convertDtoToModel(chapterDto);
+            ChapterRest chapterRest = chapterService.convertDtoToRest(chapterDto);
             returnVal.add(chapterRest);
         }
         
@@ -158,7 +142,7 @@ public class ChapterController {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
-        return convertDtoToModel(chapterDto);
+        return chapterService.convertDtoToRest(chapterDto);
     }
     
     @ApiImplicitParams({
@@ -188,7 +172,7 @@ public class ChapterController {
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
-        returnValue = convertDtoToModel(updatedChapter);
+        returnValue = chapterService.convertDtoToRest(updatedChapter);
         
         return returnValue;
     }

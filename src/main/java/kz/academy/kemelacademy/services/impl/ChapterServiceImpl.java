@@ -11,6 +11,7 @@ import kz.academy.kemelacademy.ui.entity.ChapterEntity;
 import kz.academy.kemelacademy.ui.entity.CourseEntity;
 import kz.academy.kemelacademy.ui.entity.LessonEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
+import kz.academy.kemelacademy.ui.model.response.ChapterRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -127,6 +128,22 @@ public class ChapterServiceImpl implements IChapterService {
         chapterEntity.setLessons(new ArrayList<>());
         
         chapterRepository.save(chapterEntity);
+    }
+    
+    @Override
+    public ChapterRest convertDtoToRest(ChapterDto createdChapter) {
+        ChapterRest ret = new ChapterRest();
+        
+        ret.setCourse(createdChapter.getCourseDto().toString());
+        Integer duration = 0;
+        for (LessonDto lessonDto: createdChapter.getLessons()) {
+            //            duration += lessonDto.getDuration();//todo
+        }
+        ret.setDuration(duration);
+        ret.setLessonCount(createdChapter.getLessons().size());
+        BeanUtils.copyProperties(createdChapter, ret);
+        
+        return ret;
     }
     
     private ChapterDto convertEntityToDto(ChapterEntity savedChapter) {

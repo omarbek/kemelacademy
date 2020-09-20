@@ -2,7 +2,9 @@ package kz.academy.kemelacademy.ui.model.response;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,5 +32,6 @@ public class CourseRest {
     private String courseStatus;
     private Set<String> pupils = new HashSet<>();
     private String certificateName;
+    private List<ChapterRest> chapters = new ArrayList<>();
     
 }

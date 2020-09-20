@@ -2,6 +2,9 @@ package kz.academy.kemelacademy.ui.model.response;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Omarbek.Dinassil
  * on 2020-08-12
@@ -16,5 +19,6 @@ public class ChapterRest {
     private String name;
     private Integer lessonCount;
     private Integer duration;
+    private List<LessonRest> lessons = new ArrayList<>();
     
 }

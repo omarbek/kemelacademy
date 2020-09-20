@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.services;
 
 import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.entity.ChapterEntity;
+import kz.academy.kemelacademy.ui.model.response.ChapterRest;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ public interface IChapterService {
     
     void delete(long id) throws Exception;
     
-    public void delete(ChapterEntity entity) throws Exception;
+    void delete(ChapterEntity entity) throws Exception;
+    
+    ChapterRest convertDtoToRest(ChapterDto createdChapter);
     
 }
