@@ -45,6 +45,9 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     private String userId;
     
+    @Column(name = "agreed_with_agreement")
+    private boolean agreedWithAgreement;
+    
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "user_roles",

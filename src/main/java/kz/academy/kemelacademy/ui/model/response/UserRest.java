@@ -20,5 +20,6 @@ public class UserRest {
     private Set<String> roles = new HashSet<>();
     private Set<String> coursesAsAuthor = new HashSet<>();
     private Set<String> coursesAsPupil = new HashSet<>();
+    private boolean agreedWithAgreement;
     
 }

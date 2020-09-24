@@ -25,6 +25,7 @@ public class UserDto implements Serializable {
     private Set<RoleDto> roles = new HashSet<>();
     private Set<CourseDto> coursesAsAuthor = new HashSet<>();
     private Set<CourseDto> coursesAsPupil = new HashSet<>();
+    private boolean agreedWithAgreement;
     
     @Override
     public String toString() {
