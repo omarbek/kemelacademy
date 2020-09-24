@@ -200,7 +200,7 @@ public class CourseServiceImpl implements ICourseService {
     }
     
     @Override
-    public List<CourseDto> getAll(int page, int limit, Long categoryId) throws Exception {
+    public List<CourseDto> getAll(int page, int limit, Long categoryId, String name) throws Exception {
         List<CourseDto> returnValue = new ArrayList<>();
         
         if (page > 0) {
@@ -210,7 +210,13 @@ public class CourseServiceImpl implements ICourseService {
         Pageable pageable = PageRequest.of(page, limit);
         Page<CourseEntity> coursePage = courseRepository.findAll(pageable);
         List<CourseEntity> courses = new ArrayList<>();
-        for (CourseEntity courseEntity: coursePage.getContent()) {
+        List<CourseEntity> entities;
+        if (name == null) {
+            entities = coursePage.getContent();
+        } else {
+            entities = courseRepository.findByName(name);
+        }
+        for (CourseEntity courseEntity: entities) {
             if (categoryId != null) {
                 if (categoryId.equals(courseEntity.getCategory().getId())) {
                     courses.add(courseEntity);
