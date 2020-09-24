@@ -208,7 +208,7 @@ public class CourseServiceImpl implements ICourseService {
         }
         
         Pageable pageable = PageRequest.of(page, limit);
-        Page<CourseEntity> coursePage = courseRepository.findAll(pageable);
+        Page<CourseEntity> coursePage = courseRepository.findAllByOrderByIdAsc(pageable);
         List<CourseEntity> courses = new ArrayList<>();
         List<CourseEntity> entities;
         if (name == null) {

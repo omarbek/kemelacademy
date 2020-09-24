@@ -61,7 +61,7 @@ public class ChapterServiceImpl implements IChapterService {
         }
         
         Pageable pageable = PageRequest.of(page, limit);
-        Page<ChapterEntity> chapterEntityPage = chapterRepository.findAll(pageable);
+        Page<ChapterEntity> chapterEntityPage = chapterRepository.findAllByOrderByChapterNoAsc(pageable);
         List<ChapterEntity> chapters = chapterEntityPage.getContent();
         
         for (ChapterEntity chapterEntity: chapters) {

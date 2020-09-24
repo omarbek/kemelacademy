@@ -41,9 +41,8 @@ public class CategoryServiceImpl implements ICategoryService {
         }
         
         Pageable pageable = PageRequest.of(page, limit);
-        Page<CategoryEntity> categoryPage = categoryRepository.findAll(pageable);
+        Page<CategoryEntity> categoryPage = categoryRepository.findAllByOrderByIdAsc(pageable);
         List<CategoryEntity> categories = categoryPage.getContent();
-        
         for (CategoryEntity categoryEntity: categories) {
             CategoryDto categoryDto = convertEntityToDto(categoryEntity);
             returnValue.add(categoryDto);

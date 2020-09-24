@@ -157,7 +157,7 @@ public class LessonServiceImpl implements ILessonService {
         }
         
         Pageable pageable = PageRequest.of(page, limit);
-        Page<LessonEntity> lessonEntityPage = lessonRepository.findAll(pageable);
+        Page<LessonEntity> lessonEntityPage = lessonRepository.findAllByOrderByLessonNoAsc(pageable);
         List<LessonEntity> lessonEntities = lessonEntityPage.getContent();
         
         for (LessonEntity lessonEntity: lessonEntities) {
