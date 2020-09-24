@@ -36,8 +36,6 @@ public class ChapterEntity {
     @Column(name = "chapter_no")
     private Integer chapterNo;
     
-    private boolean deleted = false;
-    
     @OneToMany(
             mappedBy = "chapter",
             cascade = CascadeType.ALL
@@ -54,8 +52,7 @@ public class ChapterEntity {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
         ChapterEntity that = (ChapterEntity) o;
-        return deleted == that.deleted &&
-                Objects.equals(id, that.id) &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(course, that.course) &&
                 Objects.equals(chapterNo, that.chapterNo) &&
@@ -64,7 +61,7 @@ public class ChapterEntity {
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, chapterNo, deleted);
+        return Objects.hash(id, name, chapterNo);
     }
     
 }

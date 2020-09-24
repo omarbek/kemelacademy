@@ -55,11 +55,9 @@ public class CategoryServiceImpl implements ICategoryService {
     private CategoryDto convertEntityToDto(CategoryEntity categoryEntity) {
         CategoryDto categoryDto = new CategoryDto();
         for (CourseEntity courseEntity: categoryEntity.getCourses()) {
-            if (!courseEntity.getDeleted()) {
-                CourseDto courseDto = new CourseDto();
-                BeanUtils.copyProperties(courseEntity, courseDto);
-                categoryDto.getCourses().add(courseDto);
-            }
+            CourseDto courseDto = new CourseDto();
+            BeanUtils.copyProperties(courseEntity, courseDto);
+            categoryDto.getCourses().add(courseDto);
         }
         BeanUtils.copyProperties(categoryEntity, categoryDto);
         return categoryDto;

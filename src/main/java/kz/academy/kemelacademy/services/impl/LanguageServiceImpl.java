@@ -48,11 +48,9 @@ public class LanguageServiceImpl implements ILanguageService {
     private LanguageDto convertEntityToDto(LanguageEntity languageEntity) {
         LanguageDto languageDto = new LanguageDto();
         for (CourseEntity courseEntity: languageEntity.getCourses()) {
-            if (!courseEntity.getDeleted()) {
-                CourseDto courseDto = new CourseDto();
-                BeanUtils.copyProperties(courseEntity, courseDto);
-                languageDto.getCourses().add(courseDto);
-            }
+            CourseDto courseDto = new CourseDto();
+            BeanUtils.copyProperties(courseEntity, courseDto);
+            languageDto.getCourses().add(courseDto);
         }
         BeanUtils.copyProperties(languageEntity, languageDto);
         return languageDto;

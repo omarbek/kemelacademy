@@ -44,11 +44,9 @@ public class LevelServiceImpl implements ILevelService {
     private LevelDto convertEntityToDto(LevelEntity levelEntity) {
         LevelDto levelDto = new LevelDto();
         for (CourseEntity courseEntity: levelEntity.getCourses()) {
-            if (!courseEntity.getDeleted()) {
-                CourseDto courseDto = new CourseDto();
-                BeanUtils.copyProperties(courseEntity, courseDto);
-                levelDto.getCourses().add(courseDto);
-            }
+            CourseDto courseDto = new CourseDto();
+            BeanUtils.copyProperties(courseEntity, courseDto);
+            levelDto.getCourses().add(courseDto);
         }
         BeanUtils.copyProperties(levelEntity, levelDto);
         return levelDto;

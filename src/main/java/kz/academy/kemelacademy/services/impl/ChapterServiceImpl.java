@@ -21,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +65,7 @@ public class ChapterServiceImpl implements IChapterService {
         List<ChapterEntity> chapters = chapterEntityPage.getContent();
         
         for (ChapterEntity chapterEntity: chapters) {
-            if (!chapterEntity.isDeleted() && courseId != null && chapterEntity.getCourse().getId().equals(courseId)) {
+            if (courseId != null && chapterEntity.getCourse().getId().equals(courseId)) {
                 ChapterDto chapterDto = convertEntityToDto(chapterEntity);
                 returnValue.add(chapterDto);
             }
@@ -119,16 +118,7 @@ public class ChapterServiceImpl implements IChapterService {
     
     @Override
     public void delete(ChapterEntity chapterEntity) throws Exception {
-        chapterEntity.setDeleted(true);
-        
-        Iterator<LessonEntity> lessons = chapterEntity.getLessons().iterator();
-        while (lessons.hasNext()) {
-            LessonEntity lessonEntity = lessons.next();
-            lessonService.delete(lessonEntity);
-        }
-        chapterEntity.setLessons(new ArrayList<>());
-        
-        chapterRepository.save(chapterEntity);
+        chapterRepository.delete(chapterEntity);
     }
     
     @Override

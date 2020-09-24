@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.services.impl;
 
 import com.google.common.collect.Sets;
 import kz.academy.kemelacademy.exceptions.ServiceException;
+import kz.academy.kemelacademy.repositories.ICourseRepository;
 import kz.academy.kemelacademy.repositories.IPasswordResetTokenRepository;
 import kz.academy.kemelacademy.repositories.IRoleRepository;
 import kz.academy.kemelacademy.repositories.IUserRepository;
@@ -57,6 +58,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private IPasswordResetTokenRepository passwordResetTokenRepository;
     
+    @Autowired
+    private ICourseRepository courseRepository;
+    
     @Override
     public UserDto createUser(UserDto userDto) throws Exception {
         UserEntity userByEmail = userRepository.findByEmail(userDto.getEmail());
@@ -94,18 +98,14 @@ public class UserServiceImpl implements IUserService {
             returnVal.getRoles().add(roleDto);
         }
         for (CourseEntity courseEntity: storedUserDetails.getCourses()) {
-            if (!courseEntity.getDeleted()) {
-                CourseDto courseDto = new CourseDto();
-                BeanUtils.copyProperties(courseEntity, courseDto);
-                returnVal.getCoursesAsAuthor().add(courseDto);
-            }
+            CourseDto courseDto = new CourseDto();
+            BeanUtils.copyProperties(courseEntity, courseDto);
+            returnVal.getCoursesAsAuthor().add(courseDto);
         }
         for (UserCourseEntity userCourseEntity: storedUserDetails.getPupils()) {
-            if (!userCourseEntity.getCourse().getDeleted()) {
-                CourseDto courseDto = new CourseDto();
-                BeanUtils.copyProperties(userCourseEntity.getCourse(), courseDto);
-                returnVal.getCoursesAsPupil().add(courseDto);
-            }
+            CourseDto courseDto = new CourseDto();
+            BeanUtils.copyProperties(userCourseEntity.getCourse(), courseDto);
+            returnVal.getCoursesAsPupil().add(courseDto);
         }
     }
     
@@ -171,8 +171,7 @@ public class UserServiceImpl implements IUserService {
         Iterator<CourseEntity> courses = userEntity.getCourses().iterator();
         for (userEntity.getCourses().iterator(); courses.hasNext(); ) {
             CourseEntity courseEntity = courses.next();
-            courseEntity.setDeleted(true);
-            courseEntity.setAuthor(null);
+            courseRepository.delete(courseEntity);
         }
         userEntity.setCourses(new HashSet<>());
         

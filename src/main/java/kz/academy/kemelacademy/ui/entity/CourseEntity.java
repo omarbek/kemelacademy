@@ -51,8 +51,6 @@ public class CourseEntity {
     @Column(nullable = false)
     private String description;
     
-    private Boolean deleted = false;
-    
     @Column(nullable = false)
     private String requirements;
     
@@ -69,7 +67,7 @@ public class CourseEntity {
     )
     private Set<ChapterEntity> chapters = new HashSet<>();
     
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private Set<UserCourseEntity> users = new HashSet<>();
     
     @OneToOne(cascade = CascadeType.ALL)
@@ -94,7 +92,6 @@ public class CourseEntity {
                 Objects.equals(language, that.language) &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(description, that.description) &&
-                Objects.equals(deleted, that.deleted) &&
                 Objects.equals(requirements, that.requirements) &&
                 Objects.equals(learns, that.learns) &&
                 Objects.equals(courseStatus, that.courseStatus) &&
@@ -104,7 +101,7 @@ public class CourseEntity {
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, description, deleted, requirements, learns);
+        return Objects.hash(id, name, price, description, requirements, learns);
     }
     
 }

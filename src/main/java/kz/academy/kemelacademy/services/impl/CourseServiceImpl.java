@@ -211,14 +211,12 @@ public class CourseServiceImpl implements ICourseService {
         Page<CourseEntity> coursePage = courseRepository.findAll(pageable);
         List<CourseEntity> courses = new ArrayList<>();
         for (CourseEntity courseEntity: coursePage.getContent()) {
-            if (!courseEntity.getDeleted()) {
-                if (categoryId != null) {
-                    if (categoryId.equals(courseEntity.getCategory().getId())) {
-                        courses.add(courseEntity);
-                    }
-                } else {
+            if (categoryId != null) {
+                if (categoryId.equals(courseEntity.getCategory().getId())) {
                     courses.add(courseEntity);
                 }
+            } else {
+                courses.add(courseEntity);
             }
         }
         
@@ -270,17 +268,7 @@ public class CourseServiceImpl implements ICourseService {
     
     @Override
     public void delete(CourseEntity courseEntity) throws Exception {
-        courseEntity.setDeleted(true);
-        
-        Iterator<ChapterEntity> chapters = courseEntity.getChapters().iterator();
-        while (chapters.hasNext()) {
-            ChapterEntity chapterEntity = chapters.next();
-            chapterService.delete(chapterEntity);
-        }
-        courseEntity.setChapters(new HashSet<>());
-        courseEntity.setUsers(new HashSet<>());
-        
-        courseRepository.save(courseEntity);
+        courseRepository.delete(courseEntity);
     }
     
     @Override
