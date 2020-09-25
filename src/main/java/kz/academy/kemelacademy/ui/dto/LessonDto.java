@@ -19,7 +19,7 @@ public class LessonDto implements Serializable {
     
     private String url;
     private boolean alwaysOpen;
-    private Integer duration;
+    private Integer duration = 0;
     
     private String fileName;
     
