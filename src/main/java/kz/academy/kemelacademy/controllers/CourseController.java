@@ -112,7 +112,7 @@ public class CourseController {
         Integer lessonCount = 0;
         for (ChapterDto chapterDto: createdCourse.getChapters()) {
             for (LessonDto lessonDto: chapterDto.getLessons()) {
-                //                duration += lessonDto.getDuration();//todo
+                duration += lessonDto.getDuration();
                 lessonCount++;
             }
         }

@@ -128,7 +128,7 @@ public class ChapterServiceImpl implements IChapterService {
         ret.setCourse(createdChapter.getCourseDto().toString());
         Integer duration = 0;
         for (LessonDto lessonDto: createdChapter.getLessons()) {
-            //            duration += lessonDto.getDuration();//todo
+            duration += lessonDto.getDuration();
         }
         ret.setDuration(duration);
         ret.setLessonCount(createdChapter.getLessons().size());
@@ -143,7 +143,8 @@ public class ChapterServiceImpl implements IChapterService {
         return ret;
     }
     
-    private ChapterDto convertEntityToDto(ChapterEntity savedChapter) {
+    @Override
+    public ChapterDto convertEntityToDto(ChapterEntity savedChapter) {
         ChapterDto ret = new ChapterDto();
         
         BeanUtils.copyProperties(savedChapter.getCourse(), ret.getCourseDto());

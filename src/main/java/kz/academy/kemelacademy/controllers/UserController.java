@@ -80,7 +80,7 @@ public class UserController {
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e); //todo
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e); //todo discuss with Aknur
         }
         
         convertDtoToRest(createdUser, returnValue);
@@ -329,7 +329,7 @@ public class UserController {
         try {
             operationResult = userService.resetPassword(passwordResetModel.getToken(),
                     passwordResetModel.getPassword());
-        } catch (Exception e) {//todo
+        } catch (Exception e) {//todo discuss with Aknur
             log.error(e.getLocalizedMessage(), e);
         }
         
