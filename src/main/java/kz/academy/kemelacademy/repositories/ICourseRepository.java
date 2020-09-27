@@ -22,4 +22,15 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
     
     Page<CourseEntity> findAllByOrderByIdAsc(Pageable pageable);
     
+    @Query("select course from CourseEntity course" +
+            " left join course.users course_users" +
+            " where course_users.user.id = :userId" +
+            " order by course.id")
+    Page<CourseEntity> myCoursesAsPupilOrderByIdAsc(Pageable pageable, Long userId);
+    
+    @Query("select course from CourseEntity course" +
+            " where course.author.id = :userId" +
+            " order by course.id")
+    Page<CourseEntity> myCoursesAsTeacherOrderByIdAsc(Pageable pageable, Long userId);
+    
 }

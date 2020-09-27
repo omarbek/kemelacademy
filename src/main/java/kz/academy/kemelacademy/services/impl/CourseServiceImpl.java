@@ -84,7 +84,7 @@ public class CourseServiceImpl implements ICourseService {
             userCourseRepository.save(userCourseEntity);
         }
         
-        return convertEntityToDto(storedCourse);
+        return convertEntityToDto(storedCourse, 0, 1);
     }
     
     private void convertDtoToEntity(CourseDto courseDto, CourseEntity courseEntity, boolean update) {
@@ -153,7 +153,7 @@ public class CourseServiceImpl implements ICourseService {
         }
     }
     
-    private CourseDto convertEntityToDto(CourseEntity storedCourse) {
+    private CourseDto convertEntityToDto(CourseEntity storedCourse, int page, int limit) {
         CourseDto returnVal = new CourseDto();
         BeanUtils.copyProperties(storedCourse.getAuthor(), returnVal.getAuthor());
         BeanUtils.copyProperties(storedCourse.getCategory(), returnVal.getCategory());
@@ -171,10 +171,14 @@ public class CourseServiceImpl implements ICourseService {
             UserDto userDto = userService.getUserByUserId(userCourseEntity.getUser().getUserId());
             returnVal.getPupils().add(userDto);
         }
-        for (ChapterEntity chapterEntity: storedCourse.getChapters()) {
-            ChapterDto chapterDto = chapterService.convertEntityToDto(chapterEntity);
-            returnVal.getChapters().add(chapterDto);
+        List<ChapterDto> chapters;
+        try {
+            chapters = chapterService.getAll(page, limit, storedCourse.getId());
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
+        returnVal.setChapters(chapters);
+        
         if (storedCourse.getCertificate() != null) {
             returnVal.setCertificateName(storedCourse.getCertificate().getName());
         }
@@ -219,7 +223,7 @@ public class CourseServiceImpl implements ICourseService {
         }
         
         for (CourseEntity courseEntity: courses) {
-            CourseDto courseDto = convertEntityToDto(courseEntity);
+            CourseDto courseDto = convertEntityToDto(courseEntity, page, limit);
             returnValue.add(courseDto);
         }
         
@@ -232,7 +236,7 @@ public class CourseServiceImpl implements ICourseService {
         
         CourseEntity courseEntity = getCourseEntity(id);
         
-        returnValue = convertEntityToDto(courseEntity);
+        returnValue = convertEntityToDto(courseEntity, 0, 1);
         
         return returnValue;
     }
@@ -253,7 +257,7 @@ public class CourseServiceImpl implements ICourseService {
         convertDtoToEntity(courseDto, courseEntity, true);
         
         CourseEntity updatedCourse = courseRepository.save(courseEntity);
-        returnValue = convertEntityToDto(updatedCourse);
+        returnValue = convertEntityToDto(updatedCourse, 0, 1);
         
         return returnValue;
     }
@@ -297,7 +301,7 @@ public class CourseServiceImpl implements ICourseService {
         courseEntity.setCertificate(fileEntity);
         CourseEntity uploadedFileCourseEntity = courseRepository.save(courseEntity);
         
-        return convertEntityToDto(uploadedFileCourseEntity);
+        return convertEntityToDto(uploadedFileCourseEntity, 0, 1);
     }
     
     @Override
@@ -329,17 +333,20 @@ public class CourseServiceImpl implements ICourseService {
     }
     
     @Override
-    public List<CourseDto> getMyCourses() {
+    public List<CourseDto> getMyCourses(int page, int limit) {
         List<CourseDto> returnValue = new ArrayList<>();
         
-        List<CourseEntity> courses = new ArrayList<>();
-        Set<UserCourseEntity> pupils = userUtils.getCurrentUserEntity().getPupils();
-        for (UserCourseEntity userCourseEntity: pupils) {
-            courses.add(userCourseEntity.getCourse());
+        if (page > 0) {
+            page -= 1;
         }
         
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<CourseEntity> coursePage = courseRepository.myCoursesAsPupilOrderByIdAsc(pageable,
+                userUtils.getCurrentUserEntity().getId());
+        List<CourseEntity> courses = coursePage.getContent();
+        
         for (CourseEntity courseEntity: courses) {
-            CourseDto courseDto = convertEntityToDto(courseEntity);
+            CourseDto courseDto = convertEntityToDto(courseEntity, page, limit);
             returnValue.add(courseDto);
         }
         
@@ -347,12 +354,20 @@ public class CourseServiceImpl implements ICourseService {
     }
     
     @Override
-    public List<CourseDto> myCoursesAsTeacher() throws Exception {
+    public List<CourseDto> myCoursesAsTeacher(int page, int limit) throws Exception {
         List<CourseDto> returnValue = new ArrayList<>();
         
-        Set<CourseEntity> coursesAsTeacher = userUtils.getCurrentUserEntity().getCourses();
-        for (CourseEntity courseEntity: coursesAsTeacher) {
-            CourseDto courseDto = convertEntityToDto(courseEntity);
+        if (page > 0) {
+            page -= 1;
+        }
+        
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<CourseEntity> coursePage = courseRepository.myCoursesAsTeacherOrderByIdAsc(pageable,
+                userUtils.getCurrentUserEntity().getId());
+        List<CourseEntity> courses = coursePage.getContent();
+        
+        for (CourseEntity courseEntity: courses) {
+            CourseDto courseDto = convertEntityToDto(courseEntity, page, limit);
             returnValue.add(courseDto);
         }
         

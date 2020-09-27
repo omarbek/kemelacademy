@@ -48,7 +48,7 @@ public class ChapterServiceImpl implements IChapterService {
         
         ChapterEntity savedChapter = chapterRepository.save(chapterEntity);
         
-        return convertEntityToDto(savedChapter);
+        return convertEntityToDto(savedChapter, 0, 1);
     }
     
     @Override
@@ -60,14 +60,12 @@ public class ChapterServiceImpl implements IChapterService {
         }
         
         Pageable pageable = PageRequest.of(page, limit);
-        Page<ChapterEntity> chapterEntityPage = chapterRepository.findAllByOrderByChapterNoAsc(pageable);
+        Page<ChapterEntity> chapterEntityPage = chapterRepository.findAllByOrderByChapterNoAsc(pageable, courseId);
         List<ChapterEntity> chapters = chapterEntityPage.getContent();
         
         for (ChapterEntity chapterEntity: chapters) {
-            if (courseId != null && chapterEntity.getCourse().getId().equals(courseId)) {
-                ChapterDto chapterDto = convertEntityToDto(chapterEntity);
-                returnValue.add(chapterDto);
-            }
+            ChapterDto chapterDto = convertEntityToDto(chapterEntity, page, limit);
+            returnValue.add(chapterDto);
         }
         
         return returnValue;
@@ -83,7 +81,7 @@ public class ChapterServiceImpl implements IChapterService {
         }
         ChapterEntity chapterEntity = optional.get();
         
-        returnValue = convertEntityToDto(chapterEntity);
+        returnValue = convertEntityToDto(chapterEntity, 0, 1);
         
         return returnValue;
     }
@@ -100,7 +98,7 @@ public class ChapterServiceImpl implements IChapterService {
         convertDtoToEntity(chapterDto, chapterEntity, true);
         
         ChapterEntity updatedChapter = chapterRepository.save(chapterEntity);
-        returnValue = convertEntityToDto(updatedChapter);
+        returnValue = convertEntityToDto(updatedChapter, 0, 1);
         
         return returnValue;
     }
@@ -143,13 +141,13 @@ public class ChapterServiceImpl implements IChapterService {
     }
     
     @Override
-    public ChapterDto convertEntityToDto(ChapterEntity savedChapter) {
+    public ChapterDto convertEntityToDto(ChapterEntity savedChapter, int page, int limit) {
         ChapterDto ret = new ChapterDto();
         BeanUtils.copyProperties(savedChapter.getCourse(), ret.getCourseDto());
         
         List<LessonDto> lessons;
         try {
-            lessons = lessonService.getAll(0, 25, savedChapter.getId(), savedChapter.getCourse().getId());
+            lessons = lessonService.getAll(page, limit, savedChapter.getId(), savedChapter.getCourse().getId());
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }

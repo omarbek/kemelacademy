@@ -31,8 +31,8 @@ public interface ICourseService {
     
     void setRating(Long courseId, Double rating);
     
-    List<CourseDto> getMyCourses();
+    List<CourseDto> getMyCourses(int page, int limit);
     
-    List<CourseDto> myCoursesAsTeacher() throws Exception;
+    List<CourseDto> myCoursesAsTeacher(int page, int limit) throws Exception;
     
 }

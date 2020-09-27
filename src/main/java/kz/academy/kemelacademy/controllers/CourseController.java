@@ -401,12 +401,13 @@ public class CourseController {
     })
     @Transactional
     @GetMapping(path = "myCoursesAsPupil")
-    public List<CourseRest> myCoursesAsPupil() {
+    public List<CourseRest> myCoursesAsPupil(@RequestParam(value = "page", defaultValue = "0") int page,
+                                             @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<CourseRest> returnVal = new ArrayList<>();
         
         List<CourseDto> courses;
         try {
-            courses = courseService.getMyCourses();
+            courses = courseService.getMyCourses(page, limit);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
@@ -431,12 +432,13 @@ public class CourseController {
     })
     @Transactional
     @GetMapping(path = "myCoursesAsTeacher")
-    public List<CourseRest> myCoursesAsTeacher() {
+    public List<CourseRest> myCoursesAsTeacher(@RequestParam(value = "page", defaultValue = "0") int page,
+                                               @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<CourseRest> returnVal = new ArrayList<>();
         
         List<CourseDto> courses;
         try {
-            courses = courseService.myCoursesAsTeacher();
+            courses = courseService.myCoursesAsTeacher(page, limit);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }

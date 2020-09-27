@@ -27,6 +27,6 @@ public interface IChapterService {
     
     ChapterRest convertDtoToRest(ChapterDto createdChapter);
     
-    ChapterDto convertEntityToDto(ChapterEntity savedChapter);
+    ChapterDto convertEntityToDto(ChapterEntity savedChapter, int page, int limit);
     
 }

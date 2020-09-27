@@ -107,6 +107,9 @@ public class ChapterController {
     public List<ChapterRest> getChapters(@RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "limit", defaultValue = "25") int limit,
                                          @RequestParam(value = "courseId") Long courseId) {
+        Object[] fields = {courseId};
+        ThrowUtils.throwMissingRequiredFieldException(fields);
+        
         List<ChapterRest> returnVal = new ArrayList<>();
         
         List<ChapterDto> chapters;
