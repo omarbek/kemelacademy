@@ -22,6 +22,7 @@ public class LessonDto implements Serializable {
     private Integer duration = 0;
     
     private String fileName;
+    private String fileUrl;
     
     private String description;
     

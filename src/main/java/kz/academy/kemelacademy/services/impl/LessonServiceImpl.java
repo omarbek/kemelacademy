@@ -106,10 +106,11 @@ public class LessonServiceImpl implements ILessonService {
     public LessonDto uploadFile(Long lessonId, MultipartFile file) throws Exception {
         String pathFolder = systemParameterUtils.getPathFolder() + userUtils.getCurrentUserEntity().getUserId() + "/"
                 + "lesssons/" + lessonId + "/";
-        String filename = pathFolder + new Date().getTime() + "_" + file.getOriginalFilename();
+        String filename = file.getOriginalFilename();
+        String url = pathFolder + new Date().getTime() + "_" + filename;
         
         byte[] bytes = file.getBytes();
-        Path path = Paths.get(filename);
+        Path path = Paths.get(url);
         Path parentDir = path.getParent();
         if (!Files.exists(parentDir)) {
             Files.createDirectories(parentDir);
@@ -139,6 +140,7 @@ public class LessonServiceImpl implements ILessonService {
             BeanUtils.copyProperties(fileTypeById, fileEntity.getFileType());
         }
         
+        fileEntity.setUrl(url);
         fileEntity.setName(filename);
         fileRepository.save(fileEntity);
         
@@ -382,6 +384,7 @@ public class LessonServiceImpl implements ILessonService {
         }
         if (savedLesson.getFile() != null) {
             ret.setFileName(savedLesson.getFile().getName());
+            ret.setFileUrl(savedLesson.getFile().getUrl());
         }
         if (savedLesson.getHomeWork() != null) {
             ret.setDescription(savedLesson.getHomeWork().getDescription());

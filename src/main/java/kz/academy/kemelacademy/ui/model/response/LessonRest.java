@@ -20,6 +20,7 @@ public class LessonRest {
     private Integer duration;
     
     private String fileName;
+    private String fileUrl;
     
     private String description;
     

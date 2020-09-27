@@ -34,6 +34,8 @@ public class FileEntity {
     
     private String name;
     
+    private String url;
+    
     @OneToOne(mappedBy = "certificate")
     private CourseEntity course;
     
