@@ -34,7 +34,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+            throws IOException, ServletException {//logged-1
         String header = request.getHeader(SecurityConstants.HEADER_STRING);
         
         if (header == null /*|| !header.startsWith(SecurityConstants.TOKEN_PREFIX)*/) {
@@ -43,17 +43,24 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         }
         
         if (!header.isEmpty()) {
-            UsernamePasswordAuthenticationToken authenticationToken = getAuthentication(request);
+            UsernamePasswordAuthenticationToken authenticationToken = null;
+            try {
+                authenticationToken = getAuthentication(request);
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
+                return;
+            }
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
         chain.doFilter(request, response);
     }
     
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {//call from another api not login
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) throws Exception {//logged-2
         String token = request.getHeader(SecurityConstants.HEADER_STRING);
         
         if (token != null) {
-            //            token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
+            // token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
+            
             String user = Jwts.parser().setSigningKey(SecurityConstants.getTokenSecret())
                     .parseClaimsJws(token)
                     .getBody()
