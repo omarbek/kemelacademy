@@ -157,21 +157,17 @@ public class LessonServiceImpl implements ILessonService {
         }
         
         Pageable pageable = PageRequest.of(page, limit);
-        Page<LessonEntity> lessonEntityPage = lessonRepository.findAllByOrderByLessonNoAsc(pageable);
+        Page<LessonEntity> lessonEntityPage;
+        if (chapterId != null) {
+            lessonEntityPage = lessonRepository.findAllByOrderByLessonNoAsc(pageable, courseId, chapterId);
+        } else {
+            lessonEntityPage = lessonRepository.findAllByOrderByLessonNoAsc(pageable, courseId);
+        }
         List<LessonEntity> lessonEntities = lessonEntityPage.getContent();
         
         for (LessonEntity lessonEntity: lessonEntities) {
-            if (courseId != null && courseId.equals(lessonEntity.getChapter().getCourse().getId())) {
-                if (chapterId != null) {
-                    if (lessonEntity.getChapter().getId().equals(chapterId)) {
-                        LessonDto lessonDto = convertEntityToDto(lessonEntity);
-                        returnValue.add(lessonDto);
-                    }
-                } else {
-                    LessonDto lessonDto = convertEntityToDto(lessonEntity);
-                    returnValue.add(lessonDto);
-                }
-            }
+            LessonDto lessonDto = convertEntityToDto(lessonEntity);
+            returnValue.add(lessonDto);
         }
         
         return returnValue;

@@ -4,6 +4,7 @@ import kz.academy.kemelacademy.ui.entity.LessonEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * @author Omarbek.Dinassil
@@ -12,6 +13,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface ILessonRepository extends JpaRepository<LessonEntity, Long> {
     
-    Page<LessonEntity> findAllByOrderByLessonNoAsc(Pageable pageable);
+    @Query("select l from LessonEntity l" +
+            " where l.chapter.id = :chapterId and l.chapter.course.id = :courseId" +
+            " order by l.lessonNo")
+    Page<LessonEntity> findAllByOrderByLessonNoAsc(Pageable pageable, Long courseId, Long chapterId);
+    
+    @Query("select l from LessonEntity l where l.chapter.course.id = :courseId order by l.lessonNo")
+    Page<LessonEntity> findAllByOrderByLessonNoAsc(Pageable pageable, Long courseId);
     
 }

@@ -192,6 +192,9 @@ public class LessonController {
                                    @RequestParam(value = "limit", defaultValue = "25") int limit,
                                    @RequestParam(value = "chapterId", required = false) Long chapterId,
                                    @RequestParam(value = "courseId") Long courseId) {
+        Object[] fields = {courseId};
+        ThrowUtils.throwMissingRequiredFieldException(fields);
+        
         List<LessonRest> returnVal = new ArrayList<>();
         
         List<LessonDto> dtoList;
