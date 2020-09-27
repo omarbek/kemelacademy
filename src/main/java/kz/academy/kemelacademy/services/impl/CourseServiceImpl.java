@@ -206,7 +206,7 @@ public class CourseServiceImpl implements ICourseService {
         if (name == null) {
             entities = coursePage.getContent();
         } else {
-            entities = courseRepository.findByName(name);
+            entities = courseRepository.findByNameOrderByIdAsc(name);
         }
         for (CourseEntity courseEntity: entities) {
             if (categoryId != null) {

@@ -5,8 +5,8 @@ import kz.academy.kemelacademy.utils.LocaleUtils;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Omarbek.Dinassil
@@ -21,7 +21,7 @@ public class RoleDto implements Serializable {
     private String nameRu;
     private String nameEn;
     private String name;
-    private Set<UserDto> users = new HashSet<>();
+    private List<UserDto> users = new ArrayList<>();
     
     @Override
     public String toString() {

@@ -3,8 +3,8 @@ package kz.academy.kemelacademy.ui.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Omarbek.Dinassil
@@ -18,7 +18,7 @@ public class ChapterDto implements Serializable {
     private CourseDto courseDto = new CourseDto();
     private Integer chapterNo;
     private String name;
-    private Set<LessonDto> lessons = new HashSet<>();
+    private List<LessonDto> lessons = new ArrayList<>();
     
     @Override
     public String toString() {

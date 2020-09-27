@@ -3,8 +3,8 @@ package kz.academy.kemelacademy.ui.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Omarbek.Dinassil
@@ -22,9 +22,9 @@ public class UserDto implements Serializable {
     private String password;
     private String fullName;
     private String userId;
-    private Set<RoleDto> roles = new HashSet<>();
-    private Set<CourseDto> coursesAsAuthor = new HashSet<>();
-    private Set<CourseDto> coursesAsPupil = new HashSet<>();
+    private List<RoleDto> roles = new ArrayList<>();
+    private List<CourseDto> coursesAsAuthor = new ArrayList<>();
+    private List<CourseDto> coursesAsPupil = new ArrayList<>();
     private boolean agreedWithAgreement;
     
     @Override

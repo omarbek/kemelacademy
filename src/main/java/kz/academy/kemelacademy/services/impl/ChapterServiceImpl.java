@@ -9,7 +9,6 @@ import kz.academy.kemelacademy.ui.dto.ChapterDto;
 import kz.academy.kemelacademy.ui.dto.LessonDto;
 import kz.academy.kemelacademy.ui.entity.ChapterEntity;
 import kz.academy.kemelacademy.ui.entity.CourseEntity;
-import kz.academy.kemelacademy.ui.entity.LessonEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.model.response.ChapterRest;
 import kz.academy.kemelacademy.ui.model.response.LessonRest;
@@ -146,22 +145,15 @@ public class ChapterServiceImpl implements IChapterService {
     @Override
     public ChapterDto convertEntityToDto(ChapterEntity savedChapter) {
         ChapterDto ret = new ChapterDto();
-        
         BeanUtils.copyProperties(savedChapter.getCourse(), ret.getCourseDto());
-        for (LessonEntity lessonEntity: savedChapter.getLessons()) {
-            LessonDto lessonDto = new LessonDto();
-            BeanUtils.copyProperties(lessonEntity, lessonDto);
-            if (lessonEntity.getVideo() != null) {
-                lessonDto.setUrl(lessonEntity.getVideo().getUrl());
-                lessonDto.setDuration(lessonEntity.getVideo().getDuration());
-                lessonDto.setAlwaysOpen(lessonEntity.getVideo().isAlwaysOpen());
-            }
-            if (lessonEntity.getFile() != null) {
-                lessonDto.setFileName(lessonEntity.getFile().getName());
-            }
-            if (lessonEntity.getHomeWork() != null) {
-                lessonDto.setDescription(lessonEntity.getHomeWork().getDescription());
-            }
+        
+        List<LessonDto> lessons;
+        try {
+            lessons = lessonService.getAll(0, 25, savedChapter.getId(), savedChapter.getCourse().getId());
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        for (LessonDto lessonDto: lessons) {
             ret.getLessons().add(lessonDto);
         }
         BeanUtils.copyProperties(savedChapter, ret);

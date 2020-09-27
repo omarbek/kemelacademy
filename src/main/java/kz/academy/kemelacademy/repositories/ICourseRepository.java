@@ -15,8 +15,10 @@ import java.util.List;
  */
 public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
     
-    @Query("SELECT c FROM CourseEntity c WHERE c.name LIKE CONCAT('%',:name,'%')")
-    List<CourseEntity> findByName(String name);
+    @Query("SELECT c FROM CourseEntity c" +
+            " WHERE c.name LIKE CONCAT('%',:name,'%')" +
+            " order by c.id")
+    List<CourseEntity> findByNameOrderByIdAsc(String name);
     
     Page<CourseEntity> findAllByOrderByIdAsc(Pageable pageable);
     

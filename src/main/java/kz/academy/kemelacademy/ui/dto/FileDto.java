@@ -3,8 +3,8 @@ package kz.academy.kemelacademy.ui.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Omarbek.Dinassil
@@ -19,6 +19,6 @@ public class FileDto implements Serializable {
     private FileTypeDto fileType = new FileTypeDto();
     private String name;
     private LessonDto test = new LessonDto();
-    private Set<UserHomeWorkDto> userTests = new HashSet<>();
+    private List<UserHomeWorkDto> userTests = new ArrayList<>();
     
 }
