@@ -346,5 +346,18 @@ public class CourseServiceImpl implements ICourseService {
         return returnValue;
     }
     
+    @Override
+    public List<CourseDto> myCoursesAsTeacher() throws Exception {
+        List<CourseDto> returnValue = new ArrayList<>();
+        
+        Set<CourseEntity> coursesAsTeacher = userUtils.getCurrentUserEntity().getCourses();
+        for (CourseEntity courseEntity: coursesAsTeacher) {
+            CourseDto courseDto = convertEntityToDto(courseEntity);
+            returnValue.add(courseDto);
+        }
+        
+        return returnValue;
+    }
+    
     
 }

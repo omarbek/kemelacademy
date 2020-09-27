@@ -33,4 +33,6 @@ public interface ICourseService {
     
     List<CourseDto> getMyCourses();
     
+    List<CourseDto> myCoursesAsTeacher() throws Exception;
+    
 }

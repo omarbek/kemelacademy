@@ -418,4 +418,34 @@ public class CourseController {
         return returnVal;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @Transactional
+    @GetMapping(path = "myCoursesAsTeacher")
+    public List<CourseRest> myCoursesAsTeacher() {
+        List<CourseRest> returnVal = new ArrayList<>();
+        
+        List<CourseDto> courses;
+        try {
+            courses = courseService.myCoursesAsTeacher();
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        for (CourseDto courseDto: courses) {
+            CourseRest courseRest = convertDtoToModel(courseDto);
+            returnVal.add(courseRest);
+        }
+        
+        return returnVal;
+    }
+    
 }
