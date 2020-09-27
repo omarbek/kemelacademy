@@ -84,7 +84,7 @@ public class CourseServiceImpl implements ICourseService {
             userCourseRepository.save(userCourseEntity);
         }
         
-        return convertEntityToDto(storedCourse, 0, 1);
+        return convertEntityToDto(storedCourse, 0, 25);
     }
     
     private void convertDtoToEntity(CourseDto courseDto, CourseEntity courseEntity, boolean update) {
@@ -236,7 +236,7 @@ public class CourseServiceImpl implements ICourseService {
         
         CourseEntity courseEntity = getCourseEntity(id);
         
-        returnValue = convertEntityToDto(courseEntity, 0, 1);
+        returnValue = convertEntityToDto(courseEntity, 0, 25);
         
         return returnValue;
     }
@@ -257,7 +257,7 @@ public class CourseServiceImpl implements ICourseService {
         convertDtoToEntity(courseDto, courseEntity, true);
         
         CourseEntity updatedCourse = courseRepository.save(courseEntity);
-        returnValue = convertEntityToDto(updatedCourse, 0, 1);
+        returnValue = convertEntityToDto(updatedCourse, 0, 25);
         
         return returnValue;
     }
@@ -301,7 +301,7 @@ public class CourseServiceImpl implements ICourseService {
         courseEntity.setCertificate(fileEntity);
         CourseEntity uploadedFileCourseEntity = courseRepository.save(courseEntity);
         
-        return convertEntityToDto(uploadedFileCourseEntity, 0, 1);
+        return convertEntityToDto(uploadedFileCourseEntity, 0, 25);
     }
     
     @Override

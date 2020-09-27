@@ -48,7 +48,7 @@ public class ChapterServiceImpl implements IChapterService {
         
         ChapterEntity savedChapter = chapterRepository.save(chapterEntity);
         
-        return convertEntityToDto(savedChapter, 0, 1);
+        return convertEntityToDto(savedChapter, 0, 25);
     }
     
     @Override
@@ -81,7 +81,7 @@ public class ChapterServiceImpl implements IChapterService {
         }
         ChapterEntity chapterEntity = optional.get();
         
-        returnValue = convertEntityToDto(chapterEntity, 0, 1);
+        returnValue = convertEntityToDto(chapterEntity, 0, 25);
         
         return returnValue;
     }
@@ -98,7 +98,7 @@ public class ChapterServiceImpl implements IChapterService {
         convertDtoToEntity(chapterDto, chapterEntity, true);
         
         ChapterEntity updatedChapter = chapterRepository.save(chapterEntity);
-        returnValue = convertEntityToDto(updatedChapter, 0, 1);
+        returnValue = convertEntityToDto(updatedChapter, 0, 25);
         
         return returnValue;
     }
