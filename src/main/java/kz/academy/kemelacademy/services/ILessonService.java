@@ -44,4 +44,6 @@ public interface ILessonService {
     
     LessonRest convertDtoToRest(LessonDto dto);
     
+    LessonDto uploadVideo(Long lessonId, MultipartFile file) throws Exception;
+    
 }

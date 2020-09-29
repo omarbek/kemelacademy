@@ -154,6 +154,36 @@ public class LessonController {
             @ApiImplicitParam(
                     name = "authorization",
                     value = "${authorizationHeader.description}",
+                    paramType = "header")
+    })
+    @Transactional
+    @PostMapping(path = "uploadVideo/{lessonId}")
+    public LessonRest uploadVideo(@RequestParam("file") MultipartFile file,
+                                  @PathVariable("lessonId") Long lessonId) {
+        LessonRest returnValue;
+        
+        if (file == null || file.isEmpty()) {
+            throw new ServiceException(ErrorMessages.PLEASE_SELECT_FILE.getErrorMessage());
+        }
+        
+        LessonDto uploadedVideoDto;
+        try {
+            uploadedVideoDto = lessonService.uploadVideo(lessonId, file);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        returnValue = lessonService.convertDtoToRest(uploadedVideoDto);
+        
+        return returnValue;
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
                     paramType = "header"),
             @ApiImplicitParam(
                     name = "accept-language",

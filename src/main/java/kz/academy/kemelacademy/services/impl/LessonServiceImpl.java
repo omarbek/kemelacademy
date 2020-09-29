@@ -16,20 +16,27 @@ import kz.academy.kemelacademy.utils.SystemParameterUtils;
 import kz.academy.kemelacademy.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Omarbek.Dinassil
@@ -148,6 +155,55 @@ public class LessonServiceImpl implements ILessonService {
         LessonEntity uploadedFileLessonEntity = lessonRepository.save(lessonEntity);
         
         return convertEntityToDto(uploadedFileLessonEntity);
+    }
+    
+    @Override
+    public LessonDto uploadVideo(Long lessonId, MultipartFile file) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        map.add("file", new FileSystemResource(convert(file)));
+        
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        String ip = "http://195.210.47.99:80/api/uploadVideo";//todo edit
+        ResponseEntity<String> response = restTemplate.postForEntity(ip, request, String.class);
+        String url = response.getBody().substring(response.getBody().indexOf("Your video link is: ") + 20,
+                response.getBody().indexOf("success") - 3);
+        
+        VideoEntity videoEntity;
+        
+        LessonEntity lessonEntity = getLessonEntityById(lessonId);
+        if (lessonEntity.getVideo() != null) {
+            videoEntity = lessonEntity.getVideo();
+        } else {
+            videoEntity = new VideoEntity();
+            videoEntity.setLesson(lessonEntity);
+        }
+        
+        videoEntity.setUrl(url);
+        videoEntity.setDuration(0);
+        videoRepository.save(videoEntity);
+        
+        lessonEntity.setVideo(videoEntity);
+        LessonEntity uploadedFileLessonEntity = lessonRepository.save(lessonEntity);
+        
+        return convertEntityToDto(uploadedFileLessonEntity);
+    }
+    
+    private static File convert(MultipartFile file) {
+        File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+        try {
+            convFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(file.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+        }
+        
+        return convFile;
     }
     
     @Override
