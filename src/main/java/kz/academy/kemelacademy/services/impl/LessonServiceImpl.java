@@ -171,6 +171,7 @@ public class LessonServiceImpl implements ILessonService {
         ResponseEntity<String> response = restTemplate.postForEntity(ip, request, String.class);
         String url = response.getBody().substring(response.getBody().indexOf("Your video link is: ") + 20,
                 response.getBody().indexOf("success") - 3);
+        url = url.replace("\\", "");
         
         VideoEntity videoEntity;
         
