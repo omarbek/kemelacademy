@@ -12,6 +12,7 @@ import kz.academy.kemelacademy.ui.dto.UserHomeWorkDto;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
+import kz.academy.kemelacademy.ui.model.request.HomeWorkRequestModel;
 import kz.academy.kemelacademy.ui.model.request.LessonRequestModel;
 import kz.academy.kemelacademy.ui.model.request.VideoRequestModel;
 import kz.academy.kemelacademy.ui.model.response.LessonRest;
@@ -192,12 +193,12 @@ public class LessonController {
             )
     })
     @Transactional
-    @PostMapping(path = "createHomeWorkLesson/{lessonId}")
-    public LessonRest createHomeWorkLesson(@RequestParam("description") String description,
-                                           @PathVariable("lessonId") Long lessonId) {
+    @PostMapping(path = "createHomeWorkLesson")
+    public LessonRest createHomeWorkLesson(@RequestBody HomeWorkRequestModel homeWorkRequestModel) {
         LessonDto createdDto;
         try {
-            createdDto = lessonService.createHomeWorkLesson(lessonId, description);
+            createdDto = lessonService.createHomeWorkLesson(homeWorkRequestModel.getLessonId(),
+                    homeWorkRequestModel.getDescription());
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
