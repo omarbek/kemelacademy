@@ -34,5 +34,6 @@ public class CourseRest {
     private String certificateName;
     private List<ChapterRest> chapters = new ArrayList<>();
     private String imageUrl;
+    private boolean accepted;
     
 }

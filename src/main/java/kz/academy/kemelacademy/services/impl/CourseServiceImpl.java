@@ -393,5 +393,16 @@ public class CourseServiceImpl implements ICourseService {
         return courseDto;
     }
     
+    @Override
+    public void acceptCourse(long courseId) throws Exception {
+        Optional<CourseEntity> optional = courseRepository.findById(courseId);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        CourseEntity courseEntity = optional.get();
+        courseEntity.setAccepted(true);
+        courseRepository.save(courseEntity);
+    }
+    
     
 }

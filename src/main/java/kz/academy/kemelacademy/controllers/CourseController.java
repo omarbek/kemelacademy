@@ -484,4 +484,32 @@ public class CourseController {
         return returnValue;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @Transactional
+    @PostMapping(path = "acceptCourse/{courseId}")
+    public OperationStatusModel acceptCourse(@PathVariable("courseId") long courseId) {
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+        operationStatusModel.setOperationName(RequestOperationName.ACCEPT_COURSE.name());
+        
+        try {
+            courseService.acceptCourse(courseId);
+            operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+        
+        return operationStatusModel;
+    }
+    
 }

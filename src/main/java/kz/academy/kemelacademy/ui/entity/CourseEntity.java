@@ -77,6 +77,9 @@ public class CourseEntity {
     @Column(name = "image_url")
     private String imageUrl;
     
+    @Column(nullable = false)
+    private boolean accepted;
+    
     @Override
     public String toString() {
         return name;
@@ -100,12 +103,13 @@ public class CourseEntity {
                 Objects.equals(courseStatus, that.courseStatus) &&
                 Objects.equals(chapters, that.chapters) &&
                 Objects.equals(users, that.users) &&
-                Objects.equals(imageUrl, that.imageUrl);
+                Objects.equals(imageUrl, that.imageUrl) &&
+                Objects.equals(accepted, that.accepted);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, description, requirements, learns, imageUrl);
+        return Objects.hash(id, name, price, description, requirements, learns, imageUrl, accepted);
     }
     
 }

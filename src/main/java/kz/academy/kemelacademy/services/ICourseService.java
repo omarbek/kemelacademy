@@ -37,4 +37,6 @@ public interface ICourseService {
     
     CourseDto uploadFile(MultipartFile image) throws Exception;
     
+    void acceptCourse(long courseId) throws Exception;
+    
 }
