@@ -374,5 +374,24 @@ public class CourseServiceImpl implements ICourseService {
         return returnValue;
     }
     
+    @Override
+    public CourseDto uploadFile(MultipartFile image) throws Exception {
+        String pathFolder = systemParameterUtils.getPathFolder() + "courses/images/";//todo
+        File directory = new File(pathFolder);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        String filename = pathFolder + new Date().getTime() + "_" + image.getOriginalFilename();
+        
+        byte[] bytes = image.getBytes();
+        Path path = Paths.get(filename);
+        Files.write(path, bytes);
+        
+        CourseDto courseDto = new CourseDto();
+        courseDto.setImageUrl(filename);
+        
+        return courseDto;
+    }
+    
     
 }

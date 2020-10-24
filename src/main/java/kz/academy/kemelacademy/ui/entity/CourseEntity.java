@@ -74,6 +74,9 @@ public class CourseEntity {
     @JoinColumn(name = "certificate_id", referencedColumnName = "id")
     private FileEntity certificate;
     
+    @Column(name = "image_url")
+    private String imageUrl;
+    
     @Override
     public String toString() {
         return name;
@@ -96,12 +99,13 @@ public class CourseEntity {
                 Objects.equals(learns, that.learns) &&
                 Objects.equals(courseStatus, that.courseStatus) &&
                 Objects.equals(chapters, that.chapters) &&
-                Objects.equals(users, that.users);
+                Objects.equals(users, that.users) &&
+                Objects.equals(imageUrl, that.imageUrl);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, description, requirements, learns);
+        return Objects.hash(id, name, price, description, requirements, learns, imageUrl);
     }
     
 }

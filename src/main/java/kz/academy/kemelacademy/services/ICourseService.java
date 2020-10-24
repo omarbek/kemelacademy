@@ -35,4 +35,6 @@ public interface ICourseService {
     
     List<CourseDto> myCoursesAsTeacher(int page, int limit) throws Exception;
     
+    CourseDto uploadFile(MultipartFile image) throws Exception;
+    
 }

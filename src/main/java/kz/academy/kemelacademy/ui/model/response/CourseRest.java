@@ -33,5 +33,6 @@ public class CourseRest {
     private Set<String> pupils = new HashSet<>();
     private String certificateName;
     private List<ChapterRest> chapters = new ArrayList<>();
+    private String imageUrl;
     
 }

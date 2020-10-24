@@ -36,6 +36,7 @@ public class CourseDto implements Serializable {
     private List<ChapterDto> chapters = new ArrayList<>();
     private String certificateName;
     private Double rating;
+    private String imageUrl;
     
     @Override
     public String toString() {
@@ -61,12 +62,13 @@ public class CourseDto implements Serializable {
                 Objects.equals(pupils, courseDto.pupils) &&
                 Objects.equals(chapters, courseDto.chapters) &&
                 Objects.equals(certificateName, courseDto.certificateName) &&
-                Objects.equals(rating, courseDto.rating);
+                Objects.equals(rating, courseDto.rating) &&
+                Objects.equals(imageUrl, courseDto.imageUrl);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, price, name, description, requirements, learns, certificateName, rating);
+        return Objects.hash(id, price, name, description, requirements, learns, certificateName, rating, imageUrl);
     }
     
 }

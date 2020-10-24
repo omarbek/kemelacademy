@@ -450,4 +450,38 @@ public class CourseController {
         return returnVal;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @Transactional
+    @PostMapping(path = "uploadImage")
+    public CourseRest uploadImage(@RequestParam("file") MultipartFile image) {
+        CourseRest returnValue = new CourseRest();
+        
+        if (image == null || image.isEmpty()) {
+            throw new ServiceException(ErrorMessages.PLEASE_SELECT_FILE.getErrorMessage());
+        }
+        
+        CourseDto uploadedFileDto;
+        try {
+            uploadedFileDto = courseService.uploadFile(image);
+        } catch (ServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        returnValue.setImageUrl(uploadedFileDto.getImageUrl());
+        
+        return returnValue;
+    }
+    
 }

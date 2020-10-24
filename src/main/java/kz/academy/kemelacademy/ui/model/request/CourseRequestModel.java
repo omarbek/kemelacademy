@@ -23,5 +23,6 @@ public class CourseRequestModel {
     private String learns;
     private Long courseStatusId;
     private Set<Long> pupils = new HashSet<>();
+    private String imageUrl;
     
 }
