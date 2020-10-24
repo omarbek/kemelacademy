@@ -14,6 +14,7 @@ import kz.academy.kemelacademy.ui.model.request.VideoRequestModel;
 import kz.academy.kemelacademy.ui.model.response.LessonRest;
 import kz.academy.kemelacademy.utils.SystemParameterUtils;
 import kz.academy.kemelacademy.utils.UserUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -43,6 +44,7 @@ import java.util.*;
  * on 2020-08-18
  * @project kemelacademy
  */
+@Slf4j
 @Service
 public class LessonServiceImpl implements ILessonService {
     
@@ -163,15 +165,17 @@ public class LessonServiceImpl implements ILessonService {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        map.add("file", new FileSystemResource(convert(file)));
+        File uploadedVideo = convert(file);
+        map.add("file", new FileSystemResource(uploadedVideo));
         
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, headers);
         RestTemplate restTemplate = new RestTemplate();
-        String ip = "http://195.210.47.99:80/api/uploadVideo";//todo edit
+        String ip = "https://files.uirenu.online/api/uploadVideo";//todo edit
         ResponseEntity<String> response = restTemplate.postForEntity(ip, request, String.class);
         String url = response.getBody().substring(response.getBody().indexOf("Your video link is: ") + 20,
                 response.getBody().indexOf("success") - 3);
         url = url.replace("\\", "");
+        uploadedVideo.delete();
         
         VideoEntity videoEntity;
         
@@ -193,15 +197,25 @@ public class LessonServiceImpl implements ILessonService {
         return convertEntityToDto(uploadedFileLessonEntity);
     }
     
-    private static File convert(MultipartFile file) {
-        File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+    private File convert(MultipartFile file) {
+        File convFile;
         try {
+            String pathFolder = systemParameterUtils.getPathFolder() + userUtils.getCurrentUserEntity().getUserId() + "/"
+                    + "videos/";
+            String filename = file.getOriginalFilename();
+            String url = pathFolder + new Date().getTime() + "_" + filename;
+            convFile = new File(Objects.requireNonNull(url));
+            Path path = Paths.get(url);
+            Path parentDir = path.getParent();
+            if (!Files.exists(parentDir)) {
+                Files.createDirectories(parentDir);
+            }
             convFile.createNewFile();
             FileOutputStream fos = new FileOutputStream(convFile);
             fos.write(file.getBytes());
             fos.close();
         } catch (IOException e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage());
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }
         
         return convFile;
