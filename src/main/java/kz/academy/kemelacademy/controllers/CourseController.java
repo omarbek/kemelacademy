@@ -16,11 +16,17 @@ import kz.academy.kemelacademy.utils.ThrowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -510,6 +516,37 @@ public class CourseController {
         }
         
         return operationStatusModel;
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @GetMapping("/get/{fileName:.+}")
+    public ResponseEntity<byte[]> showFile(@PathVariable String fileName, HttpServletRequest request)
+            throws IOException {
+        
+        String contentType = null;
+        Resource resource = null;
+        try {
+            
+            resource = courseService.loadFileAsResource(fileName);
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(Files.readAllBytes(resource.getFile().toPath()));
+            
+        } catch (Exception ex) {
+            throw new ServiceException("No such file", ex);
+        }
+        
     }
     
 }

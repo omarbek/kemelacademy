@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.services;
 
 import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.entity.CourseEntity;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -38,5 +39,7 @@ public interface ICourseService {
     CourseDto uploadFile(MultipartFile image) throws Exception;
     
     void acceptCourse(long courseId) throws Exception;
+    
+    Resource loadFileAsResource(String fileName) throws Exception;
     
 }

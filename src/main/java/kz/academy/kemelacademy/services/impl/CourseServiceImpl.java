@@ -14,6 +14,8 @@ import kz.academy.kemelacademy.utils.SystemParameterUtils;
 import kz.academy.kemelacademy.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -402,6 +405,22 @@ public class CourseServiceImpl implements ICourseService {
         CourseEntity courseEntity = optional.get();
         courseEntity.setAccepted(true);
         courseRepository.save(courseEntity);
+    }
+    
+    public Resource loadFileAsResource(String fileName) throws Exception {
+        try {
+            final Path fileStorageLocation = Paths.get(systemParameterUtils.getPathFolder() + "courses/images/")
+                    .toAbsolutePath().normalize();
+            Path filePath = fileStorageLocation.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                return resource;
+            } else {
+                throw new ServiceException("FileResource not found " + fileName);
+            }
+        } catch (MalformedURLException ex) {
+            throw new ServiceException("FileResource not found " + fileName, ex);
+        }
     }
     
     
