@@ -384,14 +384,15 @@ public class CourseServiceImpl implements ICourseService {
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        String filename = pathFolder + new Date().getTime() + "_" + image.getOriginalFilename();
+        String url = new Date().getTime() + "_" + image.getOriginalFilename();
+        String filename = pathFolder + url;
         
         byte[] bytes = image.getBytes();
         Path path = Paths.get(filename);
         Files.write(path, bytes);
         
         CourseDto courseDto = new CourseDto();
-        courseDto.setImageUrl(filename);
+        courseDto.setImageUrl(url);
         
         return courseDto;
     }
