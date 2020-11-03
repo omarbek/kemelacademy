@@ -17,6 +17,7 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
     
     @Query("SELECT c FROM CourseEntity c" +
             " WHERE c.name LIKE CONCAT('%',:name,'%')" +
+            " and c.accepted = true" +
             " order by c.id")
     List<CourseEntity> findByNameOrderByIdAsc(String name);
     
