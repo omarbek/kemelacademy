@@ -20,6 +20,9 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
             " order by c.id")
     List<CourseEntity> findByNameOrderByIdAsc(String name);
     
+    @Query("select course from CourseEntity course" +
+            " where course.accepted = true" +
+            " order by course.id")
     Page<CourseEntity> findAllByOrderByIdAsc(Pageable pageable);
     
     @Query("select course from CourseEntity course" +
