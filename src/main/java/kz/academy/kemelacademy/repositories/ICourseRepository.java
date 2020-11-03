@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Omarbek.Dinassil
@@ -36,5 +37,9 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
             " where course.author.id = :userId" +
             " order by course.id")
     Page<CourseEntity> myCoursesAsTeacherOrderByIdAsc(Pageable pageable, Long userId);
+    
+    @Override
+    @Query("select c from CourseEntity c where c.id = :id and c.accepted = true")
+    Optional<CourseEntity> findById(Long id);
     
 }
