@@ -30,6 +30,7 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
     @Query("select course from CourseEntity course" +
             " left join course.users course_users" +
             " where course_users.user.id = :userId" +
+            " and course.accepted = true" +
             " order by course.id")
     Page<CourseEntity> myCoursesAsPupilOrderByIdAsc(Pageable pageable, Long userId);
     
