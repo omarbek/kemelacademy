@@ -1,5 +1,6 @@
 package kz.academy.kemelacademy;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.client.LinkDiscoverer;
@@ -12,9 +13,11 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.VendorExtension;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.paths.RelativePathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,6 +31,9 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+    
+    @Autowired
+    private ServletContext servletContext;
     
     Contact contact = new Contact(
             "Omarbek Dinassil",
@@ -51,6 +57,13 @@ public class SwaggerConfig {
     @Bean
     public Docket apiDocket() {
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .host("api.uirenu.online")
+                .pathProvider(new RelativePathProvider(servletContext) {
+                    @Override
+                    public String getApplicationBasePath() {
+                        return null;
+                    }
+                })
                 .protocols(new HashSet<>(Arrays.asList("HTTP", "HTTPS")))
                 .apiInfo(apiInfo)
                 .select()
