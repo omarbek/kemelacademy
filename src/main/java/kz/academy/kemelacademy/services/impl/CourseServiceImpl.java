@@ -153,7 +153,7 @@ public class CourseServiceImpl implements ICourseService {
             }
         } else {
             BeanUtils.copyProperties(courseDto, courseEntity);
-            courseEntity.setImageUrl("https://api.uirenu.online/courses/" + courseDto.getImageUrl());
+            courseEntity.setImageUrl("https://api.uirenu.online/courses/get/" + courseDto.getImageUrl());
         }
     }
     
