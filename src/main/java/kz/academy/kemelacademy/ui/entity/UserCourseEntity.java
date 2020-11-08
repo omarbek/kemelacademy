@@ -16,7 +16,7 @@ import java.util.Objects;
 public class UserCourseEntity implements Serializable {
     
     @EmbeddedId
-    private UserCourseId userCourseId;
+    private UserCourseId userCourseId = new UserCourseId();
     
     @ManyToOne
     @MapsId("userId")
