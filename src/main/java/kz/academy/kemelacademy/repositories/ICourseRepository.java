@@ -44,4 +44,7 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
     @Query("select c from CourseEntity c where c.id = :id and c.accepted = true")
     Optional<CourseEntity> findById(Long id);
     
+    @Query("select c from CourseEntity c where c.id = :id")
+    Optional<CourseEntity> findByIdNotAccepted(Long id);
+    
 }

@@ -400,7 +400,7 @@ public class CourseServiceImpl implements ICourseService {
     
     @Override
     public void acceptCourse(long courseId) throws Exception {
-        Optional<CourseEntity> optional = courseRepository.findById(courseId);
+        Optional<CourseEntity> optional = courseRepository.findByIdNotAccepted(courseId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
