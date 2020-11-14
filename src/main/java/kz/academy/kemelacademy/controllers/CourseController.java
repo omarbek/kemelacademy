@@ -504,13 +504,14 @@ public class CourseController {
             )
     })
     @Transactional
-    @PostMapping(path = "acceptCourse/{courseId}")
-    public OperationStatusModel acceptCourse(@PathVariable("courseId") long courseId) {
+    @PostMapping(path = "changeProgressStatus/{courseId}/{progressStatusId}")
+    public OperationStatusModel changeProgressStatus(@PathVariable("courseId") long courseId,
+                                                     @PathVariable("progressStatusId") long progressStatusId) {
         OperationStatusModel operationStatusModel = new OperationStatusModel();
-        operationStatusModel.setOperationName(RequestOperationName.ACCEPT_COURSE.name());
+        operationStatusModel.setOperationName(RequestOperationName.CHANGE_PROGRESS_STATUS_OF_COURSE.name());
         
         try {
-            courseService.acceptCourse(courseId);
+            courseService.changeProgressStatus(courseId, progressStatusId);
             operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
         } catch (Exception e) {
             log.error(e.getLocalizedMessage(), e);

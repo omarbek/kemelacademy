@@ -403,14 +403,13 @@ public class CourseServiceImpl implements ICourseService {
     }
     
     @Override
-    public void acceptCourse(long courseId) throws Exception {
+    public void changeProgressStatus(long courseId, long progressStatusId) throws Exception {
         Optional<CourseEntity> optional = courseRepository.findById(courseId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         CourseEntity courseEntity = optional.get();
-        Optional<ProgressStatusEntity> statusEntityOptional = progressStatusRepository.findById(
-                ProgressStatusEntity.PUBLISHED);
+        Optional<ProgressStatusEntity> statusEntityOptional = progressStatusRepository.findById(progressStatusId);
         if (!statusEntityOptional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
