@@ -157,6 +157,12 @@ public class CourseServiceImpl implements ICourseService {
         } else {
             BeanUtils.copyProperties(courseDto, courseEntity);
             courseEntity.setImageUrl("https://api.uirenu.online/courses/get/" + courseDto.getImageUrl());
+            
+            Optional<ProgressStatusEntity> optional = progressStatusRepository.findById(ProgressStatusEntity.DRAFT);
+            if (!optional.isPresent()) {
+                throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+            }
+            courseEntity.setProgressStatus(optional.get());
         }
     }
     

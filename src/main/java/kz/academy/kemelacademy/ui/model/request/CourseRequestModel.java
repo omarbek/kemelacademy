@@ -24,6 +24,5 @@ public class CourseRequestModel {
     private Long courseStatusId;
     private Set<Long> pupils = new HashSet<>();
     private String imageUrl;
-    private boolean accepted = false;
     
 }
