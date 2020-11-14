@@ -532,6 +532,35 @@ public class CourseController {
                     paramType = "header"
             )
     })
+    @Transactional
+    @PostMapping(path = "addDeclineReason/{courseId}/{declineReason}")
+    public OperationStatusModel addDeclineReason(@PathVariable("courseId") long courseId,
+                                                 @PathVariable("declineReason") String declineReason) {
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+        operationStatusModel.setOperationName(RequestOperationName.ADD_DECLINE_REASON_OF_COURSE.name());
+        
+        try {
+            courseService.addDeclineReason(courseId, declineReason);
+            operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+            operationStatusModel.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+        
+        return operationStatusModel;
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
     @GetMapping("/get/{fileName:.+}")
     public ResponseEntity<byte[]> showFile(@PathVariable String fileName, HttpServletRequest request)
             throws IOException {

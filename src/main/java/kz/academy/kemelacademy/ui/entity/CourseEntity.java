@@ -81,6 +81,9 @@ public class CourseEntity {
     @JoinColumn(name = "progress_status_id")
     private ProgressStatusEntity progressStatus = new ProgressStatusEntity();
     
+    @Column(name = "decline_reason")
+    private String declineReason;
+    
     @Override
     public String toString() {
         return name;
@@ -104,12 +107,13 @@ public class CourseEntity {
                 Objects.equals(courseStatus, that.courseStatus) &&
                 Objects.equals(chapters, that.chapters) &&
                 Objects.equals(users, that.users) &&
-                Objects.equals(imageUrl, that.imageUrl);
+                Objects.equals(imageUrl, that.imageUrl) &&
+                Objects.equals(declineReason, that.declineReason);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, description, requirements, learns, imageUrl);
+        return Objects.hash(id, name, price, description, requirements, learns, imageUrl, declineReason);
     }
     
 }

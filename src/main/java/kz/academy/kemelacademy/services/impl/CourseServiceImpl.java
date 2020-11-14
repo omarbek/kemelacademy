@@ -439,5 +439,19 @@ public class CourseServiceImpl implements ICourseService {
         }
     }
     
+    @Override
+    public void addDeclineReason(long courseId, String declineReason) {
+        Optional<CourseEntity> optional = courseRepository.findById(courseId);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        CourseEntity courseEntity = optional.get();
+        if (courseEntity.getProgressStatus().getId() != 4) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        courseEntity.setDeclineReason(declineReason);
+        courseRepository.save(courseEntity);
+    }
+    
     
 }

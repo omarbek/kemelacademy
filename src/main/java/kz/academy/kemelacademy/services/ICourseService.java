@@ -42,4 +42,6 @@ public interface ICourseService {
     
     Resource loadFileAsResource(String fileName) throws Exception;
     
+    void addDeclineReason(long courseId, String declineReason);
+    
 }
