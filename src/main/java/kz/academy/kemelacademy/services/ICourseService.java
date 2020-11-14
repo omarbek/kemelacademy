@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.services;
 
 import kz.academy.kemelacademy.ui.dto.CourseDto;
 import kz.academy.kemelacademy.ui.entity.CourseEntity;
+import kz.academy.kemelacademy.ui.entity.ProgressStatusEntity;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +43,8 @@ public interface ICourseService {
     
     Resource loadFileAsResource(String fileName) throws Exception;
     
-    void addDeclineReason(long courseId, String declineReason);
+    void addDeclineReason(long courseId, String declineReason) throws Exception;
+    
+    List<ProgressStatusEntity> getProgressStatuses() throws Exception;
     
 }

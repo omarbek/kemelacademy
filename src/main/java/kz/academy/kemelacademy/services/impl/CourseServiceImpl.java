@@ -204,6 +204,9 @@ public class CourseServiceImpl implements ICourseService {
             }
         }
         returnVal.setRating(ratingSum / numberOfUsers);
+        
+        returnVal.setProgressStatus(storedCourse.getProgressStatus().toString());
+        
         BeanUtils.copyProperties(storedCourse, returnVal);
         return returnVal;
     }
@@ -440,7 +443,7 @@ public class CourseServiceImpl implements ICourseService {
     }
     
     @Override
-    public void addDeclineReason(long courseId, String declineReason) {
+    public void addDeclineReason(long courseId, String declineReason) throws Exception {
         Optional<CourseEntity> optional = courseRepository.findById(courseId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
@@ -451,6 +454,11 @@ public class CourseServiceImpl implements ICourseService {
         }
         courseEntity.setDeclineReason(declineReason);
         courseRepository.save(courseEntity);
+    }
+    
+    @Override
+    public List<ProgressStatusEntity> getProgressStatuses() throws Exception {
+        return progressStatusRepository.findAll();
     }
     
     

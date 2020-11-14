@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.*;
 import kz.academy.kemelacademy.ui.dto.*;
+import kz.academy.kemelacademy.ui.entity.ProgressStatusEntity;
 import kz.academy.kemelacademy.ui.enums.ErrorMessages;
 import kz.academy.kemelacademy.ui.enums.RequestOperationName;
 import kz.academy.kemelacademy.ui.enums.RequestOperationStatus;
@@ -579,6 +580,26 @@ public class CourseController {
             throw new ServiceException("No such file", ex);
         }
         
+    }
+    
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @GetMapping("/getProgressStatuses")
+    @Transactional
+    public List<ProgressStatusEntity> getProgressStatuses() {
+        List<ProgressStatusEntity> progressStatuses;
+        try {
+            progressStatuses = courseService.getProgressStatuses();
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        
+        return progressStatuses;
     }
     
 }

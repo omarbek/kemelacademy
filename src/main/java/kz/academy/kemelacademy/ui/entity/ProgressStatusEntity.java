@@ -4,12 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Omarbek.Dinassil
@@ -28,10 +24,11 @@ public class ProgressStatusEntity extends AbstractNameEntity {
     public static final long PUBLISHED = 3;
     public static final long DECLINED = 4;
     
-    @OneToMany(
-            mappedBy = "progressStatus",
-            cascade = CascadeType.ALL
-    )
-    private Set<CourseEntity> courses = new HashSet<>();
+    //    @OneToMany(
+    //            fetch = FetchType.LAZY,
+    //            mappedBy = "progressStatus",
+    //            cascade = CascadeType.ALL
+    //    )
+    //    private Set<CourseEntity> courses = new HashSet<>();
     
 }
