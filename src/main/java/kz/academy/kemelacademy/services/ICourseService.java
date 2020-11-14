@@ -16,7 +16,7 @@ public interface ICourseService {
     
     CourseDto createCourse(CourseDto courseDto) throws Exception;
     
-    List<CourseDto> getAll(int page, int limit, Long categoryId, String name) throws Exception;
+    List<CourseDto> getAll(int page, int limit, Long categoryId, String name, Long progressStatusId) throws Exception;
     
     CourseDto getCourseById(long id) throws Exception;
     

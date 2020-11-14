@@ -217,12 +217,14 @@ public class CourseController {
     public List<CourseRest> getCourses(@RequestParam(value = "page", defaultValue = "0") int page,
                                        @RequestParam(value = "limit", defaultValue = "25") int limit,
                                        @RequestParam(value = "categoryId", required = false) Long categoryId,
-                                       @RequestParam(required = false) String name) {
+                                       @RequestParam(required = false) String name,
+                                       @RequestParam(value = "progressStatusId", defaultValue = "3")
+                                               Long progressStatusId) {
         List<CourseRest> returnVal = new ArrayList<>();
         
         List<CourseDto> courses;
         try {
-            courses = courseService.getAll(page, limit, categoryId, name);
+            courses = courseService.getAll(page, limit, categoryId, name, progressStatusId);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }

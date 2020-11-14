@@ -16,14 +16,16 @@ import java.util.Optional;
  */
 public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
     
-    @Query("SELECT c FROM CourseEntity c" +
-            " WHERE c.name LIKE CONCAT('%',:name,'%')" +
-            " order by c.id")
-    List<CourseEntity> findByNameOrderByIdAsc(String name);
+    @Query("SELECT course FROM CourseEntity course" +
+            " WHERE course.name LIKE CONCAT('%',:name,'%')" +
+            " and course.progressStatus.id = :progressStatusId" +
+            " order by course.id")
+    List<CourseEntity> findByNameOrderByIdAsc(String name, Long progressStatusId);
     
     @Query("select course from CourseEntity course" +
+            " where course.progressStatus.id = :progressStatusId" +
             " order by course.id")
-    Page<CourseEntity> findAllByOrderByIdAsc(Pageable pageable);
+    Page<CourseEntity> findAllByOrderByIdAsc(Pageable pageable, Long progressStatusId);
     
     @Query("select course from CourseEntity course" +
             " left join course.users course_users" +
@@ -37,7 +39,7 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
     Page<CourseEntity> myCoursesAsTeacherOrderByIdAsc(Pageable pageable, Long userId);
     
     @Override
-    @Query("select c from CourseEntity c where c.id = :id")
+    @Query("select course from CourseEntity course where course.id = :id")
     Optional<CourseEntity> findById(Long id);
     
 }
