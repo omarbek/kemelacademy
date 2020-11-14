@@ -77,8 +77,9 @@ public class CourseEntity {
     @Column(name = "image_url")
     private String imageUrl;
     
-    @Column(nullable = false)
-    private boolean accepted;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "progress_status_id")
+    private ProgressStatusEntity progressStatus = new ProgressStatusEntity();
     
     @Override
     public String toString() {
@@ -103,13 +104,12 @@ public class CourseEntity {
                 Objects.equals(courseStatus, that.courseStatus) &&
                 Objects.equals(chapters, that.chapters) &&
                 Objects.equals(users, that.users) &&
-                Objects.equals(imageUrl, that.imageUrl) &&
-                Objects.equals(accepted, that.accepted);
+                Objects.equals(imageUrl, that.imageUrl);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, description, requirements, learns, imageUrl, accepted);
+        return Objects.hash(id, name, price, description, requirements, learns, imageUrl);
     }
     
 }

@@ -73,6 +73,9 @@ public class CourseServiceImpl implements ICourseService {
     @Autowired
     private IChapterService chapterService;
     
+    @Autowired
+    private IProgressStatusRepository progressStatusRepository;
+    
     @Override
     public CourseDto createCourse(CourseDto courseDto) throws Exception {
         CourseEntity courseEntity = new CourseEntity();
@@ -400,12 +403,17 @@ public class CourseServiceImpl implements ICourseService {
     
     @Override
     public void acceptCourse(long courseId) throws Exception {
-        Optional<CourseEntity> optional = courseRepository.findByIdNotAccepted(courseId);
+        Optional<CourseEntity> optional = courseRepository.findById(courseId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
         CourseEntity courseEntity = optional.get();
-        courseEntity.setAccepted(true);
+        Optional<ProgressStatusEntity> statusEntityOptional = progressStatusRepository.findById(
+                ProgressStatusEntity.PUBLISHED);
+        if (!statusEntityOptional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        courseEntity.setProgressStatus(statusEntityOptional.get());
         courseRepository.save(courseEntity);
     }
     
