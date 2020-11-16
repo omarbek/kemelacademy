@@ -22,10 +22,19 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
             " order by course.id")
     List<CourseEntity> findByNameOrderByIdAsc(String name, Long progressStatusId);
     
+    @Query("SELECT course FROM CourseEntity course" +
+            " WHERE course.name LIKE CONCAT('%',:name,'%')" +
+            " order by course.id")
+    List<CourseEntity> findByNameOrderByIdAsc(String name);
+    
     @Query("select course from CourseEntity course" +
             " where course.progressStatus.id = :progressStatusId" +
             " order by course.id")
     Page<CourseEntity> findAllByOrderByIdAsc(Pageable pageable, Long progressStatusId);
+    
+    @Query("select course from CourseEntity course" +
+            " order by course.id")
+    Page<CourseEntity> findAllByOrderByIdAsc(Pageable pageable);
     
     @Query("select course from CourseEntity course" +
             " left join course.users course_users" +
@@ -43,5 +52,4 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long> {
     @Override
     @Query("select course from CourseEntity course where course.id = :id")
     Optional<CourseEntity> findById(Long id);
-    
 }

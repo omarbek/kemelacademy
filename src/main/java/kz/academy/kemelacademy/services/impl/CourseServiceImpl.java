@@ -221,13 +221,22 @@ public class CourseServiceImpl implements ICourseService {
         }
         
         Pageable pageable = PageRequest.of(page, limit);
-        Page<CourseEntity> coursePage = courseRepository.findAllByOrderByIdAsc(pageable, progressStatusId);
+        Page<CourseEntity> coursePage;
+        if (progressStatusId != null) {
+            coursePage = courseRepository.findAllByOrderByIdAsc(pageable, progressStatusId);
+        } else {
+            coursePage = courseRepository.findAllByOrderByIdAsc(pageable);
+        }
         List<CourseEntity> courses = new ArrayList<>();
         List<CourseEntity> entities;
         if (name == null) {
             entities = coursePage.getContent();
         } else {
-            entities = courseRepository.findByNameOrderByIdAsc(name, progressStatusId);
+            if (progressStatusId != null) {
+                entities = courseRepository.findByNameOrderByIdAsc(name, progressStatusId);
+            } else {
+                entities = courseRepository.findByNameOrderByIdAsc(name);
+            }
         }
         for (CourseEntity courseEntity: entities) {
             if (categoryId != null) {

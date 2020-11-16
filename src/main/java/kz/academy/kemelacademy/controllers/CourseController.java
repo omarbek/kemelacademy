@@ -219,7 +219,7 @@ public class CourseController {
                                        @RequestParam(value = "limit", defaultValue = "25") int limit,
                                        @RequestParam(value = "categoryId", required = false) Long categoryId,
                                        @RequestParam(required = false) String name,
-                                       @RequestParam(value = "progressStatusId", defaultValue = "3")
+                                       @RequestParam(value = "progressStatusId", required = false)
                                                Long progressStatusId) {
         List<CourseRest> returnVal = new ArrayList<>();
         
