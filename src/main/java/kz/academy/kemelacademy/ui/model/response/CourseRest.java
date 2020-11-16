@@ -30,7 +30,7 @@ public class CourseRest {
     private Integer chapterCount;
     private Integer lessonCount;
     private String courseStatus;
-    private Set<String> pupils = new HashSet<>();
+    private Set<Long> pupils = new HashSet<>();
     private String certificateName;
     private List<ChapterRest> chapters = new ArrayList<>();
     private String imageUrl;

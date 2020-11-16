@@ -113,7 +113,7 @@ public class CourseController {
         courseRest.setLanguage(createdCourse.getLanguage().toString());
         courseRest.setCourseStatus(createdCourse.getCourseStatus().toString());
         for (UserDto userDto: createdCourse.getPupils()) {
-            courseRest.getPupils().add(userDto.toString());
+            courseRest.getPupils().add(userDto.getId());
         }
         Integer duration = 0;
         Integer lessonCount = 0;
