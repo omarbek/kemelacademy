@@ -127,14 +127,23 @@ public class CourseServiceImpl implements ICourseService {
         }
         Set<UserCourseEntity> userCourses = new HashSet<>();
         for (UserDto userDto: courseDto.getPupils()) {
-            UserEntity userEntity = userRepository.findByUserId(userDto.getUserId());
-            
-            UserCourseEntity userCourseEntity = new UserCourseEntity();
-            userCourseEntity.setUser(userEntity);
-            userCourseEntity.setCourse(courseEntity);
-            userCourseEntity.setFinished(false);
-            
-            userCourses.add(userCourseEntity);
+            boolean alreadyHas = false;
+            for (UserCourseEntity userCourseEntity: courseEntity.getUsers()) {
+                if (userCourseEntity.getUser().getId() == userDto.getId()) {
+                    alreadyHas = true;
+                    break;
+                }
+            }
+            if (!alreadyHas) {
+                UserEntity userEntity = userRepository.findByUserId(userDto.getUserId());
+                
+                UserCourseEntity userCourseEntity = new UserCourseEntity();
+                userCourseEntity.setUser(userEntity);
+                userCourseEntity.setCourse(courseEntity);
+                userCourseEntity.setFinished(false);
+                
+                userCourses.add(userCourseEntity);
+            }
         }
         courseEntity.setUsers(userCourses);
         
