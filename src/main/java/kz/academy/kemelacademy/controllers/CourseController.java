@@ -112,6 +112,7 @@ public class CourseController {
         courseRest.setLevel(createdCourse.getLevel().toString());
         courseRest.setLanguage(createdCourse.getLanguage().toString());
         courseRest.setCourseStatus(createdCourse.getCourseStatus().toString());
+        courseRest.setProgressStatus(createdCourse.getProgressStatus().toString());
         for (UserDto userDto: createdCourse.getPupils()) {
             courseRest.getPupils().add(userDto.getId());
         }

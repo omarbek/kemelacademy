@@ -37,7 +37,7 @@ public class CourseDto implements Serializable {
     private String certificateName;
     private Double rating;
     private String imageUrl;
-    private String progressStatus;
+    private ProgressStatusDto progressStatus = new ProgressStatusDto();
     
     @Override
     public String toString() {
@@ -70,8 +70,7 @@ public class CourseDto implements Serializable {
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, price, name, description, requirements, learns, certificateName, rating, imageUrl,
-                progressStatus);
+        return Objects.hash(id, price, name, description, requirements, learns, certificateName, rating, imageUrl);
     }
     
 }

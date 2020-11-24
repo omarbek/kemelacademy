@@ -173,6 +173,7 @@ public class CourseServiceImpl implements ICourseService {
         BeanUtils.copyProperties(storedCourse.getLevel(), returnVal.getLevel());
         BeanUtils.copyProperties(storedCourse.getLanguage(), returnVal.getLanguage());
         BeanUtils.copyProperties(storedCourse.getCourseStatus(), returnVal.getCourseStatus());
+        BeanUtils.copyProperties(storedCourse.getProgressStatus(), returnVal.getProgressStatus());
         
         Set<UserCourseEntity> users = new HashSet<>();
         try {
@@ -204,8 +205,6 @@ public class CourseServiceImpl implements ICourseService {
             }
         }
         returnVal.setRating(ratingSum / numberOfUsers);
-        
-        returnVal.setProgressStatus(storedCourse.getProgressStatus().toString());
         
         BeanUtils.copyProperties(storedCourse, returnVal);
         return returnVal;
