@@ -228,14 +228,7 @@ public class UserController {
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit,
                                    @RequestParam(value = "name", required = false) String name) {
-        // another method for checking role
-        //        UserDetails details = userService.loadUserByUsername(userUtils.getCurrentUserEmail());
-        //        if (details == null || details.getAuthorities().stream()
-        //                .noneMatch(a -> a.getAuthority().equals("Moderator"))) {
-        //            throw new ServiceException(ErrorMessages.YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION
-        //                    .getErrorMessage());
-        //        }
-        if (!request.isUserInRole("ROLE_MODERATOR")) {
+        if (!userUtils.isItAdmin()) {
             throw new ServiceException(ErrorMessages.YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION
                     .getErrorMessage());
         }

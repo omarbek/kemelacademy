@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Omarbek.Dinassil
  * on 2020-08-23
@@ -21,6 +23,9 @@ public class UserUtils {
     
     @Autowired
     private IUserRepository userRepository;
+    
+    @Autowired
+    private HttpServletRequest request;
     
     public String getCurrentUserEmail() {
         return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -38,6 +43,17 @@ public class UserUtils {
     
     public boolean userIdBelongsToCurUser(String userId) {
         return userId.equals(getCurrentUserEntity().getUserId());
+    }
+    
+    public boolean isItAdmin() {
+        // another method for checking role
+        //        UserDetails details = userService.loadUserByUsername(userUtils.getCurrentUserEmail());
+        //        if (details == null || details.getAuthorities().stream()
+        //                .noneMatch(a -> a.getAuthority().equals("Moderator"))) {
+        //            throw new ServiceException(ErrorMessages.YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION
+        //                    .getErrorMessage());
+        //        }
+        return request.isUserInRole("ROLE_MODERATOR");
     }
     
 }
