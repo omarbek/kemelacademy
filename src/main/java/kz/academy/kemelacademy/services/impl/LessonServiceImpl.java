@@ -197,6 +197,45 @@ public class LessonServiceImpl implements ILessonService {
         return convertEntityToDto(uploadedFileLessonEntity);
     }
     
+    @Override
+    public List<UserHomeWorkDto> getHomeWorks(int page, int limit, Long lessonId) {
+        List<UserHomeWorkDto> returnValue = new ArrayList<>();
+        
+        if (page > 0) {
+            page -= 1;
+        }
+        
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<UserHomeWorkEntity> userHomeWorkEntityPage = homeWorkRepository.findAllByLessonId(pageable, lessonId);
+        List<UserHomeWorkEntity> userHomeWorkEntities = userHomeWorkEntityPage.getContent();
+        
+        for (UserHomeWorkEntity entity: userHomeWorkEntities) {
+            UserHomeWorkDto dto = new UserHomeWorkDto();
+            BeanUtils.copyProperties(entity.getUser(), dto.getUser());
+            BeanUtils.copyProperties(entity.getHomeWorkStatus(), dto.getHomeWorkStatus());
+            BeanUtils.copyProperties(entity.getFile(), dto.getFile());
+            BeanUtils.copyProperties(entity.getHomeWork().getLesson(), dto.getHomeWork());
+            BeanUtils.copyProperties(entity, dto);
+            returnValue.add(dto);
+        }
+        
+        return returnValue;
+    }
+    
+    @Override
+    public void checkLessonId(Long lessonId) {
+        Optional<LessonEntity> optional = lessonRepository.findById(lessonId);
+        if (!optional.isPresent()) {
+            throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        LessonEntity lesson = optional.get();
+        UserEntity lessonAuthor = lesson.getChapter().getCourse().getAuthor();
+        UserEntity currentUser = userUtils.getCurrentUserEntity();
+        if (!lessonAuthor.getId().equals(currentUser.getId())) {
+            throw new ServiceException(ErrorMessages.THIS_IS_NOT_YOUR_COURSE.getErrorMessage());
+        }
+    }
+    
     private File convert(MultipartFile file) {
         File convFile;
         try {

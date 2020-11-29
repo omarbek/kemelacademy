@@ -46,4 +46,8 @@ public interface ILessonService {
     
     LessonDto uploadVideo(Long lessonId, MultipartFile file) throws Exception;
     
+    List<UserHomeWorkDto> getHomeWorks(int page, int limit, Long lessonId);
+    
+    void checkLessonId(Long lessonId);
+    
 }

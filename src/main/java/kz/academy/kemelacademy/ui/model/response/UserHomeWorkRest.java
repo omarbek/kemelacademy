@@ -16,5 +16,6 @@ public class UserHomeWorkRest {
     private Integer grade;
     private String comment;
     private String fileName;
+    private String fullName;
     
 }

@@ -476,4 +476,46 @@ public class LessonController {
         return operationStatusModel;
     }
     
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "authorization",
+                    value = "${authorizationHeader.description}",
+                    paramType = "header"),
+            @ApiImplicitParam(
+                    name = "accept-language",
+                    value = "${accept.language}",
+                    paramType = "header"
+            )
+    })
+    @GetMapping(path = "getHomeWorks")
+    @Transactional
+    public List<UserHomeWorkRest> getHomeWorks(@RequestParam(value = "page", defaultValue = "0") int page,
+                                               @RequestParam(value = "limit", defaultValue = "25") int limit,
+                                               @RequestParam("lessonId") Long lessonId) {
+        List<UserHomeWorkRest> returnVal = new ArrayList<>();
+        
+        Object[] fields = {lessonId};
+        ThrowUtils.throwMissingRequiredFieldException(fields);
+        
+        lessonService.checkLessonId(lessonId);
+        
+        List<UserHomeWorkDto> dtoList;
+        try {
+            dtoList = lessonService.getHomeWorks(page, limit, lessonId);
+        } catch (Exception e) {
+            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
+        }
+        for (UserHomeWorkDto dto: dtoList) {
+            UserHomeWorkRest rest = new UserHomeWorkRest();
+            rest.setHomeWorkName(dto.getHomeWork().toString());
+            rest.setStatus(dto.getHomeWorkStatus().toString());
+            rest.setFileName(dto.getFile().getName());
+            rest.setFullName(dto.getUser().toString());
+            BeanUtils.copyProperties(dto, rest);
+            returnVal.add(rest);
+        }
+        
+        return returnVal;
+    }
+    
 }

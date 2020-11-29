@@ -25,6 +25,7 @@ public enum ErrorMessages {
     THIS_USER_ID_DOES_NOT_BELONG_TO_CUR_USER("this.user.id.does.not.belong.to.cur.user"),
     YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION("your.role.has.no.grants.to.execute.this.operation"),
     YOU_CANNOT_CHANGE_YOUR_EMAIL("you.cannot.change.your.email"),
+    THIS_IS_NOT_YOUR_COURSE("this.is.not.your.course"),
     
     ;
     
