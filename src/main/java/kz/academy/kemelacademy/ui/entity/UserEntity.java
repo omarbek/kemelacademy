@@ -48,6 +48,8 @@ public class UserEntity implements Serializable {
     @Column(name = "agreed_with_agreement")
     private boolean agreedWithAgreement;
     
+    private String videoCallUrl;
+    
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "user_roles",
@@ -88,13 +90,14 @@ public class UserEntity implements Serializable {
                 Objects.equals(roles, that.roles) &&
                 Objects.equals(courses, that.courses) &&
                 Objects.equals(userHomeWorks, that.userHomeWorks) &&
-                Objects.equals(pupils, that.pupils);
+                Objects.equals(pupils, that.pupils) &&
+                Objects.equals(videoCallUrl, that.videoCallUrl);
     }
     
     @Override
     public int hashCode() {
         return Objects.hash(id, email, emailVerificationStatus, emailVerificationToken, encryptedPassword, fullName,
-                userId);
+                userId, videoCallUrl);
     }
     
 }

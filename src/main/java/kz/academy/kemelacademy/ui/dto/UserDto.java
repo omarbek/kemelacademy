@@ -26,6 +26,7 @@ public class UserDto implements Serializable {
     private List<CourseDto> coursesAsAuthor = new ArrayList<>();
     private List<CourseDto> coursesAsPupil = new ArrayList<>();
     private boolean agreedWithAgreement;
+    private String videoCallUrl;
     
     @Override
     public String toString() {
