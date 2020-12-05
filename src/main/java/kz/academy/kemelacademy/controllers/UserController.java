@@ -85,10 +85,10 @@ public class UserController {
         
         convertDtoToRest(createdUser, returnValue);
         
-        boolean sendEmail = userService.sendEmail(createdUser.getEmail(), createdUser.getEmailVerificationToken());
-        if (!sendEmail) {
-            throw new ServiceException(ErrorMessages.DID_NOT_SEND_EMAIL.getErrorMessage());
-        }
+//        boolean sendEmail = userService.sendEmail(createdUser.getEmail(), createdUser.getEmailVerificationToken());
+//        if (!sendEmail) {
+//            throw new ServiceException(ErrorMessages.DID_NOT_SEND_EMAIL.getErrorMessage());
+//        }
         
         return returnValue;
     }
@@ -228,10 +228,10 @@ public class UserController {
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit,
                                    @RequestParam(value = "name", required = false) String name) {
-        if (!userUtils.isItAdmin()) {
-            throw new ServiceException(ErrorMessages.YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION
-                    .getErrorMessage());
-        }
+//        if (!userUtils.isItAdmin()) {
+//            throw new ServiceException(ErrorMessages.YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION
+//                    .getErrorMessage());
+//        }
         
         List<UserRest> returnVal = new ArrayList<>();
         

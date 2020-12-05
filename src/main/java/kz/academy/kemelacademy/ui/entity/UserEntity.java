@@ -46,7 +46,7 @@ public class UserEntity implements Serializable {
     private String userId;
     
     @Column(name = "agreed_with_agreement")
-    private boolean agreedWithAgreement;
+    private Boolean agreedWithAgreement;
     
     private String videoCallUrl;
     

@@ -82,6 +82,7 @@ public class UserServiceImpl implements IUserService {
         Set<RoleEntity> roles = Sets.newHashSet(instructor, student);
         userEntity.setRoles(roles);
         
+        userEntity.setAgreedWithAgreement(false);
         UserEntity storedUserDetails = userRepository.save(userEntity);
         
         UserDto returnVal = new UserDto();
@@ -150,12 +151,8 @@ public class UserServiceImpl implements IUserService {
         }
         
         Boolean agreedWithAgreement = userDto.getAgreedWithAgreement();
-        if (agreedWithAgreement != null) {
-            if (agreedWithAgreement) {
-                userEntity.setVideoCallUrl(generatorUtils.generateRandomString(25));
-            } else {
-                userEntity.setVideoCallUrl(null);
-            }
+        if (!userEntity.getAgreedWithAgreement() && agreedWithAgreement != null && agreedWithAgreement) {
+            userEntity.setVideoCallUrl(generatorUtils.generateRandomString(25));
             userEntity.setAgreedWithAgreement(agreedWithAgreement);
         }
         UserEntity updatedUserDetails = userRepository.save(userEntity);
