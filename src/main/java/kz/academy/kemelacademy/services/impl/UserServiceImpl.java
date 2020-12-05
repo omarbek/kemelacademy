@@ -149,13 +149,15 @@ public class UserServiceImpl implements IUserService {
             userEntity.setEncryptedPassword(encodedPassword);
         }
         
-        boolean agreedWithAgreement = userDto.isAgreedWithAgreement();
-        if (agreedWithAgreement) {
-            userEntity.setVideoCallUrl(generatorUtils.generateRandomString(25));
-        } else {
-            userEntity.setVideoCallUrl(null);
+        Boolean agreedWithAgreement = userDto.getAgreedWithAgreement();
+        if (agreedWithAgreement != null) {
+            if (agreedWithAgreement) {
+                userEntity.setVideoCallUrl(generatorUtils.generateRandomString(25));
+            } else {
+                userEntity.setVideoCallUrl(null);
+            }
+            userEntity.setAgreedWithAgreement(agreedWithAgreement);
         }
-        userEntity.setAgreedWithAgreement(agreedWithAgreement);
         UserEntity updatedUserDetails = userRepository.save(userEntity);
         
         convertDomainToDto(updatedUserDetails, returnValue);

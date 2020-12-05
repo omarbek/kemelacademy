@@ -13,6 +13,6 @@ public class UserDetailsRequestModel {
     private String email;
     private String password;
     private String fullName;
-    private boolean agreedWithAgreement = false;
+    private Boolean agreedWithAgreement;
     
 }
