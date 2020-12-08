@@ -35,5 +35,6 @@ public class CourseRest {
     private List<ChapterRest> chapters = new ArrayList<>();
     private String imageUrl;
     private String progressStatus;
+    private String declineReason;
     
 }

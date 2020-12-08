@@ -38,6 +38,7 @@ public class CourseDto implements Serializable {
     private Double rating;
     private String imageUrl;
     private ProgressStatusDto progressStatus = new ProgressStatusDto();
+    private String declineReason;
     
     @Override
     public String toString() {
@@ -65,12 +66,14 @@ public class CourseDto implements Serializable {
                 Objects.equals(certificateName, courseDto.certificateName) &&
                 Objects.equals(rating, courseDto.rating) &&
                 Objects.equals(imageUrl, courseDto.imageUrl) &&
-                Objects.equals(progressStatus, courseDto.progressStatus);
+                Objects.equals(progressStatus, courseDto.progressStatus) &&
+                Objects.equals(declineReason, courseDto.declineReason);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, price, name, description, requirements, learns, certificateName, rating, imageUrl);
+        return Objects.hash(id, price, name, description, requirements, learns, certificateName, rating, imageUrl,
+                declineReason);
     }
     
 }
