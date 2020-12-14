@@ -213,7 +213,9 @@ public class LessonServiceImpl implements ILessonService {
             UserHomeWorkDto dto = new UserHomeWorkDto();
             BeanUtils.copyProperties(entity.getUser(), dto.getUser());
             BeanUtils.copyProperties(entity.getHomeWorkStatus(), dto.getHomeWorkStatus());
-            BeanUtils.copyProperties(entity.getFile(), dto.getFile());
+            if (entity.getFile() != null) {
+                BeanUtils.copyProperties(entity.getFile(), dto.getFile());
+            }
             BeanUtils.copyProperties(entity.getHomeWork().getLesson(), dto.getHomeWork());
             BeanUtils.copyProperties(entity, dto);
             returnValue.add(dto);
