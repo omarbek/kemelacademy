@@ -123,7 +123,7 @@ public class ChapterServiceImpl implements IChapterService {
         ChapterRest ret = new ChapterRest();
         
         ret.setCourse(createdChapter.getCourseDto().toString());
-        Integer duration = 0;
+        Double duration = 0.0;
         for (LessonDto lessonDto: createdChapter.getLessons()) {
             duration += lessonDto.getDuration();
         }

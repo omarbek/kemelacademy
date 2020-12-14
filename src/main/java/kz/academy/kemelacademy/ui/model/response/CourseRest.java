@@ -22,7 +22,7 @@ public class CourseRest {
     private String language;
     private Integer price;
     private Double rating;
-    private Integer duration;
+    private Double duration;
     private String name;
     private String description;
     private String requirements;

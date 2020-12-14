@@ -2,6 +2,8 @@ package kz.academy.kemelacademy.ui.model.response;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author Omarbek.Dinassil
  * on 2020-08-18
@@ -17,7 +19,12 @@ public class LessonRest {
     
     private String url;
     private boolean alwaysOpen;
-    private Integer duration;
+    private Double duration;
+    private String videoId;
+    private boolean finished;
+    private int progress;
+    private Date createdAt;
+    private Date createdDate;
     
     private String fileName;
     private String fileUrl;

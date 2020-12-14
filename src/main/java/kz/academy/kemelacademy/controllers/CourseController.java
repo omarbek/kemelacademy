@@ -116,7 +116,7 @@ public class CourseController {
         for (UserDto userDto: createdCourse.getPupils()) {
             courseRest.getPupils().add(userDto.getId());
         }
-        Integer duration = 0;
+        Double duration = 0.0;
         Integer lessonCount = 0;
         for (ChapterDto chapterDto: createdCourse.getChapters()) {
             for (LessonDto lessonDto: chapterDto.getLessons()) {

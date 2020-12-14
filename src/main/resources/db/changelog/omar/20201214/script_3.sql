@@ -1,0 +1,1 @@
+alter table video modify created_at TIMESTAMP;

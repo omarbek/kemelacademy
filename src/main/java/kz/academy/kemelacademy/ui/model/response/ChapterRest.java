@@ -18,7 +18,7 @@ public class ChapterRest {
     private Integer chapterNo;
     private String name;
     private Integer lessonCount;
-    private Integer duration;
+    private Double duration;
     private List<LessonRest> lessons = new ArrayList<>();
     
 }

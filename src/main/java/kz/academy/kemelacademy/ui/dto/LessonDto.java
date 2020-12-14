@@ -3,6 +3,7 @@ package kz.academy.kemelacademy.ui.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Omarbek.Dinassil
@@ -19,7 +20,12 @@ public class LessonDto implements Serializable {
     
     private String url;
     private boolean alwaysOpen;
-    private Integer duration = 0;
+    private Double duration = 0.0;
+    private String videoId;
+    private boolean finished;
+    private int progress;
+    private Date createdAt;
+    private Date createdDate;
     
     private String fileName;
     private String fileUrl;

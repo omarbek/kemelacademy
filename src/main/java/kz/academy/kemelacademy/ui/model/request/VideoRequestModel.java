@@ -13,6 +13,6 @@ public class VideoRequestModel {
     private Long lessonId;
     private String url;
     private boolean alwaysOpen;
-    private Integer duration;
+    private Double duration;
     
 }

@@ -26,6 +26,7 @@ public enum ErrorMessages {
     YOUR_ROLE_HAS_NO_GRANTS_TO_EXECUTE_THIS_OPERATION("your.role.has.no.grants.to.execute.this.operation"),
     YOU_CANNOT_CHANGE_YOUR_EMAIL("you.cannot.change.your.email"),
     THIS_IS_NOT_YOUR_COURSE("this.is.not.your.course"),
+    CAN_NOT_UPDATE_VIDEO("can.not.update.video"),
     
     ;
     

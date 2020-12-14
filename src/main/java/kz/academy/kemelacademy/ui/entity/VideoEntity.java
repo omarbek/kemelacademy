@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -34,7 +35,12 @@ public class VideoEntity {
     @Column(name = "always_open")
     private boolean alwaysOpen = false;
     
-    private Integer duration;
+    private Double duration;
+    private String videoId;
+    private boolean finished;
+    private int progress;
+    private Date createdAt;
+    private Date createdDate;
     
     @Override
     public String toString() {
@@ -49,12 +55,17 @@ public class VideoEntity {
         return alwaysOpen == that.alwaysOpen &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(lesson, that.lesson) &&
-                Objects.equals(url, that.url);
+                Objects.equals(url, that.url) &&
+                Objects.equals(videoId, that.videoId) &&
+                Objects.equals(finished, that.finished) &&
+                Objects.equals(progress, that.progress) &&
+                Objects.equals(createdAt, that.createdAt) &&
+                Objects.equals(createdDate, that.createdDate);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, url, alwaysOpen);
+        return Objects.hash(id, url, alwaysOpen, duration, videoId, finished, progress, createdAt, createdDate);
     }
     
 }
