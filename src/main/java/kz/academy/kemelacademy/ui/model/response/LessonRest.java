@@ -16,6 +16,7 @@ public class LessonRest {
     private String chapter;
     private Integer lessonNo;
     private String name;
+    private String videoCallUrl;
     
     private String url;
     private boolean alwaysOpen;

@@ -17,6 +17,7 @@ public class LessonDto implements Serializable {
     private ChapterDto chapterDto = new ChapterDto();
     private Integer lessonNo;
     private String name;
+    private String videoCallUrl;
     
     private String url;
     private boolean alwaysOpen;

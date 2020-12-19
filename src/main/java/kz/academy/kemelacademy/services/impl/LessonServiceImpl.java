@@ -585,6 +585,9 @@ public class LessonServiceImpl implements ILessonService {
             if (lessonDto.getName() != null) {
                 lessonEntity.setName(lessonDto.getName());
             }
+            if (lessonDto.getVideoCallUrl() != null) {
+                lessonEntity.setVideoCallUrl(lessonDto.getVideoCallUrl());
+            }
         }
     }
     

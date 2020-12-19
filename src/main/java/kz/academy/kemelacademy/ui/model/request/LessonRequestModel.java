@@ -13,5 +13,6 @@ public class LessonRequestModel {
     private Long chapterId;
     private Integer lessonNo;
     private String name;
+    private String videoCallUrl;
     
 }

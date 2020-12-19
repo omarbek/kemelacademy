@@ -43,6 +43,8 @@ public class LessonEntity {
     @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
     private HomeWorkEntity homeWork;
     
+    private String videoCallUrl;
+    
     @Override
     public String toString() {
         return name;
@@ -59,12 +61,13 @@ public class LessonEntity {
                 Objects.equals(lessonNo, that.lessonNo) &&
                 Objects.equals(video, that.video) &&
                 Objects.equals(file, that.file) &&
-                Objects.equals(homeWork, that.homeWork);
+                Objects.equals(homeWork, that.homeWork) &&
+                Objects.equals(videoCallUrl, that.videoCallUrl);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lessonNo);
+        return Objects.hash(id, name, lessonNo, videoCallUrl);
     }
     
 }
