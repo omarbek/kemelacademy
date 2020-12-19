@@ -19,7 +19,6 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,12 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -163,20 +163,23 @@ public class LessonServiceImpl implements ILessonService {
     }
     
     @Override
-    public LessonDto uploadVideo(Long lessonId, MultipartFile file) throws Exception {
+    public LessonDto uploadVideo(Long lessonId, byte[] file) throws Exception {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.add("Authorization", "Bearer unmkhw1a3Dwi7QWaibuG9b");
         headers.add("X-Video-Title", "New video");
+        headers.setAccept(Arrays.asList(MediaType.ALL));
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         
-        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        File uploadedVideo = convert(file);
-        map.add("file", new FileSystemResource(uploadedVideo));
-        
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, headers);
+        HttpEntity<byte[]> entity = new HttpEntity<>(file, headers);
         RestTemplate restTemplate = new RestTemplate();
         String ip = "https://uploader.kinescope.io/video";
-        ResponseEntity<String> response = restTemplate.postForEntity(ip, request, String.class);
+        ResponseEntity<String> response = null;
+        try {
+            response = restTemplate.postForEntity(ip, entity, String.class);
+        } catch (Exception e) {
+            System.out.println(response);
+            throw new Exception();
+        }
         //                String jsonString = "{\n" +
         //                        "\t\"data\": {\n" +
         //                        "\t\t\"id\": \"qnPkAnqg8aNGiPj1qfrjDi\",\n" +
@@ -205,7 +208,6 @@ public class LessonServiceImpl implements ILessonService {
         String createdAtStr = ((JSONObject) json.get("data")).get("created_at").toString();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSX");
         Date createdAt = formatter.parse(createdAtStr);
-        uploadedVideo.delete();
         
         VideoEntity videoEntity;
         
@@ -268,30 +270,6 @@ public class LessonServiceImpl implements ILessonService {
         if (!lessonAuthor.getId().equals(currentUser.getId())) {
             throw new ServiceException(ErrorMessages.THIS_IS_NOT_YOUR_COURSE.getErrorMessage());
         }
-    }
-    
-    private File convert(MultipartFile file) {
-        File convFile;
-        try {
-            String pathFolder = systemParameterUtils.getPathFolder() + userUtils.getCurrentUserEntity().getUserId() + "/"
-                    + "videos/";
-            String filename = file.getOriginalFilename();
-            String url = pathFolder + new Date().getTime() + "_" + filename;
-            convFile = new File(Objects.requireNonNull(url));
-            Path path = Paths.get(url);
-            Path parentDir = path.getParent();
-            if (!Files.exists(parentDir)) {
-                Files.createDirectories(parentDir);
-            }
-            convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(file.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
-        }
-        
-        return convFile;
     }
     
     @Override
@@ -537,7 +515,7 @@ public class LessonServiceImpl implements ILessonService {
         if (savedLesson.getHomeWork() != null) {
             ret.setDescription(savedLesson.getHomeWork().getDescription());
         }
-        
+        ret.setId(savedLesson.getId());
         return ret;
     }
     
@@ -548,40 +526,44 @@ public class LessonServiceImpl implements ILessonService {
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestMethod("GET");
         
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String output;
-        
-        StringBuffer response = new StringBuffer();
-        while ((output = in.readLine()) != null) {
-            response.append(output);
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String output;
+            
+            StringBuffer response = new StringBuffer();
+            while ((output = in.readLine()) != null) {
+                response.append(output);
+            }
+            //        String ret = "{\t\"data\": {\t\t\"id\": \"vPMUAwFJCALPiL5ELVKWsM\"," +
+            //                "\t\t\"workspace_id\": \"7QMYPMq8GhfH9UbyE1W34V\",\t\t\"project_id\": \"8wGyYGbSdtbQtcbRnY6bcC\"," +
+            //                "\t\t\"folder_id\": null,\t\t\"storage_id\": \"0bq5x26sN9fGuUWa1PM6Pn\",\t\t\"short_id\": 199731261," +
+            //                "\t\t\"version\": 0,\t\t\"title\": \"New video\",\t\t\"description\": \"\",\t\t\"status\": \"error\"," +
+            //                "\t\t\"progress\": 0,\t\t\"duration\": 0,\t\t\"assets\": [],\t\t\"chapters\": {\t\t\t\"items\": []," +
+            //                "\t\t\t\"enabled\": false,\t\t\t\"show_on_load\": false\t\t},\t\t\"privacy_type\": \"anywhere\"," +
+            //                "\t\t\"privacy_domains\": [],\t\t\"poster\": null,\t\t\"additional_materials\": []," +
+            //                "\t\t\"additional_materials_enabled\": false,\t\t\"play_link\": \"https://kinescope.io/199731261\"," +
+            //                "\t\t\"embed_link\": \"https://kinescope.io/embed/199731261\"," +
+            //                "\t\t\"created_at\": \"2020-12-14T17:47:22.206692Z\",\t\t\"updated_at\": null," +
+            //                "\t\t\"deleted_at\": null,\t\t\"subtitles\": [],\t\t\"subtitles_enabled\": false\t}}";
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(response.toString());
+            
+            String status = ((JSONObject) json.get("data")).get("status").toString();
+            video.setFinished("done".equals(status));
+            
+            int progress = Integer.parseInt(((JSONObject) json.get("data")).get("progress").toString());
+            video.setProgress(progress);
+            
+            Double duration = Double.parseDouble(((JSONObject) json.get("data")).get("duration").toString());
+            video.setDuration(duration);
+            
+            String videoUrl = ((JSONObject) json.get("data")).get("embed_link").toString();
+            video.setUrl(videoUrl);
+            
+            videoRepository.save(video);
+        } catch (IOException e) {
+            log.error("Unable to update video", e);
         }
-        //        String ret = "{\t\"data\": {\t\t\"id\": \"vPMUAwFJCALPiL5ELVKWsM\"," +
-        //                "\t\t\"workspace_id\": \"7QMYPMq8GhfH9UbyE1W34V\",\t\t\"project_id\": \"8wGyYGbSdtbQtcbRnY6bcC\"," +
-        //                "\t\t\"folder_id\": null,\t\t\"storage_id\": \"0bq5x26sN9fGuUWa1PM6Pn\",\t\t\"short_id\": 199731261," +
-        //                "\t\t\"version\": 0,\t\t\"title\": \"New video\",\t\t\"description\": \"\",\t\t\"status\": \"error\"," +
-        //                "\t\t\"progress\": 0,\t\t\"duration\": 0,\t\t\"assets\": [],\t\t\"chapters\": {\t\t\t\"items\": []," +
-        //                "\t\t\t\"enabled\": false,\t\t\t\"show_on_load\": false\t\t},\t\t\"privacy_type\": \"anywhere\"," +
-        //                "\t\t\"privacy_domains\": [],\t\t\"poster\": null,\t\t\"additional_materials\": []," +
-        //                "\t\t\"additional_materials_enabled\": false,\t\t\"play_link\": \"https://kinescope.io/199731261\"," +
-        //                "\t\t\"embed_link\": \"https://kinescope.io/embed/199731261\"," +
-        //                "\t\t\"created_at\": \"2020-12-14T17:47:22.206692Z\",\t\t\"updated_at\": null," +
-        //                "\t\t\"deleted_at\": null,\t\t\"subtitles\": [],\t\t\"subtitles_enabled\": false\t}}";
-        JSONParser parser = new JSONParser();
-        JSONObject json = (JSONObject) parser.parse(response.toString());
-        
-        String status = ((JSONObject) json.get("data")).get("status").toString();
-        video.setFinished("done".equals(status));
-        
-        int progress = Integer.parseInt(((JSONObject) json.get("data")).get("progress").toString());
-        video.setProgress(progress);
-        
-        Double duration = Double.parseDouble(((JSONObject) json.get("data")).get("duration").toString());
-        video.setDuration(duration);
-        
-        String videoUrl = ((JSONObject) json.get("data")).get("embed_link").toString();
-        video.setUrl(videoUrl);
-        
-        videoRepository.save(video);
     }
     
     private void convertDtoToEntity(LessonDto lessonDto, LessonEntity lessonEntity, boolean update) {

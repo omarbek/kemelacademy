@@ -169,7 +169,7 @@ public class LessonController {
         
         LessonDto uploadedVideoDto;
         try {
-            uploadedVideoDto = lessonService.uploadVideo(lessonId, file);
+            uploadedVideoDto = lessonService.uploadVideo(lessonId, file.getBytes());
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
