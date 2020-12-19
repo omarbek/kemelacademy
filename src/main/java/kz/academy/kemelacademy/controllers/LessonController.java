@@ -491,17 +491,17 @@ public class LessonController {
     @Transactional
     public List<UserHomeWorkRest> getHomeWorks(@RequestParam(value = "page", defaultValue = "0") int page,
                                                @RequestParam(value = "limit", defaultValue = "25") int limit,
-                                               @RequestParam("lessonId") Long lessonId) {
+                                               @RequestParam("courseId") Long courseId) {
         List<UserHomeWorkRest> returnVal = new ArrayList<>();
         
-        Object[] fields = {lessonId};
+        Object[] fields = {courseId};
         ThrowUtils.throwMissingRequiredFieldException(fields);
         
-        lessonService.checkLessonId(lessonId);
+        lessonService.checkCourseId(courseId);
         
         List<UserHomeWorkDto> dtoList;
         try {
-            dtoList = lessonService.getHomeWorks(page, limit, lessonId);
+            dtoList = lessonService.getHomeWorks(page, limit, courseId);
         } catch (Exception e) {
             throw new ServiceException(ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         }

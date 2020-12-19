@@ -84,6 +84,9 @@ public class LessonServiceImpl implements ILessonService {
     @Autowired
     private SystemParameterUtils systemParameterUtils;
     
+    @Autowired
+    private ICourseRepository courseRepository;
+    
     @Override
     public LessonDto create(LessonDto lessonDto) throws Exception {
         LessonEntity lessonEntity = new LessonEntity();
@@ -232,7 +235,7 @@ public class LessonServiceImpl implements ILessonService {
     }
     
     @Override
-    public List<UserHomeWorkDto> getHomeWorks(int page, int limit, Long lessonId) {
+    public List<UserHomeWorkDto> getHomeWorks(int page, int limit, Long courseId) {
         List<UserHomeWorkDto> returnValue = new ArrayList<>();
         
         if (page > 0) {
@@ -240,7 +243,7 @@ public class LessonServiceImpl implements ILessonService {
         }
         
         Pageable pageable = PageRequest.of(page, limit);
-        Page<UserHomeWorkEntity> userHomeWorkEntityPage = homeWorkRepository.findAllByLessonId(pageable, lessonId);
+        Page<UserHomeWorkEntity> userHomeWorkEntityPage = homeWorkRepository.findAllByCourseId(pageable, courseId);
         List<UserHomeWorkEntity> userHomeWorkEntities = userHomeWorkEntityPage.getContent();
         
         for (UserHomeWorkEntity entity: userHomeWorkEntities) {
@@ -259,15 +262,15 @@ public class LessonServiceImpl implements ILessonService {
     }
     
     @Override
-    public void checkLessonId(Long lessonId) {
-        Optional<LessonEntity> optional = lessonRepository.findById(lessonId);
+    public void checkCourseId(Long courseId) {
+        Optional<CourseEntity> optional = courseRepository.findById(courseId);
         if (!optional.isPresent()) {
             throw new ServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
-        LessonEntity lesson = optional.get();
-        UserEntity lessonAuthor = lesson.getChapter().getCourse().getAuthor();
+        CourseEntity course = optional.get();
+        UserEntity courseAuthor = course.getAuthor();
         UserEntity currentUser = userUtils.getCurrentUserEntity();
-        if (!lessonAuthor.getId().equals(currentUser.getId())) {
+        if (!courseAuthor.getId().equals(currentUser.getId())) {
             throw new ServiceException(ErrorMessages.THIS_IS_NOT_YOUR_COURSE.getErrorMessage());
         }
     }

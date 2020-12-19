@@ -14,6 +14,6 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface IHomeWorkRepository extends JpaRepository<HomeWorkEntity, Long> {
     
-    @Query("select u from UserHomeWorkEntity u where u.homeWork.lesson.id = :lessonId")
-    Page<UserHomeWorkEntity> findAllByLessonId(Pageable pageable, Long lessonId);
+    @Query("select u from UserHomeWorkEntity u where u.homeWork.lesson.chapter.course.id = :courseId")
+    Page<UserHomeWorkEntity> findAllByCourseId(Pageable pageable, Long courseId);
 }
