@@ -27,7 +27,7 @@ public enum ErrorMessages {
     YOU_CANNOT_CHANGE_YOUR_EMAIL("you.cannot.change.your.email"),
     THIS_IS_NOT_YOUR_COURSE("this.is.not.your.course"),
     CAN_NOT_UPDATE_VIDEO("can.not.update.video"),
-    
+    THIS_SHOULD_NOT_BE_CALLED("this.should.not.be.called"),
     ;
     
     @Setter
