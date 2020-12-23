@@ -2,6 +2,7 @@ package kz.academy.kemelacademy.controllers;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import kz.academy.kemelacademy.exceptions.ServiceException;
 import kz.academy.kemelacademy.services.ICategoryService;
 import kz.academy.kemelacademy.ui.dto.CategoryDto;
@@ -44,6 +45,8 @@ public class CategoryController {
                     paramType = "header"
             )
     })
+    @ApiOperation(value = "The Get Categories Web Service Endpoint",
+            notes = "${categoryController.getCategories.apiOperation.notes}")
     @GetMapping
     @Transactional
     public List<CategoryRest> getCategories(@RequestParam(value = "page", defaultValue = "0") int page,

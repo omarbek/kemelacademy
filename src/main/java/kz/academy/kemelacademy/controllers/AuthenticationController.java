@@ -29,7 +29,6 @@ public class AuthenticationController {
     @Autowired
     private SystemParameterUtils systemParameterUtils;
     
-    @ApiOperation("User Login")
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = "Response Headers",
@@ -43,6 +42,8 @@ public class AuthenticationController {
                     }
             )
     })
+    @ApiOperation(value = "The Fake Login Web Service Endpoint",
+            notes = "${authenticationController.theFakeLogin.apiOperation.notes}")
     @PostMapping("/users/login")
     public void theFakeLogin(@RequestBody LoginRequestModel loginRequestModel) {
         throw new IllegalStateException(ErrorMessages.THIS_SHOULD_NOT_BE_CALLED.getErrorMessage());
