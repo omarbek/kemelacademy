@@ -99,6 +99,8 @@ public class CategoryController {
                     paramType = "header"
             )
     })
+    @ApiOperation(value = "The Create Category Web Service Endpoint",
+            notes = "${categoryController.createCategory.apiOperation.notes}")
     @PostMapping
     public CategoryRest createCategory(@RequestBody CategoryRequestModel categoryRequestModel) {
         CategoryRest returnValue = new CategoryRest();
@@ -128,6 +130,8 @@ public class CategoryController {
                     paramType = "header"
             )
     })
+    @ApiOperation(value = "The Create Category Web Service Endpoint",
+            notes = "${categoryController.getCategory.apiOperation.notes}")
     @Transactional
     @GetMapping(path = "/{id}")
     public CategoryRest getCategory(@PathVariable("id") long id) {
@@ -154,6 +158,8 @@ public class CategoryController {
                     paramType = "header"
             )
     })
+    @ApiOperation(value = "The Update Category Web Service Endpoint",
+            notes = "${categoryController.updateCategory.apiOperation.notes}")
     @Transactional
     @PutMapping(path = "/{id}")
     public CategoryRest updateCategory(@PathVariable("id") long id,
@@ -188,6 +194,8 @@ public class CategoryController {
                     paramType = "header"
             )
     })
+    @ApiOperation(value = "The Delete Category Web Service Endpoint",
+            notes = "${categoryController.deleteCategory.apiOperation.notes}")
     @Transactional
     @DeleteMapping(path = "/{id}")
     public OperationStatusModel deleteCategory(@PathVariable("id") long id) {
